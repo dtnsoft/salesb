@@ -1,0 +1,393 @@
+@charset "utf-8";
+
+/*********************************************************
+Huation UX R&D Team (http://www.huation.com/)
+Author : huation (2013.11.10)
+*********************************************************/
+
+/* CS/컨텐츠공통 */
+/* 고객정보조회 */
+.info_cust {width:1862px;}
+.info_cust .text {width:199px;}
+.info_cust .claim_num {margin-top:-2px;padding-top:2px;padding-left:4px;padding-bottom:1px;height:14px;line-height:14px;background:url(../images/common/bg_claimnum.gif) no-repeat;}
+.info_cust .claim_num span {margin-top:-2px;padding-top:2px;padding-right:5px;padding-bottom:1px;background:url(../images/common/bg_claimnum.gif) no-repeat right 0;color:#fff;font-weight:bold;}
+
+/* 고객목록조회_레이어팝업 */
+.search {padding-bottom:10px;}
+.search .text {width:250px;}
+.search .btn_type02 {margin-top:-1px;}
+.searchlist_listSr {overflow-y:scroll;padding-right:5px;max-height:375px;}/* 검색리스트 스크롤리스트영역 */
+
+/* SMS발송내역_레이어팝업 */
+.sms_list .btn_smssearch {position:absolute;}
+.sms_list .guide_txt {padding-top:18px;}
+
+/* 대외기간접수조회_레이어팝업 */
+.tend .tab_type01, .claim .tab_type01 {height:284px;}
+.tend .tab_type01 .tab_con_area01, .claim .tab_type01 .tab_con_area01,
+.tend .tab_type01 .tab_con, .claim .tab_type01 .tab_con {height:237px;}
+.tend .tab_type01 .tab_con_area01 .tend_cont {padding:0;}
+.tend .tab_type01 .tab_con_area01 .tend_cont span {overflow-y:auto;display:block;padding:2px 5px 0;width:850px;height:199px;}
+
+/* 구매리스트조회 */
+.buy_list {position:relative;width:1862px;}
+.buy_list .cs_buy_list {overflow-y:scroll;padding-right:5px;height:205px;}
+.buy_list .paging {position:absolute;right:6px;top:-3px;width:600px;text-align:right;}
+
+/* 구매리스트조회_옵션&frasl;클레임상세 상단 찾기_받은이관찾기_보낸이관찾기_게시판찾기 */
+.buy_search {margin-bottom:10px;padding:4px 0;height:25px;border:1px solid #ccc;background:#f4f4f4;color:#333;}
+.buy_search li {float:left;padding-left:15px;}
+.buy_search li.last {padding-left:5px;}
+.buy_search li label {padding:0 7px 0 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;}
+.buy_search li .text {height:17px;line-height:17px;}
+.buy_search li select {padding:2px;height:25px;line-height:17px;}
+.buy_search li .prodname {width:250px;}
+.buy_search li .ico_calendar {position:relative;}/* 검색영역 달력 아이콘 */
+.buy_search li .ico_calendar img {position:absolute;right:4px;top:4px;}/* 검색영역 달력 아이콘 */
+
+/* 딜(티켓)상세조회_딜(배송)상세조회 */
+.buy_deal {width:1862px;}
+.buy_deal .btn_register {padding-bottom:10px;text-align:right;}/* 상단 버튼 */
+.buy_deal .btn_r .btn_type02 {float:right;padding-bottom:10px;}
+.buy_deal .guide_txt {margin-top:-18px;text-align:left;}
+.buy_deal .personinfo {position:absolute;top:126px;}/* 관련자정보말풍선 */
+.buy_deal .personinfo .info {float:left;}
+.buy_deal .personinfo .info01 {float:left;margin-left:5px;margin-top:-4px;padding-bottom:3px;width:220px;background:url(../images/layout/bg_personinfo_last.gif) no-repeat 0 bottom;}
+.buy_deal .personinfo .info01 ul {padding-top:4px;background:url(../images/layout/bg_personinfo_first.gif) no-repeat;}
+.buy_deal .personinfo .info01 ul li {padding-left:22px;height:15px;background:url(../images/common/bu_square02.gif) no-repeat 15px 5px;color:#fff;}
+
+/* 옵션&frasl;클레임상세(티켓)_옵션&frasl;클레임상세(배송) */
+.buy_option {overflow:hidden;position:relative;width:1862px;}
+.buy_option .detailinfo {position:absolute;left:400px;top:10px;}/* 주문정보 */
+.buy_option .detailinfo li {float:left;padding:0 15px 0 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;}
+.buy_option .detailinfo li strong {color:#333;}
+.buy_option .btn_register {position:absolute;right:6px;top:5px;}/* 상단 버튼 */
+.buy_option .option_area {float:left;width:829px;}/* 옵션 영역 */
+.buy_option .claim_area {float:right;width:1023px;}/* 클레임 영역 */
+.buy_option .option_area .sub_title, .buy_option .claim_area .sub_title {padding:0 7px 5px 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;color:#333;font-weight:bold;}
+.buy_option .option_area .option_list, .buy_option .claim_area .claim_list {overflow-y:scroll;padding-right:5px;width:824px;height:185px;}
+.buy_option .claim_area .claim_list {width:1018px;}
+
+/* 정산정보조회_레이어팝업 */
+.calculate .calculate_info {margin-bottom:10px;padding:4px 0;height:25px;border:1px solid #ccc;background:#f4f4f4;color:#333;}
+.calculate .calculate_info li {float:left;padding-left:15px;line-height:25px;font-weight:bold;}
+.calculate .calculate_info li span {padding-left:7px;background:url(../images/common/bu_square01.gif) no-repeat 0 10px;font-weight:normal;}
+.calculate .calculate_list {overflow-y:scroll;padding-right:5px;height:205px;}
+.calculate .calculate_list .con01 {display:none;}
+.calculate .calculate_list .con01 td {background:#f4f4f4;}
+
+/* 공지&frasl;주의사항조회_레이어팝업 */
+.deal_notice {width:1210px;}
+.deal_caution {float:left;margin-right:5px;width:500px;border-bottom:2px solid #d4d4d4;}
+.deal_caution .title {margin-bottom:0;}
+.deal_caution .con_box {padding:10px;height:407px;border:1px solid #888;border-top:0 none;}
+.deal_caution .con_box .deal_con {overflow-y:scroll;padding-right:5px;height:407px;}
+.deal_notilist {float:right;margin-left:5px;width:700px;}
+.deal_notilist .tab_type01 {height:454px;}
+.deal_notilist .tab_type01 .tab_con_area01 {height:427px;}
+.deal_notilist .tab_type01 .tab_con {padding:10px;width:678px;height:407px;}
+.deal_notilist .tab_type01 .tab_con .noti_con {height:407px;}
+.deal_notilist .tab_type01 .tab_con .noti_con .con {padding:0;}
+.deal_notilist .tab_type01 .tab_con .noti_con .con span.con01 {overflow-y:scroll;display:block;padding:2px 5px 0;width:564px;height:265px;text-align:left;}
+.deal_notilist .tab_type01 .tab_con .noti_con01 {overflow-y:scroll;padding-right:5px;}
+.deal_notilist .btn_area {padding:10px 0;text-align:right;}/* 버튼 영역 */
+.deal_notilist .btn_area .btn_l {float:left;}/* 목록 버튼 정렬 */
+
+/* 상담결과 */
+#container .counsel_result .prod_area {float:left;padding:0;background:url(../images/layout/bg_resultprod_rep.gif) repeat-x;color:#fff;}/* 타이틀옆 상품명 영역 */
+#container .counsel_result .prod_area .first {padding-top:1px;padding-left:27px;height:21px;line-height:21px;background:url(../images/layout/bg_resultprod_first.gif) no-repeat;}/* 타이틀옆 상품명 영역 */
+#container .counsel_result .prod_area .last {padding-left:12px;height:22px;background:url(../images/layout/bg_resultprod_last.gif) no-repeat;}/* 타이틀옆 상품명 영역 */
+.result_area {height:343px;}
+.result_area .consultingContent {vertical-align:top;}/* 상담내용 */
+.result_area .reply_num {margin-top:-2px;padding-top:2px;padding-left:4px;padding-bottom:1px;height:14px;line-height:14px;background:url(../images/common/bg_claimnum.gif) no-repeat;}
+.result_area .reply_num span {margin-top:-2px;padding-top:2px;padding-right:5px;padding-bottom:1px;background:url(../images/common/bg_claimnum.gif) no-repeat right 0;color:#fff;font-weight:bold;}
+/* inut size */
+.result_area .text {width:145px;}
+.result_area select {width:100%;}
+.result_area .width_colspan100p {width:97.1%;}/* 제목, 상담내용 */
+.result_area textarea.width_colspan100p {margin-top:3px;height:117px;}/* 상담내용 */
+.result_area .width_667 {width:667px;}/* 상담유형 */
+.result_area select.width_50 {width:50px;}/* 예약 시, 분 셀렉트 */
+.result_area .width_145 {width:145px;}/* 이관담당자, 클레임유형 */
+.result_area .width_622 {width:622px;}/* sms발송 */
+/* //inut size */
+.result_area .state_btn_area {position:relative;padding-top:13px;height:23px;}
+.result_area .state_btn_area .save_state {padding-left:5px;height:20px;line-height:20px;}
+.result_area .state_btn_area .save_state span {padding:0 7px 0 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 8px;color:#333;}
+.result_area .state_btn_area .save_state input {margin-left:15px;margin-top:-3px;}
+.result_area .state_btn_area .btn_area {position:absolute;right:0;bottom:0;width:100%;text-align:right;}/* 저장 버튼 */
+.result_area .state_btn_area .btn_area .btn_l {float:left;}/* 버튼 왼쪽 정렬 */
+
+
+/* 상담유형_레이어팝업 */
+.counselexile {width:1210px;}
+.counselexile .title {margin-bottom:0;}
+.tree_area {float:left;margin-right:5px;width:600px;border-bottom:2px solid #d4d4d4;}/* 트리영역 */
+.tree_area .con_box, .exile_area .con_box {padding:10px;height:420px;border:1px solid #888;border-top:0 none;}
+.tree_area .tree_btn {display:block;margin:10px 0;padding-left:5px;height:33px;line-height:33px;border:1px solid #ccc;background:#f4f4f4;}
+.tree_area .tree_btn a {padding-right:3px}
+.tree_area .tree_btn img {padding:11px 4px 0 0;vertical-align:top;}
+.tree_area ul.dynatree-container {overflow-y:scroll;height:330px;padding-right:5px;}/* 트리영역>스크롤생성부분(ul.dynatree-container) 추가설정 */
+.exile_area {float:right;margin-left:5px;width:600px;border-bottom:2px solid #d4d4d4;}/* 검색영역 */
+.exile_area .exile_list {overflow-y:scroll;padding-right:5px;height:375px;}/* 검색영역>유형리스트 */
+
+/* 클레임유형선택_레이어팝업 */
+.claimtype_area {}
+.claimtype_area .claimtype {float:left;border-left:1px solid #ccc;border-top:1px solid #ccc;}
+.claimtype_area .claimtype li {float:left;padding:9px 10px;width:224px;border-bottom:1px solid #ccc;border-right:1px solid #ccc;}
+.claimtype_area .btn_area {float:right;margin-top:10px;}/* 버튼 오른쪽 정렬 기준 */
+
+/* 게시판동시답변_레이어팝업 */
+.boardreply_area {}
+.boardreply_area .buy_search li.reply_num_area {padding:0 7px 0 22px;line-height:25px;background:url(../images/common/bu_square01.gif) no-repeat 15px 10px;}/* 찾기영역 */
+.boardreply_area .reply_num {margin-top:-2px;padding-top:2px;padding-left:4px;padding-bottom:1px;height:14px;line-height:14px;background:url(../images/common/bg_claimnum.gif) no-repeat;}
+.boardreply_area .reply_num span {margin-top:-2px;padding-top:2px;padding-right:5px;padding-bottom:1px;background:url(../images/common/bg_claimnum.gif) no-repeat right 0;color:#fff;font-weight:bold;}
+.boardreply_area .inquiry {margin-top:15px;}/* 문의내용 */
+.boardreply_area .inquiry_con {overflow:hidden;overflow-y:scroll;margin-top:10px;padding:10px;width:1158px;height:70px;border:1px solid #ccc;}
+.boardreply_area .reply {margin-top:15px;}/* 답변 */
+.boardreply_area .reply textarea {padding:10px;border-color:#ccc;}
+.boardreply_area .btn_area {margin-top:10px;text-align:right;}/* 버튼 오른쪽 정렬 기준 */
+
+/* 이관담당자_레이어팝업 */
+.transfer_group_list {;margin-bottom:15px;padding:4px 0;height:25px;border:1px solid #ccc;background:#f4f4f4;color:#333;}/* 부서별자동이관 */
+.transfer_group_list li {float:left;padding-left:15px;line-height:25px;}
+.transfer_person_list {overflow:hidden;overflow-y:scroll;padding-right:5px;height:205px;}/* 담당자지정이관 */
+
+/* 대외기관접수_레이어팝업 */
+.foreign_list_area .foreign_list {overflow:hidden;overflow-y:scroll;padding-right:5px;height:205px;}
+.foreign_info_area {margin-top:15px;}/* 상세정보 */
+.foreign_info_area .memo {padding-top:7px;padding-bottom:5px;}/* 비고 */
+.foreign_list_area .btn_area,
+.foreign_info_area .btn_area {padding-top:10px;text-align:right;}/* 버튼 오른쪽 정렬 기준 */
+
+/* 딜상담이력_상담이력_예약_아웃콜_받은이관_보낸이관_게시판 */
+.counsel_list_area {overflow-y:scroll;padding-right:5px;height:353px;}
+.counsel_list_area01 {overflow-y:scroll;padding-right:5px;height:308px;}
+/* 상담이력 음영 표시 정책 */
+.counsel_list_area tr.urgent td, .counsel_list_area tr.urgent td a,
+.counsel_list_area01 tr.urgent td, .counsel_list_area01 tr.urgent td a,
+.tsp_counsel_list_area tr.urgent td, .tsp_counsel_list_area tr.urgent td a,
+.tsp_counsel_list_area01 tr.urgent td, .tsp_counsel_list_area01 tr.urgent td a {color:red;font-weight:bold;letter-spacing:-1px;}/* 긴급 */ /*tsp_counsel_list_area01 - TSP 상담이력 영역*/
+.counsel_list_area tr.timePass td, .tsp_counsel_list_area tr.timePass td {background:#f9ede3;}/* 예약 시간 경과(주황색) */
+.counsel_list_area tr.timePass3 td, .tsp_counsel_list_area tr.timePass3 td {background:#f9ede3;}/* 할당 시간 기준(3시간 경과)(주황색) */
+.bd_counsel_list_area tr.timeRegi12 td, .counsel_list_area01 tr.timeRegi12 td, .tsp_counsel_list_area01 tr.timeRegi12 td {background:#f9f8e3;}/* 등록일시 기준(12:00~23:59)(노랑색) */
+.bd_counsel_list_area tr.timeRegi24 td, .counsel_list_area01 tr.timeRegi24 td, .tsp_counsel_list_area01 tr.timeRegi24 td {background:#f9ede3;}/* 등록일시 기준(24:00~)(주황색) */
+.counsel_list_area01 tr.diff td, .counsel_list_area01 tr.diff td a,
+.tsp_counsel_list_area01 tr.diff td, .tsp_counsel_list_area01 tr.diff td a {color:#1e9f00;}/* 타부서 이관 */
+
+/* 딜상담이력상세_상담이력상세_레이어팝업 */
+.counsel_detail .tab_type01 {height:575px;}
+.counsel_detail .tab_type01 .tab_con_area01 {height:550px;}
+.counsel_detail .tab_type01 .tab_con {padding:10px;height:528px;}
+.counsel_detail .tab_type01 .tab_con .con {padding:0;}
+.counsel_detail .tab_type01 .tab_con .con span {overflow-y:scroll;display:block;padding:2px 5px 0;height:80px;}/* 상담내용 */
+.counsel_detail .tab_type01 .tab_con .detail_con {overflow-y:scroll;padding-right:5px;height:528px;}/* 이관이력 */
+.counsel_detail .tab_type01 .tab_con .detail_con .con01 {display:none;}/* 이관이력 */
+.counsel_detail .tab_type01 .tab_con .detail_con .con01 td {padding:10px;background:#f4f4f4;}/* 이관이력 */
+.counsel_detail .btn_area {padding:10px 0;text-align:right;}/* 버튼 영역 */
+
+/* 상단추가정보상세_레이어팝업 */
+.status_details {margin-bottom:15px;}
+.status_details h2 {padding:0 7px 5px 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;color:#333;font-weight:bold;}
+.status_details select {width:150px;}
+
+/* 기본 달력아이콘 */
+.ico_calendar {position:relative;}
+.ico_calendar img {position:absolute;right:3px;top:1px;}
+
+/* 소프트영역_호전환/3자통화_레이어팝업 */
+.transconf_detail .tab_type01 {height:503px;}
+.transconf_detail .tab_type01 .tab_con_area01 {height:478px;}
+.transconf_detail .tab_type01 .tab_con {padding:10px;height:456px;}
+
+/* 소프트영역_Manual Answer_레이어팝업 */
+.manualanswer .btn_area {padding-top:10px;text-align:center;}
+
+/* AD_CT */
+/* 공통리스트 */
+.ad_list_area, .ct_list_area {}/* 조회/리스트영역 */
+.ad_list_area .ad_list, .ct_list_area .ad_list {}/* 기본리스트영역 */
+.ad_list_area .ad_listSr {overflow-y:scroll;padding-right:5px;max-height:375px;}/* 스크롤리스트영역 */
+.ad_list_area .ad_list .guide_txt span,
+.ct_list_area .ct_list .guide_txt span {padding-left:7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;color:#666;}/* 리스트 상단 점아이콘 안내 문구(오른쪽) */
+.ad_list_area .ad_list .guide_txtleft span,
+.ct_list_area .ct_list .guide_txtleft span {padding-left:7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;color:#666;}/* 리스트 상단 점아이콘 안내 문구(왼쪽) */
+.ad_list_area .ad_list .list_bottom,
+.ct_list_area .ct_list .list_bottom {margin-top:10px;height:26px;}/* 리스트 하단 페이징+버튼 영역 */
+.ad_list_area .ad_list .list_bottom .paging,
+.ct_list_area .ct_list .list_bottom .paging {margin-top:0;height:26px;}
+.ad_list_area .ad_list .list_bottom .paging_pdb0,
+.ct_list_area .ct_list .list_bottom .paging_pdb0 {padding-bottom:0;}
+.ad_list_area .ad_list .list_bottom .btn_area,
+.ct_list_area .ct_list .list_bottom .btn_area {margin-top:-26px;text-align:right;}/* 페이징과 버튼이 함께 있는 경우 */
+.ad_list_area .ad_list .list_bottom .btn_area_pno,
+.ct_list_area .ct_list .list_bottom .btn_area_pno {margin-top:0;}/* 페이징 없이 버튼만 있는 경우 : .btn_area_pno 추가 */
+.ad_list_area .ad_list .list_bottom .btn_area .btn_l,
+.ct_list_area .ct_list .list_bottom .btn_area .btn_l {float:left;margin-right:4px;}/* 버튼 왼쪽 정렬 */
+.ad_list_area .btn_c, .ct_list_area .btn_c {text-align:center;}/* 테이블안 버튼 가운데 정렬 */
+
+/* 공통상세정보 */
+.ad_info_area, .ct_info_area {margin-top:15px;}
+.ct_info_areaM0 {margin-top:0;}/* 상세정보가 최상위에 위치할 경우 */
+.ad_info_area .btn_area,
+.ct_info_area .btn_area {padding-top:10px;text-align:right;}
+.ad_info_area .btn_area .btn_l,
+.ct_info_area .btn_area .btn_l {float:left;margin-right:4px;}/* 버튼 왼쪽 정렬 */
+.ad_info_area .btn_c, .ct_info_area  .btn_c {text-align:center;}/* 테이블안 버튼 가운데 정렬 */
+
+/* 기능별권한관리 */
+.ad_list_area .groupauth_list {float:left;width:1420px;}
+.ad_list_area .groupauth_list .ad_gauth {overflow-y:scroll;padding-right:5px;height:375px;}
+.ad_list_area .groupauth_info {float:right;}
+.ad_list_area .groupauth_info .ad_gauth01 {float:left;padding-right:10px;}
+.ad_list_area .groupauth_info .ad_gauth01.last {padding-right:0;}
+.ad_list_area .groupauth_info .ad_gauth01 h3 {padding:0 0 5px 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;font-weight:bold;}
+.ad_list_area .groupauth_info .ad_gauth01 ul {overflow-y:scroll;float:left;width:168px;height:416px;border:1px solid #999;}
+.ad_list_area .groupauth_info .ad_gauth01 li a {display:block;padding:2px 5px 0;text-decoration:none;}
+.ad_list_area .groupauth_info .ad_gauth01 li a.on {background:#e6e6e6;color:#333;}
+.ad_list_area .groupauth_info .ad_gauth01 li a:hover {background:#e6e6e6;}
+.ad_list_area .groupauth_info .ad_gauth01 .list_bottom {clear:both;padding-top:10px;height:26px;text-align:right;}
+
+/* 이관양식관리 */
+.ad_info_area .ad_transf {padding-top:7px;padding-bottom:5px;}
+
+/* 딜별이관담당자관리/지역별이관담당자관리 */
+.ad_list_area .deal_list {float:left;width:1097px;}
+.ad_list_area .deal_person {float:left;padding-left:10px;width:170px;}
+.ad_list_area .deal_person .deal_person_list {overflow-y:scroll;height:432px;border:1px solid #999;}
+.ad_list_area .deal_person .deal_person_list li a {display:block;padding:2px 5px 0;text-decoration:none;}
+.ad_list_area .deal_person .deal_person_list li a.on {background:#e6e6e6;color:#333;}
+.ad_list_area .deal_person .deal_person_list li a:hover {background:#e6e6e6;}
+.ad_list_area .person_move {float:left;padding:242px 0 0 14px;}
+
+/* 콜백분배관리/아웃콜분배관리 */
+.ad_list_area .btn_c {display:block;text-align:center;}/* 공통-상담원할당버튼정렬 */
+.ad_list_area .obdist_search {float:left;width:620px;}/* 아웃콜분배관리 */
+.ad_list_area .obdist_upload {float:right;width:550px;}/* 엑셀양식업로드영역 */
+.ad_list_area .obdist_upload input {background:#fff;}
+.ad_list_area .obdist_list .guide_txt {clear:both;padding-top:10px;}/* 총글수영역 */
+.ad_list_area .obdist_list .obdist_list01 {overflow-y:scroll;padding-right:5px;max-height:375px;}/* 아웃콜분배 리스트영역 */
+
+/* 클레임관리 */
+.ad_info_area .ad_claimlist label {margin-left:15px;padding:2px 0 2px 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 7px;}
+.ad_info_area .ad_claimlist label.first {margin-left:0;}
+
+/* 클레임관리>클레임상세 */
+.ad_claimlist_detail .memo {padding:0;}/* 비고 */
+.ad_claimlist_detail .memo span {overflow-y:scroll;display:block;padding:2px 5px 0;height:61px;}
+
+/* 스킬배정 */
+.ad_info_area .ad_skill {float:left;width:720px;}
+.ad_info_area .ad_skill h3 {padding:0 0 5px 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 5px;font-weight:bold;}
+.ad_info_area .ad_skill .skill_list {overflow-y:scroll;height:273px;border:1px solid #999;}
+.ad_info_area .ad_skill .skill_list ul {padding-bottom:5px;border-right:1px solid #999;}
+.ad_info_area .ad_skill .skill_list ul li {padding:2px 10px;}
+.ad_info_area .ad_skill .skill_list ul li input {margin-top:-1px;}
+.ad_info_area .ad_skill .skill_list ul .cate {margin-bottom:5px;padding:7px 10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;background:#f4f4f4;font-weight:bold;}
+.ad_info_area .ad_skill .skill_list ul .cate.first {border-top:0 none;}
+.ad_info_area .ad_skill01 {float:right;}
+.ad_info_area .skill_move {float:left;padding:146px 0 0 14px;}
+.ad_list_area .skill_list {height:425px;}/* 스킬리스트영역 사이즈 고정 */
+
+/* 내상담내역, 상담관리(공통) */
+.ad_list_area .ico_exceldown {margin-top:7px;height:20px;line-height:20px;background-position:0 1px;}/* 엑셀다운로드 */
+
+/* 예약이력관리 */
+.ad_list_area .reservehs_list {position:relative;}/* 금일미처리건수 */
+.ad_list_area .reservehs_list .guide_txtleft {position:absolute;left:0;top:0;}
+
+/* 이관이력관리 */
+.ad_list_area .transferhs_list {position:relative;}/* 금일미처리건수 */
+.ad_list_area .transferhs_list .guide_txtleft {position:absolute;left:0;top:0;}
+.ad_list_area .transferhs_list .listscroll {overflow-y:scroll;padding-right:5px;max-height:375px;}
+.ad_list_area .transferhs_list .listscroll .con01 {display:none;}
+.ad_list_area .transferhs_list .listscroll .con01 td {background:#f4f4f4;}
+
+/* 파트너등록관리 */
+.ad_list_area .regipart_search {float:left;width:582px;}/* 조회영역 */
+.ad_list_area .regipart_upload {float:right;width:888px;}/* 엑셀업로드영역 */
+.ad_list_area .regipart_upload input {background:#fff;}
+.ad_list_area .regipart_list {overflow-y:scroll;clear:both;margin-top:35px;padding-right:5px;max-height:545px;}/* 파트너목록 */
+.ad_list_area .regipart_error_area {clear:both;margin-top:15px;}/* 업로드실패목록 */
+.ad_list_area .regipart_error_area .error_list {overflow-y:scroll;padding-right:5px;max-height:137px;}
+
+/* 사용자스킬정보 */
+.ad_list_area .userinfo_area {margin-bottom:15px;border-bottom:2px solid #d4d4d4;}
+.ad_list_area .userinfo_area .title {margin-bottom:0;}
+.ad_list_area .userinfo_area .con_box {padding:10px;border:1px solid #888;border-top:0 none;}
+.ad_list_area .skilllist_area .tab_type01 {height:422px;}
+.ad_list_area .skilllist_area .tab_type01 .tab_con_area01 {height:395px;}
+.ad_list_area .skilllist_area .tab_type01 .tab_con {height:375px;}
+.ad_list_area .skilllist_area .tab_type01 .tab_con .skilllist {overflow-y:scroll;padding-right:5px;height:375px;}
+
+/* 게시판 */
+/* 게시판상세보기 */
+.ct_info_area .bdview_con {padding:0;}
+.ct_info_area .bdview_con span.con01 {overflow-y:scroll;display:block;padding:2px 5px 0;height:180px;}
+.ct_info_area .bdview_afflist li {padding:2px 0 2px 7px;background:url(../images/common/bu_square01.gif) no-repeat 0 7px;}
+
+/* 게시판등록_게시판수정 */
+.ct_info_area .bdadd_con {height:438px;}/* 게시판등록내용영역 */
+.ct_info_area .bdmodi_con {height:354px;}/* 게시판수정내용영역 */
+.ct_info_area .bd_aff {padding:0;}/* 게시판수정첨부파일영역 */
+.ct_info_area .bdmodi_afflist {padding:2px 5px 0;border-bottom:1px solid #ccc;}
+.ct_info_area .bdmodi_afflist li {padding:2px 0 2px 7px;padding-left:7px;background:url(../images/common/bu_square01.gif) no-repeat 0 11px;}
+.ct_info_area .bdmodi_affadd {padding:5px 5px 0;background:#f4f4f4;}
+.ct_info_area .bdmodi_affadd01 {padding:5px 5px 0;background:0 none;}/* 게시판등록첨부파일 */
+.ct_info_area .bdmodi_affadd .btn_aff {padding-bottom:5px;}
+.ct_info_area .bdmodi_affadd .file_aff {padding-bottom:5px;}
+.ct_info_area .bdmodi_affadd .file_aff input {background:#fff;}
+
+/* 게시판댓글 */
+.ct_info_area .reply_area {clear:both;padding-top:10px;}
+.ct_info_area .reply_area .reply_write {padding:15px;border:1px solid #ccc;background:#f4f4f4;}
+.ct_info_area .reply_area .reply_write dt {padding-bottom:7px;color:#333;font-weight:bold;}
+.ct_info_area .reply_area .reply_write dt .text_byte {float:right;color:#999;font-size:11px;font-weight:normal;}
+.ct_info_area .reply_area .reply_write dd .text {width:1373px;height:22px;}
+.ct_info_area .reply_area .reply_write dd.btn_reply {float:right;margin-top:-30px;}
+.ct_info_area .reply_area .reply_list_area {position:relative;overflow-y:auto;height:320px;}
+.ct_info_area .reply_area .reply_list_area .reply_list {border-left:1px solid #ccc;border-right:1px solid #ccc;}
+.ct_info_area .reply_area .reply_list_area .reply_list dt {padding:13px 15px 0 15px;color:#333;font-weight:bold;}
+.ct_info_area .reply_area .reply_list_area .reply_list dt .text_date {margin-left:10px;margin-right:5px;padding-left:11px;background:url(../images/common/bg_reply_bar.gif) no-repeat 0 1px;color:#999;font-weight:normal;}
+.ct_info_area .reply_area .reply_list_area .reply_list dd {padding:3px 15px 13px 15px;border-bottom:1px solid #ccc;}
+.ct_info_area .reply_area .reply_list_area .paging {position:absolute;bottom:-32px;}/* 댓글 페이징 */
+
+/* 지식관리게시판상세보기 */
+.ct_info_area .Knowbdview_con {padding:0;}
+.ct_info_area .Knowbdview_con span.con01 {overflow-y:scroll;display:block;padding:2px 5px 0;height:386px;}
+
+/* 지식관리게시판등록_게시판수정 */
+.ct_info_area .Knowbdadd_con {height:404px;}/* 지식관리게시판등록내용영역 */
+.ct_info_area .Knowbdmodi_con {height:320px;}/* 지식관리게시판수정내용영역 */
+
+/* 딜공지사항리스트 */
+.ct_list_area .dealbd_strOpen span {float:left !important;padding-right:10px;}/* 검색영역-공개여부 */
+
+/* 딜공지사항셍세보기 */
+.ct_info_area .dealbdview_con {padding:0;}
+.ct_info_area .dealbdview_con span.con01 {overflow-y:scroll;display:block;padding:2px 5px 0;height:340px;}
+
+/* 딜공지사항등록_딜공지사항수정 */
+.ct_info_area .dealbdadd_con {height:366px;}/* 딜공지사항등록내용영역 */
+.ct_info_area .dealbdmodi_con {height:366px;}/* 딜공지사항수정내용영역 */
+
+/* 에러페이지 */
+.error_area {position:absolute;top:50%;left:50%;margin-top:-213px;margin-left:-408px;overflow:hidden;width:826px;border:1px solid #888;border-bottom:2px solid #d4d4d4;background:#fff url(../images/layout/img_error.jpg) no-repeat 70px 50%;}
+.error_area .error_con {padding:60px 70px 60px 358px;border-bottom:1px solid #888;}
+.error_area .error_con h1, .error_area .error_con h2 {padding-bottom:20px;}
+.error_area .error_con li {line-height:20px;color:#333;font-weight:bold;}
+.error_area .error_con li img {margin-top:-2px;}
+.error_area .error_con li li {padding-left:26px;background:url(../images/common/bu_square01.gif) no-repeat 19px 7px;color:#666;font-weight:normal;}
+.error_area .error_con button {margin-top:40px;}
+
+/* 전체메인 */
+.mainall1 {position:absolute;top:50%;left:50%;margin-top:-195px;margin-left:-154px;overflow:hidden;width:308px;height:393px;}/* 메뉴 1개일때 */
+.mainall4 {position:absolute;top:50%;left:50%;margin-top:-195px;margin-left:-514px;overflow:hidden;width:1029px;height:393px;}/* 메뉴 4개일때 */
+.mainall5 {position:absolute;top:50%;left:50%;margin-top:-195px;margin-left:-643px;overflow:hidden;width:1286px;height:393px;}/* 메뉴 5개일때 */
+.mainall h1 {padding-bottom:50px;text-align:center;}
+.mainall .mainall_area {height:263px;border:1px solid #888;border-bottom:2px solid #d4d4d4;background:#fff;}
+.mainall .mainall_area .mainall_con {float:left;padding:40px 0;height:182px;border-bottom:1px solid #888;}
+.mainall1 .mainall_area .mainall_con {width:306px;}/* 메뉴 1개일때-로고사이즈가 커서 영역 늘림 */
+.mainall .mainall_area .mainall_con li {float:left;width:256px;border-right:1px solid #e5e5e5;text-align:center;}
+.mainall1 .mainall_area .mainall_con li {width:306px;}/* 메뉴 1개일때-로고사이즈가 커서 영역 늘림 */
+.mainall .mainall_area .mainall_con li.last {border-right:0 none;}

@@ -1,0 +1,13 @@
+
+#WEB-INF/views/ajaxTest.jsp
+#WEB-INF/classes/com/offact/addys/controller/HomeController.class
+
+#WEB-INF/classes/com/offact/addys/mapper/SampleNotice.xml
+#WEB-INF/classes/com/offact/addys/controller/SampleNoticeController.class
+#WEB-INF/classes/com/offact/addys/service/SampleNoticeService.class
+#WEB-INF/classes/com/offact/addys/service/impl/SampleNoticeServiceImpl.class
+#WEB-INF/classes/com/offact/addys/vo/SampleNoticeVO.class
+
+#WEB-INF/views/sample/noticeList.jsp
+
+#html/**/*.*

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CustManage">
+
+<resultMap id="custListVO" type="com.offact.salesb.vo.manage.CustManageVO" >
+  <result column="customerKey"              property="customerKey"  />
+  <result column="sbPhoneNumber"            property="sbPhoneNumber"  />
+  <result column="sbPw"      	   property="sbPw"  />
+  <result column="socialId1"       	   property="socialId1"  />
+  <result column="socialId2"              property="socialId2"  />
+  <result column="socialId3"                property="socialId3"  />
+  <result column="socialId4"            property="socialId4"  />
+  <result column="socialId5"           property="socialId5"  />
+  <result column="socialId6"            property="socialId6"  />
+  <result column="socialId7"         property="socialId7"  />
+  <result column="socialId8"   property="socialId8"  />
+  <result column="socialId9"         property="socialId9"  />
+  <result column="socialId10"   property="socialId10"  />
+  <result column="createDateTime"               property="createDateTime"  />
+  <result column="token"                  property="token"  />
+  <result column="tokenDateTime"        property="tokenDateTime"  />
+  <result column="registDateTime"      property="registDateTime"  />
+  <result column="updateDateTime"        property="updateDateTime"  />
+  <result column="usedYn"      property="usedYn"  />
+  <result column="lastloginType"               property="lastloginType"  />
+  <result column="lastLat"           property="lastLat"  />
+  <result column="lastlon"   property="lastlon"  />
+</resultMap>
+
+<select id="getCustPageList"  resultMap="custListVO" parameterType="com.offact.salesb.vo.manage.CustManageVO" >
+        SELECT T1.customerKey
+			  ,T1.sbPhoneNumber
+			  ,T1.sbPw
+			  ,T1.socialId1
+			  ,T1.socialId2
+			  ,T1.socialId3
+		      ,T1.socialId4
+			  ,T1.socialId5
+			  ,T1.socialId6
+			  ,T1.socialId7
+			  ,T1.socialId8
+			  ,T1.socialId9
+			  ,T1.socialId10
+			  ,T1.createDateTime
+			  ,T1.token
+			  ,T1.tokenDateTime
+			  ,T1.registDateTime
+			  ,T1.updateDateTime
+			  ,ifnull(T1.usedYn,'N') as usedYn
+			  ,T1.lastloginType
+			  ,T1.lastLat
+			  ,T1.lastlon
+          FROM sbCustomer T1
+         WHERE 1=1
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+         
+               </when>
+               <when test="searchGubun.equals('02')">
+
+               </when>
+             </choose>
+           </if>
+           <if test="con_useYn != null and con_useYn != ''" >
+           AND T1.useYn = #{con_useYn}
+           </if>
+         ORDER BY createDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getCustCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			          FROM sbCustomer T1
+         WHERE 1=1
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+         
+               </when>
+               <when test="searchGubun.equals('02')">
+
+               </when>
+             </choose>
+           </if>
+           <if test="con_useYn != null and con_useYn != ''" >
+           AND T1.useYn = #{con_useYn}
+           </if>
+</select>
+
+
+<select id="getCustDetail" resultMap="custListVO" parameterType="com.offact.salesb.vo.manage.CustManageVO" >
+
+		Select T1.customerKey
+			  ,T1.sbPhoneNumber
+			  ,T1.sbPw
+			  ,T1.socialId1
+			  ,T1.socialId2
+			  ,T1.socialId3
+		      ,T1.socialId4
+			  ,T1.socialId5
+			  ,T1.socialId6
+			  ,T1.socialId7
+			  ,T1.socialId8
+			  ,T1.socialId9
+			  ,T1.socialId10
+			  ,T1.createDateTime
+			  ,T1.token
+			  ,T1.tokenDateTime
+			  ,T1.registDateTime
+			  ,T1.updateDateTime
+			  ,ifnull(T1.usedYn,'N') as usedYn
+			  ,T1.lastloginType
+			  ,T1.lastLat
+			  ,T1.lastlon
+	     From sbCustomer T1 
+		 Where T1.customerKey = #{customerKey} 
+</select>
+
+<update id="custDeleteProc" parameterType="java.util.Map" >
+        Update sbCustomer
+       		Set
+  				useYn = 'Y'
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+</mapper>

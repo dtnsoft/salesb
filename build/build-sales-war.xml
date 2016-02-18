@@ -1,0 +1,28 @@
+<project name="InetJarDeployer" basedir="D:\Project\offact\workspace\offact" default="build">
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+	<!--                   properties                      -->
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+    <property name="src.dir" value="src"/>
+    <property name="war.dir" value="src/main/webapp"/>
+
+	<property name="name" value="webapp"/>
+
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+	<!--                  targets                          -->
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+	<target name="build">
+		
+		<echo message="*** Create jar file ${name}.war ***"/>
+
+        
+
+
+	    <jar jarfile="${name}.war">
+			<fileset dir="${war.dir}">
+				<include name="**"/>
+			</fileset>
+            <fileset dir="${src.dir}">
+            </fileset>
+	    </jar>
+	</target>
+</project>

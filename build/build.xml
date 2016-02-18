@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="salesb" default="all">
+
+	<property name="module.alias" value="board" />
+	
+	<tstamp>
+		<format property="deploy.time" pattern="yyyy-MM-dd HH:mm:ss" />
+	</tstamp>
+	
+	<property name="server.userid" value="ipcctest" />
+	<property name="server.password" value="ipcctest" />
+	<property name="server.host" value="10.1.101.99" />
+
+	<property name="base.dir" value="D:/springsource/workspace/salesb" />
+	<property name="web.root" value="${base.dir}/src/main/webapp" />
+	<property name="java.classes.dir" value="${base.dir}/target/classes" />	
+	<property name="web.jsp.dir" value="${web.root}/WEB-INF/views" />
+	<property name="lib.dir" value="" />
+	<property name="config.dir" value="" />
+	
+	<property name="dist.base.dir" value="${base.dir}/target/cs-0.1" />
+	<property name="dist.web.root" value="${dist.base.dir}" />
+	<property name="dist.classes.dir" value="${dist.base.dir}/WEB-INF/classes" />
+	<property name="dist.web.jsp.dir" value="${dist.base.dir}/WEB-INF/views" />
+	
+	<property name="server.base.dir" value="/cs" />
+	<property name="server.web.root" value="${server.base.dir}" />
+	<property name="server.classes.dir" value="${server.base.dir}/WEB-INF/classes" />
+	<property name="server.web.jsp.dir" value="${server.base.dir}/WEB-INF/views" />
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	
+	<path id="project.classpath">
+		<fileset dir="${web.common.lib.dir}">
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement location="${dist.classes.dir}"/>
+	</path>
+	
+	<target name="all">
+		<antcall target="upload" />
+		<antcall target="was_reload" />
+	</target>
+
+	<target name="upload">
+		<tstamp>
+			<format property="build.time" pattern="yyyy-MM-dd.hh:mm" locale="kr"/>
+		</tstamp>
+		
+		<loadfile property="file" srcFile="buildList.txt" />
+		<echo message="=======================BUILDLIST UPLOAD START ===================================="/>
+		<foreach list="${file}" target="build_list" param="dest_name" delimiter="${line.separator}"/>
+		<echo message="=======================BUILDLIST UPLOAD END ======================================"/>
+		<echo>Server 전송 완료</echo>
+	</target>
+
+  	<target name="build_list">
+	<if>
+		<matches pattern="^#" string="${dest_name}" />
+		<then>
+		</then>
+		<else>
+			<scp todir="${server.userid}:${server.password}@${server.host}:/opt/tomcat7/webapps/salesb" trust="true" >
+				<fileset dir="${dist.web.root}">
+					<include name="${dest_name}" />
+				</fileset>
+			</scp>
+		</else>
+	</if>
+  	</target>
+		
+	<target name="upload2">
+		<tstamp />
+		<scp file="${dist.web.root}/WEB-INF/views/index.jsp" todir="${server.userid}:${server.password}@${server.host}:/home/test/cs" trust="true" />
+	    <scp todir="${server.userid}:${server.password}@${server.host}:/opt/tomcat7webapps/salesb" trust="true" >
+	    	<fileset dir="${dis.web.root}">
+	    		<include name="**/*.xml, **/*.html" />
+	    	</fileset>
+	    </scp>
+		<echo>Server 전송 완료</echo>
+	</target>
+	
+	<target name="upload3">
+		<tstamp />
+	    <scp todir="${server.userid}:${server.password}@${server.host}:/opt/tomcat7/webapps/salesb" trust="true" >
+	    	<fileset dir="${web.root}">
+	    		<include name="**/*.*" />
+	    	</fileset>
+	    </scp>
+		<echo>Server 전송 완료</echo>
+	</target>
+	
+    <target name="was_reload">
+        <sshexec host="${server.host}"
+                 username="${server.userid}"
+                 password="${server.password}"
+                 trust="true"
+                 command="sh /opt/tomcat7/bin/restart.sh"/>
+    </target>
+</project>

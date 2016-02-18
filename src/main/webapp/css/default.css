@@ -1,0 +1,80 @@
+@charset "utf-8";
+
+/*********************************************************
+Huation UX R&D Team (http://www.huation.com/)
+Author : huation (2013.10.31)
+*********************************************************/
+
+body {margin:0;padding:0;font-size:0.75em;line-height:15px;color:#666;}
+body, h1, h2, h3, h4, h5, h6, input, button {font-family:"돋움", Dotum, Verdana, Tahoma sans-serif;}
+header, nav, article, section, aside, footer, menu, hgroup, figure {display:block;}/* html5 IE 하위 버전 대비 */
+
+img {display:inline-block;border:0 none;vertical-align:middle;}
+a, cite, code, dfn, del, em, ins, label, q, span, strong {display:inline-block;}
+h1, h2, h3, h4, h5, h6 {margin:0;font-size:1em;font-weight:normal;}
+address, cite, em, dfn {font-style:normal;}
+sub {vertical-align:bottom;font-weight:normal !important;font-size:8px;}
+sup {vertical-align:top;font-weight:normal !important;font-size:8px;}
+blockquote, p {margin:0;}
+pre {margin:0;font-size:1em;}
+hr {display:none;}
+
+/* table */
+table {border-collapse:collapse;/*border-collapse:separate;*/border-spacing:0;}
+caption {display:none;}
+th, td {padding:0;vertical-align:middle;text-align:left;font-weight:normal;}
+
+/* list */
+dd, dl, ol, ul {margin:0;padding:0;}
+li {list-style-type:none;}
+
+/* form */
+form {margin:0;}
+fieldset {margin:0;padding:0;border:0 none;}
+legend {/*display:none;*/position:absolute; top:0; left:0; width:0; height:0; overflow:hidden; visibility:hidden; font-size:0; line-height:0;}
+label {cursor:pointer;vertical-align:middle;}
+input, select {vertical-align:middle;padding:0;margin:0;}
+input.text, textarea {font-size:12px;height:15px;line-height:15px;padding:3px 5px;color:#666;border:1px solid #999;}
+input.check, input.radio {width:13px;height:13px;margin:0 4px 0 0;padding:0;}
+select {height:23px;font-size:12px;line-height:15px;margin:0;padding:1px;color:#666;border:1px solid #999;outline:none;}
+.img_button {overflow:visible;padding:0;border:none 0;background:none;cursor:pointer;vertical-align:top;font-size:0;line-height:0;}
+.img_button img {display:block;position:relative;}
+.dis {background:#eee;color:#999 !important;}/* Input 비활성화 스타일 */
+/*
+.msie6 .img-button,
+.msie7 .img-button {margin:0 0 -1px 4px;}
+button::-moz-focus-inner {border:0;padding:0;}
+*/
+
+/* basic */
+.hidden_obj {overflow:hidden;position:absolute;visibility:hidden;top:-9000px;left:-9000px;width:0;height:0;line-height:0;font-size:0;}
+.display_none {display:none;}
+.text_c {text-align:center !important;}
+.text_l {text-align:left !important;}
+.text_r {text-align:right !important;}
+.vertical_t {vertical-align:top !important;}
+.vertical_m {vertical-align:middle !important;}
+.vertical_b {vertical-align:bottom !important;}
+.float_l {float:left !important;}
+.float_r {float:right !important;}
+.float_n {float:none !important;}
+.bg_none {background:none !important;}
+.border_none {border:none !important;}
+.m_cursor {cursor:pointer;}
+
+/* clear */
+.clear:after{content:".";height:0;font-size:0;visibility:hidden;display:block;clear:both;}
+.clear{display:inline-block;}
+* html .clear{height:0;}
+.clear{display:block;}
+.clear_both{clear:both;}
+
+/* link */
+a {text-decoration:none;cursor:pointer;}
+a:link {color:#666;}
+a:hover {color:#333;text-decoration:underline;}
+a:focus {color:#333;text-decoration:underline;}
+a:visited {color:#666;}
+a:active {color:#333;text-decoration:underline;}
+/* link_blue */
+.text_blue a {color:blue !important;text-decoration:underline;}

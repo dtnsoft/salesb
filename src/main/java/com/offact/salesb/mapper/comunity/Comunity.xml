@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Comunity">
+
+<resultMap id="ComunityVO" type="com.offact.salesb.vo.comunity.ComunityVO" >
+  <result column="customerKey"              property="customerKey"  />
+  <result column="groupId"              property="groupId"  />
+  <result column="customerId"      property="customerId"  />
+  <result column="commentType"       property="commentType"  />
+  <result column="comment"      property="comment"  />
+  <result column="commentDateTime"         property="commentDateTime"  />
+</resultMap>
+
+<select id="getComment" resultMap="ComunityVO" parameterType="com.offact.salesb.vo.comunity.ComunityVO" >
+
+   Select * From (
+        Select * From (
+        
+        Select idx,customerKey,customerKey1,groupId,groupName,customerId,commentType,comment,commentImage,commentDateTime,orderdate From (
+        Select T1.idx
+              ,concat('****-',right(trim(T1.customerKey),4)) as customerKey
+              ,Case when T1.commentType='Y' Then ifnull((Select A.profileimage From ofUser A Where A.userId=T1.userId ),'http://www.salesb.co.kr/salesb/images/img_00.png') Else T3.description End customerKey1
+              ,T1.groupId
+              ,T4.groupName
+              ,T1.customerId
+              ,T1.commentType 
+              ,replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment
+              ,T1.commentImage
+              ,DATE_FORMAT(T1.commentDateTime, '%h:%i %p') as commentDateTime
+              ,T1.commentDateTime as orderdate
+        From smCommunity T1
+             Left Join smCustomer T2 On T1.customerKey = T2.customerKey
+             Left Join ofCode T3 On T2.customerKey1 = T3.codeId And T3.codeGroupId='CU01'
+             Left Join ofGroup T4 On T1.groupId=T4.groupId
+        Where T1.groupId= #{groupId}
+        order by T1.commentDateTime desc LIMIT 0,10 
+        ) As Temp0
+        
+        union all
+        
+        Select idx,customerKey,customerKey1,groupId,groupName,customerId,commentType,comment,commentImage,commentDateTime,orderdate From (
+          Select T1.idx 
+                ,concat('****-',right(trim(T1.customerKey),4)) as customerKey
+                ,ifnull(T3.description,'http://www.salesb.co.kr/salesb/images/img_00.png') as customerKey1
+                ,T1.groupId
+                ,T4.groupName
+                ,'' as customerId
+                ,T1.commentType 
+                ,replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment
+                ,'' as commentImage
+                ,DATE_FORMAT(T1.commentDateTime, '%h:%i %p') as commentDateTime
+                ,T1.commentDateTime as orderdate
+                ,T1.displayYn
+          From smAutoCommunity T1
+               Left Join smCustomer T2 On T1.customerKey = T2.customerKey
+               Left Join ofCode T3 On T2.customerKey1 = T3.codeId And T3.codeGroupId='CU01'
+               Left Join ofGroup T4 On T1.groupId=T4.groupId
+          Where T1.groupId= #{groupId}
+          Order by RAND() LIMIT 0,5 
+          ) As Temp Where Temp.displayYn='Y'
+
+        ) as Temp Order by Temp.orderdate desc LIMIT 0,10
+      ) as Temp3 Order by Temp3.orderdate asc
+ 
+</select>
+
+<select id="getCommentList" resultMap="ComunityVO" parameterType="com.offact.salesb.vo.comunity.ComunityVO" >
+
+        Select idx,customerKey,customerKey1,groupId,customerId,commentType,comment,commentDateTime,orderdate,replyCnt From (
+        Select T1.idx
+              ,concat('****-',right(trim(T1.customerKey),4)) as customerKey
+              ,T3.description as customerKey1
+              ,T1.groupId
+              ,T1.customerId
+              ,T1.commentType 
+              ,replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment
+              ,DATE_FORMAT(T1.commentDateTime, '%h:%i %p') as commentDateTime
+              ,T1.commentDateTime as orderdate
+              ,(Select count(T4.idx) from smCommunity T4 Where T4.upidx=T1.idx ) as replyCnt 
+        From smCommunity T1
+             Left Join smCustomer T2 On T1.customerKey = T2.customerKey
+             Left Join ofCode T3 On T2.customerKey1 = T3.codeId And T3.codeGroupId='CU01'
+         WHERE T1.groupId= #{groupId}
+           <if test="customerKey != null and customerKey != '' " >
+           		AND T1.customerKey = #{customerKey}
+           </if>
+        
+        order by T1.orderdate desc LIMIT 0,10
+        ) As Temp0
+
+</select>
+
+<select id="getCommentListTalk" resultMap="ComunityVO" parameterType="com.offact.salesb.vo.comunity.ComunityVO" >
+
+        Select idx,groupName,commentType,comment,commentImage,commentDateTime,orderdate From (
+        Select idx,groupName,commentType,comment,commentImage,commentDateTime,orderdate From (
+        Select 'N' as commentType,
+       		   T1.idx
+       		  ,T2.groupName
+              ,replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment
+              ,T1.commentImage
+              ,DATE_FORMAT(T1.commentDateTime, '%h:%i %p') as commentDateTime
+              ,T1.commentDateTime as orderdate
+        From smCommunity T1
+              Left Join ofGroup T2 On T1.groupId=T2.groupId 
+         WHERE T1.groupId= #{groupId}
+           		AND T1.customerKey = #{customerKey}
+
+		union all
+
+		Select 'Y' as commentType,
+       		T1.upidx as idx,
+       		T3.groupName,
+       		replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment,
+       		T1.commentImage,
+       		DATE_FORMAT(T1.commentDateTime, '%h:%i %p') as commentDateTime,
+       		T1.commentDateTime as orderdate
+		From smCommunity T1
+     		Left Join smCommunity T2 On T2.idx=T1.upidx
+     		Left Join ofGroup T3 On T1.groupId=T3.groupId 
+  		 Where T1.groupId= #{groupId} AND T2.customerKey = #{customerKey} and T1.commentType='Y'
+  		 ) as Temp0
+  		 Order by idx desc LIMIT 0,6 
+  		 ) as Temp1 Order by idx , orderdate asc
+
+</select>
+
+<insert id="commentInsert" parameterType="com.offact.salesb.vo.comunity.ComunityVO" >
+  	Insert into smCommunity( 
+        	 customerKey
+            ,groupId
+            ,customerId
+            ,commentType 
+            ,comment
+            ,commentImage
+            ,commentDateTime
+            )
+        Values (
+	  		  #{customerKey}
+	  		, #{groupId}
+	  		, #{customerId}
+	  		, #{commentType}
+	  		, #{comment}
+	  		, #{commentImage}
+	  		, now()
+	  		)
+</insert>
+
+<select id="getComunityReply" resultMap="ComunityVO" parameterType="com.offact.salesb.vo.comunity.ComunityVO" >
+
+		SELECT T1.idx
+		      ,T1.customerKey
+		      ,DATE_FORMAT(T1.commentDateTime, '%Y-%m-%d %T') as commentDateTime
+			  ,T1.comment
+			  ,T1.userId
+			  ,T2.userName
+          FROM smCommunity T1
+               Left Join ofUser T2 on T1.userId=T2.userId
+		 Where T1.upidx = #{upidx}
+		 order by commentDateTime desc
+</select>
+
+</mapper>

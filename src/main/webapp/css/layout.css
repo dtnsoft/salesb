@@ -1,0 +1,129 @@
+@charset "utf-8";
+
+/*********************************************************
+Huation UX R&D Team (http://www.huation.com/)
+Author : huation (2013.11.06)
+*********************************************************/
+
+body.bgcolor {background-color:#e6e6e6;}
+
+#wrap {overflow:hidden;margin-top:-1px;width:1904px;}/* 팝업으로 APP 불러올때 top 여백 1px 나오는 현상 수정(margin-top:-1px) */
+
+/* login */
+#login_wrap {overflow:hidden;position:absolute;top:50%;left:50%;margin-top:-218px; margin-left:-325px; width:650px;height:437px;border-bottom:2px solid #d4d4d4;}
+#login_wrap h1 {height:116px;}
+#login_wrap section {border:1px solid #888;background:#fff;}
+#login_wrap section h2 {padding:11px 0 10px 13px;border:1px solid #f15a22;background:url(../images/layout/bg_login.gif) repeat-x;}
+#login_wrap section .con {padding:42px 80px 40px 79px;height:196px;border-top:1px solid #888;background:url(../images/layout/bg_login01.gif) repeat-x;}
+#login_wrap section .con dt {float:left;padding-top:14px;width:121px;color:#333;font-weight:bold;}
+#login_wrap section .con dd {padding-bottom:10px;}
+#login_wrap section .con dd .login_text {padding:0 10px;width:346px;height:38px;line-height:38px;border:1px solid #333;font-weight:bold;;}
+#login_wrap section .con p {padding-left:121px;text-align:center;}
+#login_wrap section .con .login_extension {padding-top:11px;height:42px;text-align:left;}
+#login_wrap section .con .login_extension input {margin-top:-2px;}
+
+/* header */
+#header {border-bottom:2px solid #d4d4d4;}
+/* gnb */
+#header .gnb_area {height:24px;border-bottom:1px solid #000;background:#323c47;color:#a3a7ac;font-size:11px;}
+#header .gnb_area li {float:left;line-height:24px;}
+#header .gnb_area .login_info {float:right;}
+#header .gnb_area .login_info li {padding:2px 10px 0 9px;line-height:22px;background:url(../images/layout/line_v_logininfo.gif) no-repeat 100% 7px;}
+#header .gnb_area .login_info li.last {padding-right:0;background:none;}
+#header .gnb_area .login_info li span {color:#fff;font-weight:bold;}
+#header .gnb_area .login_info li a {color:#ffff00;font-weight:bold;}
+#header .gnb_area .login_info li.btn_logout {padding-right:3px;background:none;}
+#header .gnb_area .login_info li.btn_logout a {padding-left:19px;height:20px;background:url(../images/layout/btn_logout.gif) no-repeat;}
+#header .gnb_area .login_info li.btn_logout a span {padding:0;height:20px;padding-right:7px;background:url(../images/layout/btn_logout.gif) no-repeat right 0;color:#000;}
+#header .gnb_area .login_info li.btn_logout a:active, #header .gnb_area .login_info li.btn_logout a.btn_click {background-position:0 -20px;}
+#header .gnb_area .login_info li.btn_logout a:active span, #header .gnb_area .login_info li.btn_logout a.btn_click span {background-position:right -20px;}
+
+/* 주메뉴 */
+#header .lnb_area {position:relative;clear:both;height:45px;background:url(../images/layout/bg_lnbarea.gif) repeat-x;}
+#header .lnb_area h1 {border-left:1px solid #f92601;}
+#header .lnb_area h1 img {margin-top:1px;}
+#header .lnb_area .lnb {position:absolute;top:1px;right:0;color:#fff;}
+#header .lnb_area .lnb li {float:left;text-align:center;font-weight:bold;}
+#header .lnb_area .lnb li a {width:150px;height:39px;line-height:39px;border-left:1px solid #f92601;color:#fff;text-decoration:none;}
+#header .lnb_area .lnb li.last a {border-right:1px solid #f92601;}
+#header .lnb_area .lnb li a:hover,
+#header .lnb_area .lnb li a:focus,
+#header .lnb_area .lnb li a:active {background:url(../images/layout/bg_lnb_over.gif) repeat-x;color:#f15a22;}
+#header .lnb_area .lnb li a:hover span,
+#header .lnb_area .lnb li a:focus span,
+#header .lnb_area .lnb li a:active span {padding-right:11px;background:url(../images/layout/ico_lnbsnb.gif) no-repeat 100% 50% !important;}
+#header .lnb_area .lnb li a.on {background:url(../images/layout/bg_lnb_over.gif) repeat-x;color:#f15a22;}
+#header .lnb_area .lnb li a.on span {padding-right:11px;background:url(../images/layout/ico_lnbsnb.gif) no-repeat 100% 50% !important;}
+#header .lnb_area .lnb li a span .ico_new {display:inline-block;margin-top:-2px;padding-left:3px;}
+#header .lnb_area .lnb li .snb {overflow:hidden;position:relative;top:0;left:1px;padding:8px 0 7px;width:150px;border:1px solid #f92601;border-top:0 none;background:#fff url(../images/layout/line_h_snb.gif) no-repeat;z-index:80;}
+#header .lnb_area .lnb li.last .snb {left:0;}
+#header .lnb_area .lnb li .snb li {clear:both;border-left:0 solid #f92601;color:#666;letter-spacing:-1px;}
+#header .lnb_area .lnb li .snb li a {height:25px;line-height:25px;border:0 none;background:#fff;color:#666;font-weight:normal;}
+#header .lnb_area .lnb li .snb li a:hover,
+#header .lnb_area .lnb li .snb li a:focus,
+#header .lnb_area .lnb li .snb li a:active {height:23px;line-height:23px;border-top:1px solid #f92601;border-bottom:1px solid #f92601;background:#f68220;color:#fff;font-weight:bold;}
+/* 소프트폰영역 */
+#header .softphone_area {position:relative;height:35px;line-height:35px;border-bottom:1px solid #888;background:#fff;color:#333;}
+#header .softphone_area h3, #header .softphone_area li {float:left;}
+#header .softphone_area .state {position:absolute;top:-42px;left:130px;height:35px;}/* 대기현황/대기정보 */
+#header .softphone_area .state, #header .softphone_area .state01 {font-size:11px;}
+#header .softphone_area .state h3, #header .softphone_area .state01 h3 {padding-top:1px;padding-right:5px;padding-left:17px;background:url(../images/common/bu_square01.gif) no-repeat 10px 15px;font-weight:bold;}
+#header .softphone_area .state h3 {margin-left:10px;padding-left:7px;background:url(../images/common/bu_square02.gif) no-repeat 0 15px;color:#fff;}
+#header .softphone_area .state ul, #header .softphone_area .state01 ul {float:left;height:35px;}
+#header .softphone_area .state li, #header .softphone_area .state01 li {margin-top:7px;margin-right:5px;padding-left:7px;height:22px;line-height:22px;background:url(../images/layout/bg_state.gif) no-repeat;}
+#header .softphone_area .state01 li {background:url(../images/layout/bg_state.gif) no-repeat 0 -132px;}
+#header .softphone_area .state li .value, #header .softphone_area .state01 li .value {padding-left:16px;background:url(../images/layout/bg_state.gif) no-repeat -984px -132px;}
+#header .softphone_area .state li .value span, #header .softphone_area .state01 li .value span {padding-right:7px;background:url(../images/layout/bg_state.gif) no-repeat right -154px;color:#fff;font-weight:bold;}
+#header .softphone_area .state li .value.red {background-position:-984px 0;}
+#header .softphone_area .state li .value.red span {background-position:right -22px;}
+#header .softphone_area .state li .value.yellow {background-position:-984px -44px;}
+#header .softphone_area .state li .value.yellow span {background-position:right -66px;}
+#header .softphone_area .state li .value.green {background-position:-984px -88px;}
+#header .softphone_area .state li .value.green span {background-position:right -110px;}
+#header .softphone_area .softphone {position:absolute;top:0;right:0;background:url(../images/layout/bg_softphone.gif) repeat-x;}/* 소프트폰 */
+#header .softphone_area .softphone .softphone_state {padding-left:19px; background:url(../images/layout/bg_softphone01.gif) no-repeat;}
+#header .softphone_area .softphone .softphone_state .text_colorRed {color:red;}
+#header .softphone_area .softphone .softphone_state span {padding-right:10px;background:url(../images/layout/bg_softphone02.gif) no-repeat right 0;font-weight:bold;}
+#header .softphone_area .softphone li {position:relative;}
+#header .softphone_area .softphone .sub {overflow:hidden;position:absolute;left:0;top:35px;padding:7px 0 6px;width:99%;border:1px solid #888;border-top:0 none;background:#efefef url(../images/layout/bg_softphone03.gif) repeat-x;z-index:70;}
+#header .softphone_area .softphone .sub li {clear:both;width:100%;line-height:17px;font-size:11px;text-align:center;letter-spacing:-1px;}
+#header .softphone_area .softphone .makecall {padding-left:9px;}
+#header .softphone_area .softphone .makecall input {margin-top:6px;margin-right:5px;width:100px;border-color:#888;color:#f15a22;vertical-align:top;}
+
+/* container */
+#container {padding:8px 10px 7px;background:#e6e6e6;}
+
+/* 고객정보, 파트너정보 박스 영역 */
+#container .info {padding-bottom:8px;}
+#container .info .tab_type01 {height:116px;}
+#container .info .tab_type01 .tab_con_area01,#container .info .tab_type01 .tab_con {height:69px;}
+
+/* 구매리스트, 상세정보, 옵션정보 박스 영역 */
+#container .buy_info {padding-bottom:8px;}
+#container .buy_info .tab_type01 {height:297px;}
+#container .buy_info .tab_type01 .tab_con_area01, #container .buy_info .tab_type01 .tab_con {height:250px;}
+
+/* 상담이력 박스 영역 */
+#container .counsel_list {float:left;width:807px;}
+#container .counsel_list .tab_type01 {height:400px;}
+#container .counsel_list .tab_type01 .tab_con_area01, #container .counsel_list .tab_type01 .tab_con {height:353px;}
+
+/* 삼담결과 박스 영역 */
+#container .counsel_result {float:right;width:1067px;}
+#container .counsel_result .tab_type01 {height:400px;}
+#container .counsel_result .tab_type01 .tab_con_area01, #container .counsel_result .tab_type01 .tab_con {height:353px;}
+
+/* 레이어팝업 */
+/* 제이쿼리 사용으로 삭제
+#lypop {border-bottom:2px solid #d4d4d4;}
+#lypop_header {padding:0 10px;height:37px;line-height:37px;border:1px solid #f15a22;background:url(../images/layout/bg_lypopup_tit.gif) repeat-x;}
+#lypop_header h1 {font-size:16px;color:#fff;font-weight:bold;}
+#lypop_container {overflow:hidden;padding:12px 10px 10px;border:1px solid #f15a22;border-top:0 none;background:url(../images/layout/bg_lypopup_tit01.gif) repeat-x;}
+*/
+#lypop_container {overflow:hidden;padding:0;}
+
+/* 팝업(새창) */
+#winpop {}
+#winpop_header {padding:0 10px;height:37px;line-height:37px;border:1px solid #f15a22;background:url(../images/layout/bg_lypopup_tit.gif) repeat-x;}
+#winpop_header h1 {font-size:16px;color:#fff;font-weight:bold;}
+#winpop_container {padding:10px;border-top:2px solid #ddd;}

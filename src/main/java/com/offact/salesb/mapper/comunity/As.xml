@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="As">
+
+<resultMap id="asListVO" type="com.offact.salesb.vo.comunity.AsVO" >
+  <result column="asNo"              property="asNo"  />
+  <result column="groupId"            property="groupId"  />
+  <result column="groupName"            property="groupName"  />
+  <result column="customerKey"      	   property="customerKey"  />
+  <result column="customerName"       	   property="customerName"  />
+  <result column="productCode"              property="productCode"  />
+  <result column="productName"              property="productName"  />
+  <result column="group1Id"            property="group1Id"  />
+  <result column="group1Name"            property="group1Name"  />
+  <result column="asCategory"                property="asCategory"  />
+  <result column="asCode"   property="asCode"  />
+  <result column="asDetail"   property="asDetail"  />
+  <result column="asImage"   property="asImage"  />
+  <result column="asState"   property="asState"  />
+  <result column="asStartUserId"   property="asStartUserId"  />
+  <result column="asStartDateTime"   property="asStartDateTime"  />
+  <result column="asRequestUserId"   property="asRequestUserId"  />
+  <result column="asRequestDateTime"   property="asRequestDateTime"  />
+  <result column="asResponseUserId"   property="asResponseUserId"  />
+  <result column="asResponseDateTime"   property="asResponseDateTime"  />
+  <result column="asCompleteUserId"   property="asCompleteUserId"  />
+  <result column="asCompleteDateTime"   property="asCompleteDateTime"  />
+  <result column="asTargetDate"   property="asTargetDate"  />
+  <result column="asResult"   property="asResult"  />
+  <result column="receiveName"   property="receiveName"  />
+  <result column="receiveTelNo"   property="receiveTelNo"  />
+  <result column="receiveType"   property="receiveType"  />
+  <result column="receiveAddress"   property="receiveAddress"  />
+  <result column="receiveAddressDetail"   property="receiveAddressDetail"  />
+  <result column="receivePost"   property="receivePost"  />
+  <result column="customerRequest"   property="customerRequest"  />
+  <result column="purchaseDate"   property="purchaseDate"  />
+  <result column="receiptImage"   property="receiptImage"  />
+  <result column="memo"   property="memo"  />
+  <result column="asDeliveryMethod"   property="asDeliveryMethod"  />
+  <result column="reDeliveryMethod"   property="reDeliveryMethod"  />
+  <result column="asTransportCode"   property="asTransportCode"  />
+  <result column="reTransportCode"   property="reTransportCode"  />
+  <result column="asTransport"   property="asTransport"  />
+  <result column="reTransport"   property="reTransport"  />
+  <result column="asTransportNo"   property="asTransportNo"  />
+  <result column="reTransportNo"   property="reTransportNo"  />
+  <result column="asQuickCharge"   property="asQuickCharge"  />
+  <result column="reQuickCharge"   property="reQuickCharge"  />
+  <result column="asQuickTel"   property="asQuickTel"  />
+  <result column="reQuickTel"   property="reQuickTel"  />
+  <result column="asTransurl"      property="asTransurl"  /> 
+  <result column="reTransurl"      property="reTransurl"  /> 
+</resultMap>
+
+<select id="getAsList"  resultMap="asListVO" parameterType="com.offact.salesb.vo.comunity.AsVO" >
+        SELECT T1.asNo
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.customerKey
+			  ,T1.customerName 
+			  ,T1.productCode
+			  ,T4.productName
+			  ,T4.group1
+			  ,T4.group1Name
+			  ,T1.asCategory
+			  ,T1.asCode
+			  ,T1.asDetail
+			  ,T1.asImage
+			  ,T1.asState
+			  ,T5.codeName as asStateTrans
+			  ,DATE_FORMAT(T1.asStartDateTime,'%Y.%m.%d') as asStartDateTime
+			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y.%m.%d') End asTargetDate
+			  ,ifnull(T1.asStartUserId,'') as asStartUserId
+			  ,ifnull(T3.userName,'') as asStartUserName
+          FROM smAs T1
+          	   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
+			   Left Join adProductMaster T4 On T1.productCode=T4.productCode
+			   Left Join ofCode T5 On T1.asState=T5.codeId And T5.codeGroupId='AS01' 
+         WHERE T1.customerKey = #{customerKey}
+               AND T1.groupId= #{groupId}
+         ORDER BY asStartDateTime desc ,asNo desc
+  LIMIT ${page_limit_val1} , ${page_limit_val2}        
+</select>
+
+<select id="getAsCnt" resultType="int">
+	SELECT count(*) AS TOT_COUNT
+  		FROM smAs T1
+         WHERE T1.customerKey = #{customerKey}
+         AND T1.groupId= #{groupId}
+</select>
+
+<select id="getAsDetail" resultMap="asListVO" parameterType="com.offact.salesb.vo.comunity.AsVO" >
+
+	   SELECT T1.asNo
+		      ,T1.groupId
+			  ,T2.groupName
+			  ,T1.customerKey
+			  ,T1.customerName 
+			  ,T1.productCode
+			  ,T5.productName
+			  ,T5.group1
+			  ,'' as group1Name
+			  ,replace('',replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asPolicy
+			  ,T1.asCategory
+			  ,T1.asCode
+			  ,replace(T1.asDetail,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asDetail
+			  ,T1.asImage
+			  ,T1.asState
+			  ,T1.asSubState
+			  ,T7.codeName as asStateTrans
+			  ,DATE_FORMAT(T1.asStartDateTime, '%Y.%m.%d') as asStartDateTime
+			  ,DATE_FORMAT(T1.asCompleteDateTime, '%Y.%m.%d') as asCompleteDateTime
+			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y.%m.%d') End asTargetDate
+			  ,ifnull(T1.asStartUserId,'') as asStartUserId
+			  ,ifnull(T3.userName,'') as asStartUserName
+			  ,ifnull(T1.asCompleteUserId,'') as asCompleteUserId
+			  ,ifnull(T4.userName,'') as asCompleteUserName
+			  ,case when T1.asState in ('01','02','03') then T1.asResult Else T10.asHistory End asResult
+        	  ,ifnull(T10.centerImage,'') as centerImage 
+              ,ifnull(T11.centerAsNo,'') as centerAsNo
+			  ,ifnull(T1.asResultDateTime,'') as asResultDateTime
+			  ,T1.receiveName
+			  ,T1.receiveTelNo
+			  ,T1.receiveType
+			  ,T1.receiveAddress
+			  ,T1.receiveAddressDetail
+			  ,T1.receivePost
+			  ,replace(T1.customerRequest,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as customerRequest
+			  ,Case When ifnull(T1.purchaseDate,'') = '' Then '' Else DATE_FORMAT(T1.purchaseDate, '%Y.%m.%d') End purchaseDate
+			  ,T1.receiptImage
+			  ,replace(T1.memo,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as memo
+			  ,T1.asDeliveryMethod
+			  ,T1.reDeliveryMethod
+			  ,T1.asTransportCode
+			  ,T1.reTransportCode
+			  ,T1.asTransport
+			  ,T1.reTransport
+			  ,T1.asTransportNo
+			  ,T1.reTransportNo
+			  ,T1.asQuickCharge
+			  ,T1.reQuickCharge
+			  ,T1.asQuickTel
+			  ,T1.reQuickTel
+			  ,T8.description as asTransurl
+			  ,T9.description as reTransurl
+          FROM smAs T1
+			   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
+			   Left Join ofUser T4 On T1.asCompleteUserId=T4.userId
+			   Left Join adProductMaster T5 On T1.productCode=T5.productCode 
+
+			   Left Join ofCode T7 On T1.asState=T7.codeId And T7.codeGroupId='AS01'  
+			   Left Join ofCode T8 On T1.asTransportCode = T8.codeId and T8.codegroupId = 'DE01'
+			   Left Join ofCode T9 On T1.reTransportCode = T9.codeId and T9.codegroupId = 'DE01'
+			   Left Join smAsHistory T10 On T1.asNo = T10.asNo and T10.asSubState = '06'
+               Left Join smAsHistory T11 On T1.asNo = T11.asNo and T11.asSubState = '04'
+		 Where T1.asNo = #{asNo}
+		 
+</select>
+
+
+<select id="getAsHistory"  resultMap="asListVO" parameterType="com.offact.salesb.vo.comunity.AsVO" >
+
+        SELECT T1.idx
+              ,T1.asNo
+			  ,T1.groupId
+			  ,T3.groupName
+			  ,T1.userId
+			  ,T4.userName 
+			  ,T1.asHistory
+			  ,DATE_FORMAT(T1.asHistoryDateTime, '%Y-%m-%d') as asHistoryDateTime
+			  ,T1.centerAsNo
+			  ,T1.centerImage
+			  ,T1.asSubState
+			  ,T5.codeName as asSubStateTrans
+			  ,T1.asState
+			  ,T6.codeName as asStateTrans
+          FROM smAsHistory T1
+               Left Join smAs T2 On T1.asNo=T2.asNo
+          	   Left Join ofGroup T3 On T1.groupId=T3.groupId
+			   Left Join ofUser T4 On T1.userId=T4.userId
+			   Left Join ofCode T5 On T1.asSubState=T5.codeId And T5.codeGroupId='AS02'
+			   Left Join ofCode T6 On T1.asState=T6.codeId And T6.codeGroupId='AS01'
+         WHERE T1.asNo=#{asNo} And T1.asSubstate not in ('02','03','05','06','07')
+         ORDER BY asHistoryDateTime asc
+         
+</select>
+
+<update id="asStateProc" parameterType="com.offact.salesb.vo.comunity.AsVO" >
+        Update smAs
+       		Set
+       		   asState =#{asState}
+  			   ,asSubState =#{asSubState}
+ 		   Where asNo = #{asNo}
+</update>
+
+<insert id="asTransHistoryInsert" parameterType="com.offact.salesb.vo.comunity.AsVO" >
+  	  	Insert into smAsHistory( 
+        	 asNo
+        	,userId
+        	,groupId
+        	,asState
+        	,asSubState
+        	,asHistory
+            ,asHistoryDateTime
+            )
+        Values (
+              #{asNo}
+            , #{userId}
+            , #{groupId}
+            , #{asState}
+            , #{asSubState}
+            , #{asHistory}
+            , now()
+	  		)
+	  		
+</insert>
+
+
+</mapper>

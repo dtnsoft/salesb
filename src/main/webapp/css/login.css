@@ -1,0 +1,109 @@
+@charset "utf-8";
+/* CSS Document jjlim : 151214 */
+
+legend, .blind { display: block; overflow: hidden; position: absolute; top: -9999px !important; left: 0; width: 1px; height: 1px; }
+form { display: block; margin-top: 0em; }
+input[type='text'], input[type='password'], input[type='submit'], input[type='search'], button, input[type='button'], input[type='submit'], input[type='reset'], input[type='file'] { -webkit-appearance: none; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+h4 { display: block; -webkit-margin-before: 1.33em; -webkit-margin-after: 1.33em; -webkit-margin-start: 0px; -webkit-margin-end: 0px; font-weight: bold; }
+
+.blind { visibility: hidden; overflow: hidden; position: absolute; width: 0; height: 0; margin: 0; padding: 0; font-size: 0; line-height: 0; }
+.inpbx { display: block; overflow: hidden; width: auto; height: 18px; padding: 8px 8px 7px; line-height: 18px; border: 1px solid #ccc; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; letter-spacing: -1px; box-shadow: inset 0 1px 0 rgba(0,0,0,.07); }
+.inpbx input { width: 100%; height: 17px; border: 0 none; background: transparent; font-size: 12px; line-height: 17px; color: #222; vertical-align: top; }
+
+
+.m_content { background:#f7f7f7; width:100%;  position: relative; top:50px;;}
+
+/* 지점선택 셀렉박스 */
+.m_selbox { position: relative; padding: 30px 0px 30px; width: 100%; ;background: #f7f7f7; line-height: 30px;   }
+.m_selbox .m_select {position: relative; left: 0px; top: 00px; width: 130px; letter-spacing: -1px;;}
+.m_selbox select {border: 1px solid #ccc; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background: #fff ; font-size: 12px; line-height: 17px;    color: #222;    vertical-align: top; ;padding: 6px 8px 5px;}
+.m_selbox .txt { font-size: 12px; line-height:12px;;position: relative; left:10px;top:10px;vertical-align: top;color: #898989; letter-spacing: -1px;;}
+
+/* 로그인박스 */
+.m_combx { padding: 20px 29px 30px; background: #f7f7f7;  }
+.m_inplogin { position: relative; border: 1px solid #ccc; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background: #fff }
+.m_inp_data { padding: 2px 8px 0 }
+.m_inp_data li { border-top: 1px solid #d9d9d9 }
+.m_inp_data li:first-child { border-top: 0 none }
+.m_inp_data li .inpbx { display: block; position: relative; padding: 10px 32px 10px 9px; border: 0 none; line-height: 17px; box-shadow: none }
+.m_inp_data li .inpbx input { font-size: 13px; line-height: 18px }
+.m_inp_data li .ico_id { position: absolute; right: 8px; bottom: 10px; background: url(../images/user_12x16.png) no-repeat 0 0; width: 15px; height: 20px }
+.m_inp_data li .ico_pw { position: absolute; right: 7px; top:12px;background:url(../images/lock_fill_12x16.png) no-repeat 0 0; width: 15px; height: 20px }
+.log_check { padding: 10px 6px 6px; border-top: 1px solid #ccc; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background: #f7f7f7; font-size: 11px; line-height: 12px; color: #666; }
+
+/* 버튼 */
+button { border: 0 none; background-color: transparent; cursor: pointer; }
+.bnbox { width: 100%; margin-top: 15px; }
+.bnbox a:first-child, .bnbox button:first-child { margin-top: 0; }
+.bnbox button { width: 100%; line-height: 100%; }
+.bnbox a, .bnbox button { clear:both; display: block; height: 46px; margin-top: 6px; font-weight: bold; font-size: 18px; line-height: 46px; color: #fff; letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top; }
+.bnbox .bn_blue, .bnbox .bn_blue2 { background: #33b9ae; }
+.bnbox .bn_gray, .bnbox .bn_gray2 { background: #808080; }
+.bnbox .bn_pnk, .bnbox .bn_pnk2 { background: #ff5b7e; }
+.bnbox .bn_salesb, .bnbox .bn_salesb { background: #33b9ae; }
+.bnbox .bn_facebook, .bnbox .bn_facebook2 { background: #3b5998; }
+.bnbox .bn_google, .bnbox .bn_google2 { background: #f44336; }
+.bnbox .bn_naver, .bnbox .bn_naver2 { background: #1fbc02; }
+
+.bnbox_kakao { width: 100%; margin-top: 15px; }
+.bnbox_kakao a:first-child, .bnbox_kakao button:first-child { margin-top: 0; }
+.bnbox_kakao button { width: 100%; line-height: 100%; }
+.bnbox_kakao a, .bnbox_kakao button { clear:both; display: block; height: 46px; margin-top: 6px; font-weight: bold; font-size: 18px; line-height: 46px; color: #473332 ; letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top; }
+.bnbox_kakao .bn_kakao, .bnbox_kakao .bn_kakao2 { background: #fff453; }
+
+.bnbox_pin { width: 100%; margin-top: 15px; }
+.bnbox_pin a:first-child, .bnbox_pin button:first-child { margin-top: 0; }
+.bnbox_pin button { width: 100%; line-height: 100%; }
+.bnbox_pin a, .bnbox_pin button { clear:both; display: block; height: 46px; margin-top: 6px; font-weight: bold; font-size: 18px; line-height: 46px; color: #bc151f; letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top; }
+.bnbox_pin .bn_pinterest, .bnbox_pin .bn_pinterest2 { background: #fff  ; }
+
+/* 이용팁 */
+.m_tip { position: relative; margin-top: 19px; padding-left: 0px; font-size: 13px; line-height: 16px; color: #898989; text-align: left; }
+.m_tip .ico_tip {/* position: absolute; left:5px; top: 3px; background: url(../images/comment_12x12.png) no-repeat 0px 0px; width: 15px; height: 12px */}
+.m_tip .m_tip_list { margin-top: 12px; font-size: 12px; line-height: 18px; color: #898989; text-align: left; }
+
+/* 로그인 >> 비밀번호찾기, 가입 */
+.line_tit { position: relative; margin: 20px 0 ; border: 1px solid #cdcdcd; height: 1px; border-left: 0 none; border-right: 0 none; font-size: 0; line-height: 0; }
+.sp_login { display: inline-block; overflow: hidden; width: auto; height: 10px; vertical-align: top;}
+.log_joinlist li:first-child { margin-top: 0; }
+.log_joinlist li { width: auto; margin-top: 8px; font-size: 12px; line-height: 24px; color: #808080; }
+.log_joinlist a {margin-left:10px; color:#fff;font-weight: bold;padding:3px 10px 6px;letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top; }
+.log_joinlist a.bn_pw {background: #b6b6b6; }
+.log_joinlist a.bn_join {background: #33b9ae;}
+
+
+
+
+/*************************
+ 	핸드폰번호 등록 비밀번호 찾기 
+ *************************/
+
+.m_resbx { background: #f7f7f7;padding: 40px 29px 30px; }
+.m_result { position: relative; padding: 0 14px 14px; border: 1px solid #ccc; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background: #fff; color: #222; margin-bottom:20px; }
+.m_sch_tp { padding: 8px 0; font-size: 13px; line-height: 16px; text-align: center; }
+.schinp_list { padding: 0 9px;  }
+.schinp_list li { margin-top: 10px; }
+.schinp_list li:first-child { margin-top: 0; }
+.schinp_list .inpbx.certi {padding: 8px 8px 7px; margin-right:100px; }
+.schinp_list a {margin-left:10px; color:#fff;font-weight: bold;padding:10px 20px 13px;letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top;background: #b6b6b6; }
+.schinp_list a.bn_certi { float:right;background: #b6b6b6; position:relative;right:0px; top:-35px;font-size: 12px;}
+
+
+/*************************
+    개인정보 수집 동의
+ *************************/
+.privacy .schinp_list label { font-weight: bold; font-size: 12px; }
+.privacy .tbl-02 { border-top: none; margin-top: 10px; }
+.privacy .tbl-02 th:first-child { border-left: 1px solid #999; }
+.privacy .tbl-lease th, .privacy .tbl-lease td { padding: 4px; font-size: 12px; text-align: center; word-break: break-all; }
+.privacy .tbl-02 th { border-right: 1px solid #999; font-weight: 600; }
+.privacy .tbl-lease th { border-bottom: 1px solid #999; border-left: 1px solid #dadada; color: #fff; background-color: #666; }
+.privacy .tbl-lease th, .privacy .tbl-lease td { padding-top: 8px; padding-bottom: 8px; font-size: 12px; line-height: 18px; letter-spacing: -1px; }
+.privacy .tbl-lease td { padding: 8px 5px; border: 1px solid #dadada; border-top: none; color: #4c4c4c; text-align: center; }
+.privacy .tbl-refer { margin-top: 5px; padding-right: 5px; color: #4c4c4c; font-size: 11px; letter-spacing: -1px; text-align: left; border-collapse: collapse; }
+.privacy .agree-box { }
+.privacy .rdo-agree { padding-top: 15px; vertical-align: top; }
+.rdo-agree dt, .rdo-agree dd { font-size: 12px; ; line-height: 18px; vertical-align: top; }
+.privacy .rdo-agree dd { padding-top:15px; color: #545454; text-align: left; position: relative;  }
+.privacy .rdo-agree dd label { margin-right:10px;}
+.privacy .rdo-agree dt, .rdo-agree dd { color: #431f5d; font-size: 12px; line-height: 12px; }

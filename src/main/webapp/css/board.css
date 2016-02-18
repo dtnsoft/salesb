@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.main_board {background:#EAEDF4; width:100%;  min-height:800px;}
+
+/* 베이스 레이아웃 테이블 */
+.tbl_base { width: 100%; padding: 10px; }
+.tbl_base td { padding: 10px; }
+.tbl_base td.lft { text-align: left }
+.tbl_base td.rgt { text-align: right }
+
+
+
+.msg_box { float:left; position:relative; width:100%; border:1px solid #f00;margin-right: 150px;}
+
+/* 메인창 아이디 */
+.main_board .id { font-weight: bold; line-height: 30px; height: 30px; border:1px solid #f0f}
+
+/* 말풍선 */
+.talk { padding: 10px; min-height: 20px; line-height: 20px; font-size: 12px; color: #000 }
+.talk.me { background: #FFF; min-width:10px; float: left;  color: #333; /*모질라*/ -webkit-border-radius: 5px; 
+/*웹킷*/ /*IE9+,FF4+,chrome,Safari5,+opera*/
+border-radius: 5px; box-shadow : 3px 3px 0 0 #ccc; }
+.talk.you { background: #FFFCC2; min-width: 10px; float: right; margin-left: 150px; -moz-border-radius: 5px; color: #333;/*모질라*/ -webkit-border-radius: 5px; /*웹킷*/ /*IE9+,FF4+,chrome,Safari5,+opera*/
+border-radius: 5px; box-shadow : 3px 3px 0 0 #ccc; }
+
+/* 시간표시 */
+.time_lft {text-align:left; float:left; width:50px; height:20px; position:relative; bottom:0px;left:0; margin-left:10px; font-size:11px; color:#666   }
+.time_lft {text-align:left; float:left; width:50px; height:20px; position:relative; bottom:0px;left:0; margin-left:10px; font-size:11px; color:#666   }

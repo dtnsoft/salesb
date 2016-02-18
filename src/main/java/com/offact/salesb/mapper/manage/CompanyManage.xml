@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CompanyManage">
+
+<resultMap id="companyVO" type="com.offact.salesb.vo.manage.CompanyManageVO" >
+  <result column="companyCode"              property="companyCode"  />
+  <result column="companyName"            property="companyName"  />
+  <result column="companyPhone"      	   property="companyPhone"  />
+  <result column="postCode"       	   property="postCode"  />
+  <result column="address1"              property="address1"  />
+  <result column="faxNumber"            property="faxNumber"  />
+  <result column="mobilePhone"           property="mobilePhone"  />
+  <result column="email"            property="email"  />
+  <result column="email_cc"            property="email_cc"  />
+  <result column="chargeName"         property="chargeName"  />
+  <result column="createUserId"        property="createUserId"  />
+  <result column="createUserName"        property="createUserName"  />
+  <result column="createDateTime"      property="createDateTime"  />
+  <result column="updateUserId"        property="updateUserId"  />
+  <result column="updateUserName"        property="updateUserName"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="deletedYn"           property="deletedYn"  />
+  <result column="companyResult"          property="companyResult"  />
+</resultMap>
+
+<select id="getCompanyPageList"  resultMap="companyVO" parameterType="com.offact.salesb.vo.manage.CompanyManageVO" >
+        SELECT T1.companyCode
+			  ,T1.companyName
+			  ,T1.companyPhone
+			  ,T1.postCode
+			  ,T1.address1   
+			  ,T1.faxNumber
+			  ,T1.mobilePhone
+			  ,T1.email
+			  ,T1.email_cc
+			  ,T1.chargeName
+			  ,T1.createUserId
+			  ,T2.userName as createUserName
+			  ,T1.updateUserId
+			  ,T3.userName as updateUserName
+			  ,T1.createDateTime 
+			  ,T1.updateDateTime
+			  ,T1.deletedYn
+          FROM adCompany T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.deletedYn='N'
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND T1.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY createDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getCompanyCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adCompany
+ 			WHERE deletedYn='N'
+           	<if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+<update id="companyDeleteAll" parameterType="java.util.Map" >
+        Update adCompany
+       		Set
+  				deletedYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where 1=1
+</update>
+
+<insert id="insertExcelCompany"  parameterType="com.offact.salesb.vo.manage.CompanyManageVO" >
+		insert into adCompany (	
+				companyCode
+            	,companyName
+            	,companyPhone 
+            	,postCode
+            	,address1
+            	,faxNumber
+           		,mobilePhone
+            	,email
+            	,email_cc
+            	,chargeName
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+				 #{companyCode}
+	  			, #{companyName}
+	  			, #{companyPhone}
+	  			, #{postCode}
+	  			, #{address1}
+	  			, #{faxNumber}
+	  			, #{mobilePhone}
+	  		    , #{email}
+	  		    , #{email_cc}
+	  		    , #{chargeName}
+	  			, #{createUserId}
+	  			, now()
+	  			, #{deletedYn}
+		)
+		ON DUPLICATE KEY UPDATE companyCode = #{companyCode},
+		                        companyName = #{companyName},
+		                        companyPhone = #{companyPhone},
+		                        postCode = #{postCode},
+		                        address1 = #{address1},
+		                        faxNumber = #{faxNumber},
+		                        mobilePhone = #{mobilePhone},
+		                        email = #{email},
+		                        email_cc = #{email_cc},
+		                        chargeName = #{chargeName},
+		                        updateUserId = #{updateUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = #{deletedYn}
+		                        
+</insert>
+
+</mapper>

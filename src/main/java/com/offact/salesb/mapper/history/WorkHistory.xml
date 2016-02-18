@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WorkHistory">
+
+<resultMap id="workHistoryVO" type="com.offact.salesb.vo.history.WorkHistoryVO" >
+  <result column="idx"              property="idx"  />
+  <result column="workDateTime"            property="workDateTime"  />
+  <result column="workIp"      	   property="workIp"  />
+  <result column="workUserId"       	   property="workUserId"  />
+  <result column="workUserName"       	   property="workUserName"  />
+  <result column="workGroupId"       	   property="workGroupId"  />
+  <result column="workGroupName"       	   property="workGroupName"  />
+  <result column="workCategory"              property="workCategory"  />
+  <result column="workCategoryName"              property="workCategoryName"  />
+  <result column="workCode"                property="workCode"  />
+  <result column="workCodeName"                property="workCodeName"  />
+  <result column="description"                property="description"  />
+  <result column="workKey1"                property="workKey1"  />
+  <result column="workKey2"                property="workKey2"  />
+  <result column="workKey3"                property="workKey3"  />
+</resultMap>
+
+<select id="getWorkHistoryPageList"  resultMap="workHistoryVO" parameterType="com.offact.salesb.vo.history.WorkHistoryVO" >
+        SELECT T1.idx
+			  ,DATE_FORMAT(T1.workDateTime,'%Y-%m-%d %T') as workDateTime
+			  ,T1.workIp
+			  ,Case When T1.workUserId ='' Then 'system' Else T1.workUserId End workUserId
+              ,Case When T1.workUserId ='' Then T1.workIp Else T4.userName End workUserName
+			  ,T4.groupId   
+			  ,T5.groupName as workGroupName
+			  ,T1.workCategory
+			  ,T2.codeName as workCategoryName
+			  ,T1.workCode
+		      ,T3.codeName as workCodeName
+		      ,T3.description as description
+		      ,ifnull(T1.workKey1,'N') as workKey1
+		      ,ifnull(T1.workKey2,'N') as workKey2
+		      ,ifnull(T1.workKey3,'N') as workKey3
+		      ,T1.searchKey1
+		      ,T6.companyName
+          FROM adWorkHistory T1
+          	   Left Join ofCode T2 On T1.workCategory=T2.codeId And T2.codeGroupId = 'SE01'
+			   Left Join ofCode T3 On T1.workCode=T3.codeId And T3.codeGroupId = 'SE02'
+			   Left Join ofUser T4 On T1.workUserId=T4.userId
+			   Left Join ofGroup T5 On T4.groupId=T5.groupId
+			   Left Join adCompany T6 On T1.searchKey1=T6.companyCode
+         WHERE T1.workDateTime between concat(#{start_workDate},' 00:00:00') and concat(#{end_workDate},' 23:59:59')
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           AND T4.groupId = #{con_groupId}
+           </if>
+           <if test="con_workCategory != null and con_workCategory != ''" >
+           			AND T1.workCategory = #{con_workCategory}
+           </if>
+           <if test="con_workCode != null and con_workCode != ''"  >
+           			AND T1.workCode = #{con_workCode}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T4.userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.workUserId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('03')">
+           AND T1.workKey1  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+           <if test="searchKey1Value != null and searchKey1Value != ''" >
+             <choose>
+               <when test="searchKey1Gubun.equals('01')">
+           AND T6.companyName  LIKE CONCAT('%', #{searchKey1Value}, '%')
+               </when>
+               <when test="searchKey1Gubun.equals('02')">
+           AND T1.searchKey1  LIKE CONCAT('%', #{searchKey1Value}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY T1.workDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getWorkHistoryCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adWorkHistory T1
+          	   Left Join ofCode T2 On T1.workCategory=T2.codeId And T2.codeGroupId = 'SE01'
+			   Left Join ofCode T3 On T1.workCode=T3.codeId And T3.codeGroupId = 'SE02'
+			   Left Join ofUser T4 On T1.workUserId=T4.userId
+			   Left Join ofGroup T5 On T4.groupId=T5.groupId
+			   Left Join adCompany T6 On T1.searchKey1=T6.companyCode
+         WHERE T1.workDateTime between concat(#{start_workDate},' 00:00:00') and concat(#{end_workDate},' 23:59:59')
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           AND T4.groupId = #{con_groupId}
+           </if>
+           <if test="con_workCategory != null and con_workCategory != ''" >
+           			AND T1.workCategory = #{con_workCategory}
+           </if>
+           <if test="con_workCode != null and con_workCode != ''"  >
+           			AND T1.workCode = #{con_workCode}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T4.userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.workUserId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+           		<when test="searchGubun.equals('03')">
+           AND T1.workKey1  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+           <if test="searchKey1Value != null and searchKey1Value != ''" >
+             <choose>
+               <when test="searchKey1Gubun.equals('01')">
+           AND T6.companyName  LIKE CONCAT('%', #{searchKey1Value}, '%')
+               </when>
+               <when test="searchKey1Gubun.equals('02')">
+           AND T1.searchKey1  LIKE CONCAT('%', #{searchKey1Value}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+</mapper>

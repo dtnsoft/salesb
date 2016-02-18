@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SmsHistory">
+
+<resultMap id="smsHistoryVO" type="com.offact.salesb.vo.history.SmsHistoryVO" >
+  <result column="idx"              property="idx"  />
+  <result column="smsTo"            property="smsTo"  />
+  <result column="smsFrom"      	   property="smsFrom"  />
+  <result column="smsMsg"       	   property="smsMsg"  />
+  <result column="smsDateTime"       	   property="smsDateTime"  />
+  <result column="smsUserId"       	   property="smsUserId"  />
+  <result column="resultCode"       	   property="resultCode"  />
+  <result column="resultMessage"              property="resultMessage"  />
+  <result column="resultLastPoint"                property="resultLastPoint"  />
+</resultMap>
+
+<select id="getSmsHistoryPageList"  resultMap="smsHistoryVO" parameterType="com.offact.salesb.vo.history.SmsHistoryVO" >
+        SELECT T1.idx
+			  ,DATE_FORMAT(T1.smsDateTime,'%Y-%m-%d %T') as smsDateTime
+			  ,T1.smsTo
+			  ,T1.smsFrom
+			  ,T1.smsMsg
+			  ,T1.smsUserId
+			  ,T2.userName as smsUserName
+			  ,T1.resultCode   
+			  ,T1.resultMessage
+		      ,T1.resultLastPoint
+          FROM adSmsHistory T1
+          	   Left Join ofUser T2 On T1.smsUserId=T2.userId
+			   Left Join ofGroup T3 On T2.groupId=T3.groupId
+         WHERE T1.smsDateTime between concat(#{start_smsDate},' 00:00:00') and concat(#{end_smsDate},' 23:59:59')
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           AND T3.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND T1.smsTo  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND T1.smsFrom  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('03')">
+           			AND T2.userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('04')">
+           			AND T1.smsUserId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('05')">
+           			AND T1.resultCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('06')">
+           			AND T1.resultMessage  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY T1.smsDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getSmsHistoryCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adSmsHistory T1
+          	   Left Join ofUser T2 On T1.smsUserId=T2.userId
+			   Left Join ofGroup T3 On T2.groupId=T3.groupId
+         WHERE T1.smsDateTime between concat(#{start_smsDate},' 00:00:00') and concat(#{end_smsDate},' 23:59:59')
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           AND T3.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND T1.smsTo  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND T1.smsFrom  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('03')">
+           			AND T2.userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('04')">
+           			AND T1.smsUserId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('05')">
+           			AND T1.resultCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('06')">
+           			AND T1.resultMessage  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+</mapper>

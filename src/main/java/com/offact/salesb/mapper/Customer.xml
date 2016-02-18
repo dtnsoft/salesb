@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Customer">
+
+<resultMap id="CustomerVO" type="com.offact.salesb.vo.CustomerVO" >
+  <result column="customerKey"              property="customerKey"  />
+  <result column="customerId"              property="customerId"  />
+  <result column="customerPw"              property="customerPw"  />
+  <result column="customerName"      property="customerName"  />
+  <result column="customerKey1"       property="customerKey1"  />
+  <result column="customerKey2"      property="customerKey2"  />
+  <result column="customerKey3"       property="customerKey3"  />
+  <result column="customerKey4"      property="customerKey4"  />
+  <result column="customerKey5"             property="customerKey5"  />
+  <result column="customerKey6"             property="customerKey6"  />
+  <result column="customerKey7"            property="customerKey7"  />
+  <result column="customerKey8"           property="customerKey8"  />
+  <result column="customerKey9"              property="customerKey9"  />
+  <result column="customerKey10"         property="customerKey10"  />
+  <result column="staffYn"         property="staffYn"  />
+  <result column="token"         property="token"  />
+</resultMap>
+
+<select id="getCustomer" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+SELECT T1.customerKey
+      ,T1.customerId
+      ,T1.customerPw
+      ,password(#{inCustomerPw}) As inCustomerPw
+      ,T1.customerName
+      ,T1.customerKey1
+      ,T1.customerKey2
+      ,T1.customerKey3 
+      ,T1.customerKey4
+      ,T1.customerKey5
+      ,T1.customerKey6
+      ,T1.customerKey7
+      ,T1.customerKey8
+      ,T1.customerKey9
+      ,T1.customerKey10
+      ,T2.smartYn as staffYn
+      ,T1.token
+  FROM smCustomer T1
+       Left Join ofUser T2 On T1.customerKey=replace(T2.mobliePhone,'-','')  and T2.smartYn='Y' 
+  WHERE T1.usedYn='Y'
+        And T1.customerKey = #{customerKey}
+ 
+</select>
+
+<update id="customerUpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update smCustomer
+       		Set
+  				customerKey1 = ifnull(#{customerKey1},'01')
+            	,customerKey2 = #{customerKey2}
+            	,customerKey3 = #{customerKey3}
+            	,customerKey4 = #{customerKey4}
+            	,customerKey5 = #{customerKey5}
+            	,customerKey6 = #{customerKey6}
+           	 	,customerKey7 = #{customerKey7}
+            	,customerKey8 = #{customerKey8}
+            	,customerKey9 = #{customerKey9}
+            	,customerKey10 = #{customerKey10}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<update id="customerUpdatePwProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update smCustomer
+       		Set customerPw = password(#{customerPw})
+       		    ,customerKey1 = ifnull(#{customerKey1},'01')
+            	,customerKey2 = #{customerKey2}
+            	,customerKey3 = #{customerKey3}
+            	,customerKey4 = #{customerKey4}
+            	,customerKey5 = #{customerKey5}
+            	,customerKey6 = #{customerKey6}
+           	 	,customerKey7 = #{customerKey7}
+            	,customerKey8 = #{customerKey8}
+            	,customerKey9 = #{customerKey9}
+            	,customerKey10 = #{customerKey10}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<select id="getEncPassword" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+			Select PASSWORD(#{curPwd}) as encPwd
+</select>
+
+<insert id="customerRegist" parameterType="com.offact.salesb.vo.CustomerVO">
+        INSERT INTO smCustomer( 
+        	 customerKey
+            ,customerPw
+            ,registDateTime 
+            ,usedYn 
+            )
+        VALUES (
+	  		  #{customerKey}
+	  		, password(#{customerPw})
+	  		, now()
+	  		, 'Y'
+	  		) 
+	  	ON DUPLICATE KEY UPDATE customerPw =  password(#{customerPw})
+            	               ,updateDateTime = now()    
+            	               ,usedYn = 'Y'  
+ </insert>
+
+
+<insert id="getToken"  parameterType="com.offact.salesb.vo.CustomerVO" >
+		 
+		 INSERT INTO smCustomer( 
+        	 customerKey
+        	,createDateTime 
+        	,token
+            ,tokenDateTime
+            )
+        VALUES (
+	  		  #{customerKey}
+	  		, now()
+	  		, #{token}
+	  		, now()
+	  		)      
+	  	ON DUPLICATE KEY UPDATE token = #{token}
+            	               ,tokenDateTime = now()
+		                        
+</insert>
+
+<select id="getTokenInfo" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+	SELECT T1.token
+  		FROM smCustomer T1
+  	WHERE T1.customerKey = #{customerKey}
+ 
+</select>
+</mapper>

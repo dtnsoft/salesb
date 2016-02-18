@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                        http://www.springframework.org/schema/context 
+                        http://www.springframework.org/schema/context/spring-context.xsd">
+                        
+    <!-- Root Context: defines shared resources visible to all other web components -->
+    <!-- 다국어 지원을 위한 설정 브라우저의 AcceptHeader를 이용하여 다국어 설정을 지원한다. -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"></bean>
+        <!-- 이하의 데이터베이스 관련 빈에서 사용할 jdbc.properties를 가져오는 빈 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">     
+        <property name="locations" value="classpath:jdbc.properties"/>     
+        <property name="fileEncoding" value="UTF-8"/> 
+    </bean>
+    
+    <!-- Spring Framework 이내에서 예외가 발생한 경우 지정한 클래스(com.preludeb.sample.core.PreludebExceptionResolver)에서 처리한다. -->
+    <bean id="exceptionMapping" class="com.offact.framework.exception.ExceptionResolver">
+        <property name="view" value="errors/errors"/>
+    </bean>
+    
+    <!-- Apache DBCP DataSource를 생성한다. 데이터베이스 관련 설정은 jdbc.properties를 따른다. -->
+    <bean id="dataSource" class="com.offact.framework.db.SPDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClass}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+    </bean>
+ 	<!-- 다중 DB Connection -->
+     <bean id="dataSource1" class="com.offact.framework.db.SPDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc1.driverClass}"/>
+        <property name="url" value="${jdbc1.url}"/>
+        <property name="username" value="${jdbc1.username}"/>
+        <property name="password" value="${jdbc1.password}"/>
+        <property name="validationQuery" value="${jdbc1.validationQuery}"/>
+        <property name="testWhileIdle" value="${jdbc1.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc1.timeBetweenEvictionRunsMillis}"/>
+    </bean>
+    <!-- mybatis SqlSessionFactory 빈을 생성한다. mybatis에서 사용할 매퍼 XML의 경로를 설정한다. -->
+    <!-- 
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:kr/or/cs/mapper/*.xml"/>
+    </bean>
+     -->
+    <!-- SqlSession 빈을 생성한다. -->
+    <!--
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+    </bean>
+    -->
+    <bean id="commonDao" class="com.offact.framework.db.SqlSessionCommonDao">
+        <property name="sqlSessionTemplate">
+            <bean class="org.mybatis.spring.SqlSessionTemplate">
+                <constructor-arg>
+                    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+                        <property name="dataSource" ref="dataSource"/>
+                        <property name="mapperLocations" value="classpath:com/offact/salesb/mapper/**/*.xml"/>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    
+    <!-- 다중 DB Connection -->
+    <bean id="commonDao1" class="com.offact.framework.db.SqlSessionCommonAdminDao">
+        <property name="sqlSessionTemplate">
+            <bean class="org.mybatis.spring.SqlSessionTemplate">
+                <constructor-arg>
+                    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+                        <property name="dataSource" ref="dataSource1"/>
+                        <property name="mapperLocations" value="classpath:com/offact/salesb/mapper/**/*.xml"/>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- CommonBatch -->
+        <!-- Cron 대상 클래스 정의 -->
+    <bean id="dealQuartz" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.offact.batch.CommonBatch"></property>
+    </bean>    
+    
+    <!-- Cron 시간 설정 -->
+    <bean id="dealQuartzTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="dealQuartz"></property>
+        <property name="cronExpression" value="0 0 1 * * ?"></property>
+         <!-- 
+        <property name="cronExpression" value="0/3 * * * * ?"></property>
+         -->
+    	
+    </bean>
+    
+    <!-- Cron 실행 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    	<property name="triggers">
+    		<list>
+    			<ref bean="dealQuartzTrigger"></ref>
+    		</list>
+    	</property>
+    	<property name="quartzProperties">
+    		<props>
+    			<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+    			<prop key="org.quartz.threadPool.threadCount">3</prop>
+            	<prop key="org.quartz.threadPool.threadPriority">4</prop>
+            	<prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+            	<prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+    		</props>
+    	</property>
+    </bean>
+    
+     <!-- Email 처리 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	   <property name="host" value="smtp.worksmobile.com"/>
+	   <property name="port" value="587"/>
+	   <property name="username" value="salesb@salesb.net"/>
+	   <property name="password" value="offact@1214" />
+	   <property name="defaultEncoding" value="UTF-8"/>
+	   <property name="javaMailProperties">
+	      <props>
+	      	<prop key="mail.transport.protocol">smtp</prop>
+	        <prop key="mail.smtp.auth">true</prop>
+	        <prop key="mail.smtp.starttls.enable">false</prop>
+	        <prop key="mail.debug">false</prop>
+	      </props>
+	   </property>
+	</bean>
+    
+    <!-- Ldap 적용 
+    <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+    	<property name="url" value="bean.tmoncorp.com:389" />
+    	<property name="base" value="DC=tmoncorp,DC=com" />
+    	<property name="userDn" value="CN= IPCC00cs,OU=TemporaryWorker,OU=Users,OU=TMON,DC=tmoncorp,DC=com" />
+    	<property name="password" value="ipcc123!" />
+    </bean>
+
+	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+	
+	<bean id="personDao" class="com.offact.framework.ldap.PersonDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+ 	</bean>
+    -->
+    
+    <!-- 트랜잭션 매니저 빈을 생성한다. -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+          
+    <!-- 트랜젝션을 위한 설정 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*"  read-only="true"/>
+            <tx:method name="*" rollback-for="Exception"/>
+            <!-- <tx:method name="*NTx"     rollback-for="Throwable" propagation="REQUIRED" read-only="false"/> -->         
+        </tx:attributes>
+    </tx:advice>
+    <aop:config proxy-target-class="true">
+        <aop:pointcut id="requiredTx" expression="execution(* com.offact.salesb.service.impl.*Impl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
+    </aop:config>
+    
+    <!-- AOP CGLib(Code Generation Library) Proxy -->
+    <tx:annotation-driven proxy-target-class="true"/>
+    
+    <context:component-scan base-package="com.offact.salesb.*">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>        
+    </context:component-scan>    
+
+</beans>

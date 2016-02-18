@@ -1,0 +1,158 @@
+<%@ page contentType="text/html; charset=utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<%!
+    /* ============================================================================== */
+    /* =   null 값을 처리하는 메소드                                                   = */
+    /* = -------------------------------------------------------------------------- = */
+      public String f_get_parm( String val )
+        {
+        if ( val == null ) val = "";
+            return  val;
+        }
+    /* ============================================================================== */
+%>
+
+<%
+    /* ============================================================================== */
+    /* =   login 처리 결과값 receive                                                 = */
+    /* = -------------------------------------------------------------------------- = */
+	  
+	    request.setCharacterEncoding( "utf-8" );
+
+		String loginType          = f_get_parm( request.getParameter( "loginType"         ) ); // loginType   
+		
+		String id          = f_get_parm( request.getParameter( "id"         ) ); // id         
+		String name         = f_get_parm( request.getParameter( "name"        ) ); // name
+		String photo         = f_get_parm( request.getParameter( "photo"        ) ); // name
+		String restfulltype         = f_get_parm( request.getParameter( "restfulltype"        ) ); // restfulltype
+		String access_token         = f_get_parm( request.getParameter( "access_token"        ) ); // access_token
+
+		String customerKey         = f_get_parm( request.getParameter( "customerKey"        ) ); // customerKey
+		String customerPw         = f_get_parm( request.getParameter( "customerPw"        ) ); // customerPw
+		String groupId         = f_get_parm( request.getParameter( "groupId"        ) ); // groupId
+		String groupName         = f_get_parm( request.getParameter( "groupName"        ) ); // groupName
+
+		String url             = request.getRequestURL().toString();
+
+	/* ============================================================================== */
+%>
+
+<%
+    /* ============================================================================== */
+    /* =   request 구분값에 따른 분기처리로직                                           = */
+    /* = -------------------------------------------------------------------------- = */
+
+		String serverName = request.getServerName();
+		String serverQueryString = request.getQueryString();
+
+		String[] querygb=null;
+		String port="19003";
+		String context="sales/";
+		String suburl="";
+		String key="";
+		String login="";
+
+		if(!"sns".equals(loginType)){ //sales url 처리( root or shrt url)
+
+			if (serverQueryString == null || serverQueryString.equals("")){ //root context
+				
+				suburl=""; 
+
+			}else{ //단축제공 url
+				
+				querygb=serverQueryString.split("=");
+
+				if(querygb.length==2){
+					
+					if("key".equals(querygb[0])){
+						key=querygb[1];
+						suburl="custmobilesale?key="+key;
+					}
+
+				}
+
+			}
+
+		}
+	/* ============================================================================== */				
+%>
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<%
+	if("salesb.net".equals(serverName) || "www.salesb.net".equals(serverName)) {
+%>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Sales Baron">
+    <meta property="og:description" content="I'm Sales Baron">
+    <meta property="og:image" content="http://dev.salesb.net:<%=port%>/salesb/images/salesbaron.jpg">
+	
+    <TITLE>sales baron</TITLE>
+    <link rel="shortcut icon" href="http://dev.salesb.net:<%=port%>/salesb/images/favicon.ico" type='image/ico'>
+<%
+	}else{
+%>
+	<TITLE>addys</TITLE>
+    <link rel="shortcut icon" href="http://www.addys.co.kr/addys/images/favicon.ico" type='image/ico'>
+<%
+	}
+%>
+ 
+  <script>
+  
+  var domArr=document.domain.split(".");
+  var chkdomain=domArr[0];
+  var salsebchk=domArr[0]+domArr[1];
+   
+    if('wwwsalesb'==salsebchk || 'salesbnet'==salsebchk){
+
+		//addys 에서 80 받을경우 (offact 19003으로 포워딩)
+		//location.href='http://dev.salesb.net:19003/salesb/';
+
+    }else{
+
+		if('login'==chkdomain){//물류관리시스템
+			location.href='http://login.addys.co.kr/addon/';
+		}else if('dev'==chkdomain){//sales
+			location.href='http://dev.addys.co.kr/sales/';
+		}else if('m'==chkdomain){//모바일 전용
+			location.href='http://m.addys.co.kr/addys/';
+		}else{//www.addys.co.kr or addys.kr [samart 모바일웹]
+			location.href='http://addys.kr/addys/customerloginform';
+		}
+	}
+
+  </script>
+
+<%
+	if("salesb.net".equals(serverName) || "www.salesb.net".equals(serverName)) {
+
+		if(!"sns".equals(loginType)){ //sales 일반 url 처리
+%>
+
+	</HEAD>
+		 <frameset rows="*,0" frameborder="no" border="0" framespacing="0">
+			<frame src="http://dev.salesb.net:<%=port%>/salesb/<%=suburl%>" name="mainFrame" id="mainFrame" />
+		</frameset>
+	</HTML>
+
+<%
+		}else{ //sns 로그인 처리후 데이타 전달 (POST방식으로 변경)
+
+			suburl="customer/snslogin?groupId="+groupId+"&groupName="+groupName+"&customerKey="+customerKey+"&customerPw="+customerPw+"&id="+id+"&name="+name+"&photo="+photo+"&restfulltype="+restfulltype+"&access_token="+access_token; //sns url
+%>
+
+	</HEAD>
+		 <frameset rows="*,0" frameborder="no" border="0" framespacing="0">
+			<frame src="http://dev.salesb.net:<%=port%>/salesb/<%=suburl%>" name="mainFrame" id="mainFrame" />
+		</frameset>
+	</HTML>
+
+<%
+		}
+	}
+%>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Sms">
+
+<resultMap id="smsVO" type="com.offact.salesb.vo.common.SmsVO" >
+  <result column="idx"              property="idx"  />
+  <result column="smsTo"            property="smsTo"  />
+  <result column="smsFrom"      	   property="smsFrom"  />
+  <result column="smsMsg"       	   property="smsMsg"  />
+  <result column="smsDateTime"       	   property="smsDateTime"  />
+  <result column="smsUserId"       	   property="smsUserId"  />
+  <result column="resultCode"       	   property="resultCode"  />
+  <result column="resultMessage"              property="resultMessage"  />
+  <result column="resultLastPoint"                property="resultLastPoint"  />
+</resultMap>
+
+<insert id="smsHistoryInsert"  parameterType="com.offact.salesb.vo.common.SmsVO" >
+		insert into adSmsHistory (
+				 smsTo
+            	,smsFrom
+            	,smsMsg 
+            	,smsDateTime
+            	,smsUserId
+            	,resultCode
+            	,resultMessage
+            	,resultLastPoint
+		)values(
+				 #{smsTo}
+	  			, #{smsFrom}
+	  			, #{smsMsg}
+	  		    , now()
+	  		    , #{smsUserId}
+	  		    , #{resultCode}
+	  		    , #{resultMessage}
+	  		    , #{resultLastPoint}
+		)
+
+</insert>
+
+</mapper>

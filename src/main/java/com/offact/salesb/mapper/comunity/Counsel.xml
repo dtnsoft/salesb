@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Counsel">
+
+<resultMap id="CounselVO" type="com.offact.salesb.vo.comunity.CounselVO" >
+  <result column="idx"      property="idx"  />
+  <result column="groupId"              property="groupId"  />
+  <result column="customerKey"              property="customerKey"  />
+  <result column="customerId"      property="customerId"  />
+  <result column="counselState"       property="counselState"  />
+  <result column="counsel"      property="counsel"  />
+  <result column="counselDateTime"         property="counselDateTime"  />
+</resultMap>
+
+<insert id="counselInsert" parameterType="com.offact.salesb.vo.comunity.CounselVO" >
+  	
+  	Insert into smCounsel( 
+        	 customerKey
+            ,groupId
+            ,customerId
+            ,counselState 
+            ,counsel
+            ,counselImage
+            ,counselDateTime
+            )
+        Values (
+	  		  #{customerKey}
+	  		, #{groupId}
+	  		, #{customerId}
+	  		, #{counselState}
+	  		, #{counsel}
+	  		, #{counselImage}
+	  		, now()
+	  		)
+</insert>
+
+<select id="getCounselList" resultMap="CounselVO" parameterType="com.offact.salesb.vo.comunity.CounselVO" >
+
+        Select T1.idx
+              ,concat('****-',right(trim(T1.customerKey),4)) as customerKey
+              ,replace(T1.counsel,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as counsel
+              ,T1.counselImage
+              ,T1.counselState
+              ,DATE_FORMAT(T1.counselDateTime, '%Y.%m.%d') as counselDateTime
+              ,ifnull(T3.userId,'') as userId
+              ,ifnull(T4.userName,'') as userName
+              ,ifnull(T3.counselResult,'') as counselResult
+              ,T3.counselResultImage
+              ,Case When ifnull(T3.counselResultDateTime,'') = '' Then '' Else DATE_FORMAT(T3.counselResultDateTime, '%Y.%m.%d') End counselResultDateTime
+        From smCounsel T1
+             Left Join smCustomer T2 On T1.customerKey = T2.customerKey
+             Left Join smCounselResult T3 On T1.idx = T3.idx
+             Left Join ofUser T4 On T3.userId = T4.userId
+         WHERE T1.groupId= #{groupId}
+               And T1.customerKey = #{customerKey}
+               Order by counselDateTime desc ,idx desc
+         LIMIT ${page_limit_val1} , ${page_limit_val2}     
+
+
+</select>
+
+<select id="getCounselCnt" resultType="int">
+	SELECT count(*) AS TOT_COUNT
+  		FROM smCounsel T1
+         WHERE T1.groupId= #{groupId} 
+               And T1.customerKey = #{customerKey}
+</select>
+
+</mapper>
