@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="Pragma" content="no-cache">
+    
     <!-- Latest compiled and minified CSS -->
 	<style type="text/css">
 	.map_style {
@@ -15,14 +16,22 @@
 	    width: 100%;
 	}
 	</style>
-	<link href="<%= request.getContextPath() %>/css/reset.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
+
+    <link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
 	<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
 	<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
-	
+
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/blog-home.css">
+
+	<!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap-datetimepicker.min.css">
+
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+	
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
 	
 	<!-- JQuery Mobile을 사용하기 위해 반드시 필요한 태그-->
@@ -30,6 +39,7 @@
     <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
 	<!-- JQuery-UI-Map을 사용하기 위해 반드시 필요한 태그-->
+	
     <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
     <script src="<%= request.getContextPath() %>/web/jquery.fn.gmap.js" type="text/javascript"></script>
     <script src="<%= request.getContextPath() %>/ui/jquery.ui.map.full.min.js" type="text/javascript"></script>   
@@ -39,82 +49,9 @@
     <script type="text/javascript" src="http://openapi.map.naver.com/openapi/v2/maps.js?clientId=4THYarC7qz77DVXElPNk"></script>
     <!-- daum -->
     <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=cf7f8d48261d5da8c3c317b89b95736e"></script>
-
-	<script>
-	
-	var setFlag='01';
-	
-
-    /*
-	 *interval에따른 시간차 함수
-	 */
-	 function interval(method,secval){
-	
-	 	setTimeout(method,secval);
-	 	
-	 }
-
-
-    function setTab(flag){
-
-    	setFlag=flag;
-    	
-    	if(flag=='01'){
-
-    		$('#orderlist').attr("style","display:block");
-        	$('#saleslist').attr("style","display:none");
-        	$('#map').attr("style","display:none");
-        	$('#orderkeydtail').attr("style","display:none");
-        	$('#customerModify').attr("style","display:none");
-
-        	$('#tab1').attr("class","on");
-        	$('#tab2').attr("class","");
-        	$('#tab3').attr("class","");
-        	$('#tab4').attr("class","");
-        	
-    	}else if(flag=='02'){
-    		
-    		$('#orderlist').attr("style","display:none");
-        	$('#saleslist').attr("style","display:block");
-        	$('#map').attr("style","display:none");
-        	$('#orderkeydtail').attr("style","display:none");
-        	$('#customerModify').attr("style","display:none");
-
-        	$('#tab1').attr("class","");
-        	$('#tab2').attr("class","on");
-        	$('#tab3').attr("class","");
-        	$('#tab4').attr("class","");
-        	
-    	}else if(flag=='03'){
-
-    		$('#orderlist').attr("style","display:none");
-        	$('#saleslist').attr("style","display:none");
-        	$('#map').attr("style","display:block");
-        	$('#orderkeydtail').attr("style","display:none");
-        	$('#customerModify').attr("style","display:none");
- 
-        	$('#tab1').attr("class","");
-        	$('#tab2').attr("class","");
-        	$('#tab3').attr("class","on");
-        	$('#tab4').attr("class","");
-        	
-    	}else if(flag=='04'){
-    		
-    		$('#orderlist').attr("style","display:none");
-        	$('#saleslist').attr("style","display:none");
-        	$('#map').attr("style","display:none");
-        	$('#orderkeydtail').attr("style","display:block");
-        	$('#customerModify').attr("style","display:none");
-
-        	$('#tab1').attr("class","");
-        	$('#tab2').attr("class","");
-        	$('#tab3').attr("class","");
-        	$('#tab4').attr("class","on");
-        	
-    	}
-
-    }
     
+	<script>
+
 	function fcConfig_modifyView() {
 
     	$.ajax({
@@ -122,22 +59,76 @@
             url:  '<%= request.getContextPath() %>/common/customermodifyform',
             success: function(result) {
              
-            	$("#customerModify").html(result);
-            	
-            	$('#orderlist').attr("style","display:none");
-            	$('#saleslist').attr("style","display:none");
+            	$("#config").html(result);
+
+            	$('#view').attr("style","display:none");
             	$('#map').attr("style","display:none");
-            	$('#orderkeydtail').attr("style","display:none");
-            	$('#customerModify').attr("style","display:block");
-      	
+            	
+            	$('#config').attr("style","display:block");
+
             },
             error:function(){
 
             }
         });
     };
+    //상품 토큰현황
+    function fcMyToken_list(){
+    	
+    	//var customerKey='${customerKey}';
+    	//var groupId='${groupId}';
+    	
+    	var customerKey='01067471995';
+    	var groupId='BD008';
+    
+        $.ajax({
+            type: "POST",
+               url:  "<%= request.getContextPath() %>/member/mytokenlist",
+               success: function(result) {
+                  
+                   $("#view").html(result);
+               },
+               error:function() {
+                  
+               }
+        });
+    }
 
- // 리스트 조회
+    
+ // 등록상품 목록 및 수정
+    function fcGoods_list(){
+
+        $.ajax({
+            type: "POST",
+               url:  "<%= request.getContextPath() %>/business/goodsmanage",
+               success: function(result) {
+                  
+                   $("#view").html(result);
+               },
+               error:function() {
+                  
+               }
+        });
+    }
+ 
+    //개별상품 등록
+    function fcGoodsRegist(){
+
+    
+        $.ajax({
+            type: "POST",
+               url:  "<%= request.getContextPath() %>/business/goodsregistform",
+               success: function(result) {
+                  
+                   $("#view").html(result);
+               },
+               error:function() {
+                  
+               }
+        });
+    }
+
+ // 주문리스트 조회
     function fcOrder_list(){
 		
     	//var customerKey='${customerKey}';
@@ -151,7 +142,7 @@
                url:  "<%= request.getContextPath() %>/comunity/orderlist",
                success: function(result) {
                   
-                   $("#orderlist").html(result);
+                   $("#view").html(result);
                },
                error:function() {
                   
@@ -173,7 +164,7 @@
                url:  "<%= request.getContextPath() %>/comunity/saleslist",
                success: function(result) {
                
-                   $("#saleslist").html(result);
+                   $("#view").html(result);
                },
                error:function() {
                   
@@ -190,7 +181,9 @@
  
     function fcMap(){//위치조회
     	
-    	//alert(mapType);
+    	$('#view').attr("style","display:none");
+    	$('#map').attr("style","display:block");
+    	$('#config').attr("style","display:none");
     	
     	if(mapType=='daum'){
     		dMap();
@@ -665,7 +658,7 @@
             url:  "<%= request.getContextPath() %>/comunity/orderkeydetail",
             success: function(result) {
              
-                   $("#orderkeydtail").html(result);
+                   $("#view").html(result);
             },
             error:function(){
 
@@ -884,67 +877,122 @@
 
   </script>
   </head>
-   <body>
-  <form method="post" id="logoutForm" name="logoutForm"  role="form" >
-  <input type="hidden" name="saleurlvalue" id="saleurlvalue" >
-  </form>
-	 <div id="wrap" class="wrap" >
-	 <!-- 헤더 -->
-	  <header id="header">
-	    <div id="m_gnb" class="mcom_gnbwrap mb_top">
-	      <div class="mcom_gnb ">
-	        <h1 class="head_logo"></h1>
-	        <div class="mcom_gnb_rgt">
-	          <div class="b_toggle">
-	            <ul>
-	               <!--<li> <a href="#" class="b_name"> <strong class="">${restfulltype}</strong> </a></li>-->
-	              <li> <a href="#" class="b_name"> <strong class="">${name}</strong> </a></li>
-	              <li> <a href="javascript:fcConfig_modifyView()" class="b_cog"> <strong class="ico_cog"><span>설정</span></strong> </a></li>
-	              <li><a href="javascript:goLogout()" class="b_logout"> 
-	                <strong>로그아웃</strong></a>
-	              </li>
-	            </ul>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="mcom_navwrap" style="overflow: hidden; z-index: 2000; -webkit-tap-highlight-color: transparent; height: 47px;">
-	      <div class="mcom_nav" style="position: absolute; z-index: 1; left: 0px; top: 0px; transition-property: -webkit-transform; transform: translate3d(10px, 0px, 0px); transition-timing-function: cubic-bezier(0.33, 0.66, 0.66, 1); height: 100%; width: 2583px; transition-duration: 0ms;">
-	        <ul style="width: 861px; height: 100%; position: absolute; left: 0px; top: 0px;">
-	          <li id="tab1" class="on" index="0" style="float: left; width: 70px;"><a href="javascript:setTab('01');fcOrder_list()"><span class="nav_mnu">주문조회</span></a></li>
-	          <li id="tab2" index="1" style="float: left; width: 70px;"><a href="javascript:setTab('02');fcSales_list();"><span class="nav_mnu">판매조회</span></a></li>
-	          <li id="tab3" index="2" style="float: left; width: 70px;"><a href="javascript:setTab('03');fcMap();"><span class="nav_mnu">위치조회</span></a></li>
-	          <li id="tab4" index="3" style="float: left; width: 70px;"><a href="javascript:setTab('04');fcOrderKey()"><span class="nav_mnu" style="color:red">주문키발급</span></a></li>
-	        </ul>
-	      </div>
-	    </div>
-	  </header>
-	  <!--//헤더 --> 
-
-      <div id=orderlist style="display:none"></div>
-      <div id=saleslist style="display:none"></div>
-  
-      <div id=map style="display:none">
-	     <div data-role="page" id="page" data-fullscreen="true" class="map_style">
- 			<div id="map_canvas" class="map_style"></div>
-		 </div> 
-	  </div> 
-	  
-	  <div id=orderkeydtail title="주문키상세"></div>
-	  
-      <div id=orderDetail title="주문상세"></div>
-      <div id=salesDetail title="판매상세"></div>
-      
-      <div id="customerModify"  style="display:none"></div>
-      
-  	  <div id="imageView"  onClick="imageClose()"></div>
-
-      <div id="footer" class="footer">
-	    <span class="Copyright">Copyright 2015 ⓒsalesb Corp. All rights reserved. v1.0.0</span>
-	  </div>
-       
-    </div>
-  </body>
+	<body>
+		<div id="wrap" class="wrap" >
+			<div class="container">
+				<form method="post" id="logoutForm" name="logoutForm"  role="form" >
+				  <input type="hidden" name="saleurlvalue" id="saleurlvalue" >
+				</form>
+		 
+			  <!-- Navigation -->
+			    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			        <div class="container">
+			            <!-- Brand and toggle get grouped for better mobile display -->
+			            <div class="navbar-header">
+			                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+			                    <span class="sr-only">Menu</span>
+			                    <span class="icon-bar"></span>
+			                    <span class="icon-bar"></span>
+			                    <span class="icon-bar"></span>
+			                </button>
+			                <c:choose>
+				               	<c:when test="${name!=''}">
+				               		  <table>
+										  <tr>
+										  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
+										    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;(${name})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
+										  </tr>
+									  </table>
+				               	</c:when>
+								<c:otherwise>
+									 <c:if test="${sbPhoneNumber!=''}">
+									  <table>
+										  <tr>
+										  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
+										    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;(${sbPhoneNumber})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
+										  </tr>
+									  </table>
+									</c:if>
+				               </c:otherwise>
+							</c:choose>
+			            </div>
+			            <!-- Collect the nav links, forms, and other content for toggling -->
+			            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			                <c:choose>
+				               	<c:when test="${memberType=='01'}">
+									  <ul class="nav navbar-nav">
+								        <li class="dropdown">
+								          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">상품등록/변경<span class="caret"></span></a>
+								           <ul class="dropdown-menu">
+								            <li><a href="javascript:fcGoodsRegist()">개별상품등록</a></li>
+								            <li><a href="javascript:fcOrderKey()">일괄상품등록</a></li>
+								            <li><a href="javascript:fcGoods_list()">등록상품 목록 및 수정</a></li>
+								          </ul>
+								        </li>
+								      </ul>
+								      <ul class="nav navbar-nav">
+								        <li class="dropdown">
+								          <a href="javascript:fcOrderKey()" >토근발급</a>
+								        </li>
+								      </ul>
+								      <ul class="nav navbar-nav">
+								        <li >
+								          <a href="javascript:fcSales_list(); ">판매관리</a>
+								        </li>
+								      </ul>
+								      <ul class="nav navbar-nav">
+								        <li class="dropdown">
+								          <a href="javascript:alert('작업중')" >정산관리</a>
+								        </li>
+								      </ul>
+								</c:when>
+								<c:otherwise>
+									 <ul class="nav navbar-nav">
+								        <li class="dropdown">
+								          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">나의상품<span class="caret"></span></a>
+								           <ul class="dropdown-menu">
+								            <li><a href="javascript:fcMyToken_list()">상품 토큰 현황</a></li>
+								            <li><a href="javascript:fcOrderKey()">상품 페이지 제작</a></li>
+								          </ul>
+								        </li>
+								      </ul>
+								      <ul class="nav navbar-nav">
+								        <li >
+								          <a href="javascript:fcSales_list(); ">판매현황</a>
+								        </li>
+								      </ul>
+								</c:otherwise>
+							</c:choose>
+							<ul class="nav navbar-nav navbar-right">
+					        <li><a href="javascript:fcConfig_modifyView()" class="b_cog"><strong class="ico_cog"><span>설정</span></strong> </a></li>
+							<li><a href="javascript:goLogout()" class="b_logout"><strong>로그아웃</strong></a></li>
+					      </ul>
+			            </div>
+			            <!-- /.navbar-collapse -->
+			        </div>
+			        <!-- /.container -->
+			    </nav>
+		      
+			    <div id="view"></div>
+			
+			    <div id="config"  style="display:none"></div>
+			      
+			  	<div id="imageView"  onClick="imageClose()"></div>
+			
+			    <div id=map style="display:none">
+			     <div data-role="page" id="page" data-fullscreen="false" class="map_style">
+		 			<div id="map_canvas" class="map_style"></div>
+				 </div> 
+				</div> 
+		
+		    </div>
+		    <!-- 
+		    <div id="footer" class="footer">
+			    <span class="Copyright">Copyright 2015 ⓒsalesb Corp. All rights reserved. v1.0.0</span>
+			</div>
+			 -->  
+		</div>
+	</body>
 </html>
 <script>
 
@@ -952,7 +1000,16 @@ if('${customerKey}'==null || '${customerKey}'=='null' ){
 	goLogout();
 }
 
-setTab('01');
-fcOrder_list();
+
+if('${memberType}'=='01'){
+
+	fcGoods_list();
+	
+	
+}else{
+
+	fcMyToken_list();
+
+}
 
 </script>

@@ -153,12 +153,12 @@
             	
             	var frm=document.PasswordForm;
             	
-            	if(frm.customerKeyView.value==''){
+            	if(frm.sbPhoneNumberView.value==''){
     				alert('인증하실 핸드폰 번호가 없습니다.');
     				return;
     			}
             	
-            	frm.customerKey.value=frm.customerKeyView.value;
+            	frm.sbPhoneNumber.value=frm.sbPhoneNumberView.value;
             	
             	$.ajax({
     		        type: "POST",
@@ -170,7 +170,7 @@
     						if(result=='0'){
     							
     						    alert('인증요청을 성공했습니다.\n문자로 발송된 인증번호를 입력하시기 바랍니다.');
-    						    frm.customerKeyView.disabled=true;
+    						    frm.sbPhoneNumberView.disabled=true;
     							frm.tokenView.disabled=false;
     							//document.all('completebtn').style.display="inline";
     							document.all('completebtn').disabled=false;
@@ -207,7 +207,7 @@
        				return;
        			}
            		
-            	if(frm.customerKey.value==''){
+            	if(frm.sbPhoneNumber.value==''){
     				alert('인증하실 핸드폰 번호가 없습니다.');
     				return;
     			}
@@ -258,7 +258,7 @@
             	
             	var frm=document.PasswordForm;
             	
-            	if(frm.customerKey.value==''){
+            	if(frm.sbPhoneNumber.value==''){
     				alert('인증된 핸드폰 번호가 없습니다.');
     				return;
     			}
@@ -304,7 +304,7 @@
             	
             	var frm=document.PasswordForm;
             	
-            	if(frm.customerKey.value==''){
+            	if(frm.sbPhoneNumber.value==''){
     				alert('인증된 핸드폰 번호가 없습니다.');
     				return;
     			}
@@ -314,7 +314,7 @@
        				return;
        			}
             	
-            	if(frm.customerPw.value==''){
+            	if(frm.sbPw.value==''){
     				alert('변경하실 비밀번호를  입력 하시기 바랍니다.');
     				return;
     			}
@@ -324,18 +324,18 @@
     				return;
     			}
 
-    			if(frm.customerPw.value!=frm.customerRePw.value){
+    			if(frm.sbPw.value!=frm.customerRePw.value){
     				alert('변경하실 비밀번호가 재입력 비밀번호와 같지 않습니다.');
-    				frm.customerPw.value='';
+    				frm.sbPw.value='';
     				frm.customerRePw.value='';
     				
-    				frm.customerPw.focus(1);
+    				frm.sbPw.focus(1);
     				return;
     			}
 
     			if (confirm('비밀번호를 변경 하시겠습니까?')){ 
     	    		
-    				setCookie("addys_customerkey", $('#customerKey').val());
+    				setCookie("addys_customerkey", $('#sbPhoneNumber').val());
     				
 	    		    $.ajax({
 	    		        type: "POST",
@@ -410,8 +410,8 @@
 		                <li>
 		                  <label for="" class="blind">핸드폰번호</label>
 		                  <span class="inpbx certi">
-		                  <input type="text" id=customerKeyView name="customerKeyView" placeholder="핸드폰번호 등록">
-		                  <input type="hidden" id=customerKey name="customerKey"  value=""/> 
+		                  <input type="text" id=sbPhoneNumberView name="sbPhoneNumberView" placeholder="핸드폰번호 등록">
+		                  <input type="hidden" id=sbPhoneNumber name="sbPhoneNumber"  value=""/> 
 		                  </span><a href="javascript:getToken()" id="reqbtn" class="bn_certi" >인증요청</a></li>
 		                <li>
 		                  <label for="" class="blind">인증번호</label>
@@ -431,7 +431,7 @@
 		                <li>
 		                  <label for="inp_pw" class="blind">비밀번호</label>
 		                  <span class="inpbx">
-		                  <input type="password" name="customerPw" id="customerPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)">
+		                  <input type="password" name="sbPw" id="sbPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)">
 		                  </span></li>
 		                <li>
 		                  <label for="inp_pw2" class="blind">비밀번호 재입력</label>
@@ -462,8 +462,8 @@ var cust_frm = document.PasswordForm;
 var cust_key = getCookie("addys_customerkey");
 
 if( cust_key != null && trim(cust_key) != '' && cust_key != 'null' ){
-	cust_frm.customerKeyView.value = cust_key;
-	cust_frm.customerKey.value = cust_key;
+	cust_frm.sbPhoneNumberView.value = cust_key;
+	cust_frm.sbPhoneNumber.value = cust_key;
 }
 
 </script>

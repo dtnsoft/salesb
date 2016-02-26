@@ -204,8 +204,8 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">관리<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="<%= request.getContextPath() %>/manage/customermanage">고객 관리</a></li>
             <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정 관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/manage/custmanage">고객 관리</a></li>
             <li><a href="<%= request.getContextPath() %>/manage/companymanage">업체 관리</a></li>
             <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li>
           </ul>

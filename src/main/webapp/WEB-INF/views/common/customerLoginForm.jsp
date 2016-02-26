@@ -14,8 +14,10 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
       
+
 <link href="<%= request.getContextPath() %>/css/reset.css" rel="stylesheet">
 <link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
+<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
 <link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
 <link href="<%= request.getContextPath() %>/css/login.css" rel="stylesheet">
 
@@ -27,6 +29,12 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
 <script src="http://connect.facebook.net/en_US/all.js" language="JavaScript" type="text/javascript" ></script>
+  
+<!-- JQuery Mobile을 사용하기 위해 반드시 필요한 태그
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+-->
 
 <script>
 
@@ -43,20 +51,26 @@
 	function goLogin(){
 		
 		var frm = document.loginForm;
-		var customerKey = frm.customerKey.value;
-		var customerPw =  frm.customerPw.value;
+		
+		if(frm.memberType.value=='01'){
+			frm.sbPhoneNumber.value=frm.businessId.value;
+			frm.sbPw.value=frm.businessPw.value;
+		}
+
+		var sbPhoneNumber = frm.sbPhoneNumber.value;
+		var sbPw =  frm.sbPw.value;
 	
-		if(customerKey==''){
+		if(sbPhoneNumber==''){
 			alert('핸드폰 번호를 입력하시기 바랍니다.');
 			return;
 		}
 		
-		if(customerPw==''){
+		if(sbPw==''){
 			alert('Password를 입력하시기 바랍니다.');
 			return;
 		}
 
-		setCookie("salesb_customerKey", $('#customerKey').val());
+		setCookie("salesb_sbPhoneNumber", $('#sbPhoneNumber').val());
 		setCookie("salesb_groupkey", $('#groupId').val());
 
 		frm.groupName.value='물류정상';
@@ -69,7 +83,7 @@
 
 	function goPrivateForm(){
 		
-		setCookie("salesb_customerKey", $('#customerKey').val());
+		setCookie("salesb_sbPhoneNumber", $('#sbPhoneNumber').val());
 		setCookie("salesb_groupkey", $('#groupId').val());
 
 		location.href="<%= request.getContextPath() %>/customerregistform";
@@ -79,7 +93,7 @@
 	
 	function goPwSearch(){
 		
-		setCookie("salesb_customerKey", $('#customerKey').val());
+		setCookie("salesb_sbPhoneNumber", $('#sbPhoneNumber').val());
 		setCookie("salesb_groupkey", $('#groupId').val());
 
 		location.href="<%= request.getContextPath() %>/customerpwform";
@@ -139,117 +153,161 @@
 		    top.location.href=loginURL + '?client_id=' + client_id + '&redirect_uri=' + redirectURL +'&response_type=code&state=${state}';
 		    
 	  }
+	  
+	  function memeberLoginFrom(type){
+	
+		  var frm = document.loginForm;
+		  frm.memberType.value=type;
+			
+		  if(type=='02'){
+		      document.all('memberView').style.display="inline";
+		      document.all('businessView').style.display="none";
+		     
+		  }else{
+			  document.all('memberView').style.display="none";
+			  document.all('businessView').style.display="inline";
+		  }
+
+	  }
 </script>
 </head>
-<body>
-<div id="wrap" class="wrap"  >
-  <!-- 헤더 -->
-  <header>
-     <div class="mb_top"  id="header">
-      <h1 class="head_logo"></h1>
-    </div>
-  </header>
-  <!--//헤더 --> 
-  <form  id="loginForm" name="loginForm"  method="post" role="form" action="<%= request.getContextPath() %>/customer/login">
-  <input type="hidden" name="loginType" value="comunity" >
-  <input type="hidden" name="groupName" value="" >
-  <!-- container -->
-  <div id="container">
-    <div class="m_content" >
-      <!-- 로그인영역 -->
-      <div class="m_combx">
-      <input type="hidden" id="groupId" name="groupId" value="BD008">
-      <br></br>
-        <fieldset>
-          <legend>로그인 영역</legend>
-          <form id="login_form" method="post">
-            <!-- 로그인 -->
-            <div class="m_inplogin">
-              <ul class="m_inp_data">
-                <li>
-                  <label for="inp_id" class="blind">핸드폰번호</label>
-                  <span class="inpbx">
-                  <input type="text" id="customerKey" name="customerKey" placeholder="핸드폰번호">
-                  <span class="sp_login ico_id">&nbsp;</span></span></li>
-                <li>
-                  <label for="inp_pw" class="blind">비밀번호</label>
-                  <span class="inpbx">
-                  <input type="password" id="customerPw" name="customerPw" placeholder="비밀번호">
-                  <span class="sp_login ico_pw">&nbsp;</span></span></li>
-              </ul>
-            </div>
-            <!-- //로그인 -->
-            <!-- 로그인버튼 -->
-            <div class="bnbox">
-              <button type="button" class="bn_salesb" onclick="goLogin()">Login</button>
-            </div>
-            <div class="bnbox_kakao">
-              <button type="button" class="bn_kakao" onclick="kakaoLogin()">Login with KaKao</button>
-            </div>
-             <div class="bnbox">
-              <button type="button" class="bn_naver" onclick="naverLogin()">Login with NAVER</button>
-            </div>
-            <div class="bnbox">
-              <button type="button" class="bn_facebook" onclick="fbLogin()">Login with Facebook</button>
-            </div>
-            <div class="bnbox">
-              <button type="button" class="bn_google" onclick="gbLogin()">Login with Google</button>
-            </div>
-            <div class="bnbox_pin">
-              <button type="button" class="bn_pinterest" onclick="pinLogin()">Login with Pinterest</button>
-            </div>
-            <!-- 
-            <div class="bnbox">
-              <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-            </div>
-             -->
-            <div id="status">
+
+<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+     <div id="wrap" class="wrap" >
+		 <!-- 헤더 -->
+		  <header>
+		   <div class="mb_top">
+				<h1 class="head_logo"></h1>
 			</div>
-            <!--//로그인버튼 -->
-            <!-- 가입,비번찾기 -->
-	        <div class="login_join">
-	          <h3 class="line_tit"></h3>
-	          <ul class="log_joinlist">
-	            <li> <span class="tit">아직 회원이 아니세요?</span> <span class="txt"><a href="javascript:goPrivateForm()" class="bn_join">간편가입</a> </li>
-	            <li> <span class="tit">정보를 잊어 버리셨나요?</span> <span class="txt"> <a href="javascript:goPwSearch()" class="bn_pw">비밀번호 찾기</a></span> </li>
-	          </ul>
-	        </div>
-	        <!--//가입,비번찾기 -->
-            <!-- 이용안내 -->
-             <h3 class="line_tit"></h3>
-            <div class="m_tip">
-              <span class="ico_tip"></span>등록을 하시면 다음과 같은 서비스를 이용 가능하십니다.
-              <ul class="m_tip_list">
-                <li>1. 주문내역 조회</li>
-                <li>2. 판매내역 조회</li>
-              </ul>
-            </div>
-            <!--//이용안내 -->
+		  </header>
+		  <!--//헤더 -->  
+		  <!-- container -->
+		  <form  id="loginForm" name="loginForm"  method="post" role="form" action="<%= request.getContextPath() %>/customer/login">
+			  <input type="hidden" name="loginType" value="comunity" >
+			  <input type="hidden" name="groupName" value="" >
+			  <input type="hidden" id="groupId" name="groupId" value="BD008">
+			  <input type="hidden" name="memberType" value="02" >   
+		    <div id="container">
+		      <div class="m_content form" >
+				<!-- 타이틀 -->
+		        <div class="clm_acdo_tit">
+		          <h1>로그인</h1>
+		          <div class="clm_acdo_tit_left">
+		 			 <a href="<%= request.getContextPath() %>/intro" class="btn b_prev"><span class="sp_prev">취소</span></a>
+		          </div>
+		        </div>
+		        <!--// 타이틀 --> 
+		        <div class="m_resbx">
+		        <form id="login_form" method="post">
+		            <div class="m_result id">
+	<!-- 
+						    <select id="flip-1" name="flip-1" data-role="slider">
+						        <option value="off">사업자 인증</option>
+						        <option value="on">회원인증</option>
+						    </select>
+	 -->
+		              	<h4 class="m_sch_tp">	
+		              		<label class="radio-inline">
+							  <input type="radio" name="memberTypeRadio" id="memberTypeRadio" value="02" checked onChange="memeberLoginFrom('02')"> 일반회원
+							</label>
+				            <label class="radio-inline">
+							   <input type="radio" name="memberTypeRadio" id="memberTypeRadio" value="01" onChange="memeberLoginFrom('01')"> 사업자 회원
+							</label>
+						</h4>
+		            </div>
+		          <div id="memberView" >
+		           <div class="m_result id">
+		              <ul class="schinp_list">
+		                <div class="bnbox">
+			              <button type="button" class="bn_facebook" onclick="fbLogin()">FACEBOOK 으로 연결</button>
+			            </div>
+			            <div class="bnbox_kakao">
+			              <button type="button" class="bn_kakao" onclick="kakaoLogin()">KAKAO 로 연결</button>
+			            </div>
+                        <div class="bnbox">
+			              <button type="button" class="bn_naver" onclick="naverLogin()">NAVER 로 연결</button>
+			            </div>
+		              </ul>
+		            </div>
+		          	<h6  class="m_sch_tp">-또는-</h6>
+		            <!-- 핸드폰번호 등록 -->
+		            <div class="m_result id">
+ 						<h6  class="m_sch_tp"></h6>
+		              	<ul class="schinp_list">
+		                 <li>
+		                  <label for="inp_id" class="blind">핸드폰번호</label>
+		                  <span class="inpbx">
+		                  <input type="text" id="sbPhoneNumber" name="sbPhoneNumber" placeholder="핸드폰번호">
+		                  <span class="sp_login ico_id">&nbsp;</span></span></li>
+		                 <li>
+		                  <label for="inp_pw" class="blind">비밀번호</label>
+		                  <span class="inpbx">
+		                  <input type="password" id="sbPw" name="sbPw" placeholder="비밀번호">
+		                  <span class="sp_login ico_pw">&nbsp;</span></span></li>
+		                  
+			             <!-- //로그인 -->
+			             <div class="bnbox">
+			              <button type="button" class="bn_salesb" onclick="goLogin()">Login</button>
+			             </div>
+			            </ul>
+		            </div>
+		           </div>
+		           
+		           <div id="businessView" style="display:none" >
+		            <!-- 핸드폰번호 등록 -->
+		            <div class="m_result id">
+		              <h4 class="m_sch_tp">사업자 회원 아이디를 입력하세요</h4>
+		              	<ul class="schinp_list">
+		                 <li>
+		                  <label for="inp_id" class="blind">회원아이디</label>
+		                  <span class="inpbx">
+		                  <input type="text" id="businessId" name="businessId" placeholder="회원아이디">
+		                  <span class="sp_login ico_id">&nbsp;</span></span></li>
+		                <li>
+		                  <label for="inp_pw" class="blind">비밀번호</label>
+		                  <span class="inpbx">
+		                  <input type="password" id="businessPw" name="businessPw" placeholder="비밀번호">
+		                  <span class="sp_login ico_pw">&nbsp;</span></span></li>
+		                  
+			            <!-- //로그인 -->
+			            <div class="bnbox">
+			              <button type="button" class="bn_salesb" onclick="goLogin()">Login</button>
+			            </div>
+		              </ul>
+		            </div>
+		           </div>
+		            
+		            <!-- 가입,비번찾기 -->
+			        <div class="login_join">
+			          <h3 class="line_tit"></h3>
+			          <ul class="log_joinlist">
+			            <li> <span class="tit">비밀번호를 잊으셨나요?</span> <span class="txt"> <a href="javascript:goPwSearch()" class="bn_pw">비밀번호 찾기</a></span> </li>
+			          </ul>
+			        </div>
+			        <!--//가입,비번찾기 -->
+				</form>
+		        </div>
+		      </div>
+		  </div>
+
           </form>
-        </fieldset>
+          
+		  <div id="footer" class="footer">
+		    <span class="Copyright">Copyright 2015 ⓒ salesb Corp. All rights reserved. v1.0.0</span>
+		  </div>
+	  	  <!--//container -->
       </div>
-      <!--//로그인영역 -->
-    </div>
-  </div>
-  <!--//container -->
-  </form>
-  
-  <div id=facebooklogin style="display:none"></div>
-  
-  <div id="footer" class="footer">
-    <span class="Copyright">Copyright 2015 ⓒ salseb Corp. All rights reserved. v1.0.0</span>
-  </div>
-</div>
+
 </body>
 </html>
 <script>
 
 var cust_frm = document.loginForm;
-var cust_key = getCookie("salesb_customerKey");
+var cust_key = getCookie("salesb_sbPhoneNumber");
 var group_key = getCookie("salesb_groupkey");
 
 if( cust_key != null && trim(cust_key) != '' && cust_key != 'null' ){
-	cust_frm.customerKey.value = cust_key;
+	cust_frm.sbPhoneNumber.value = cust_key;
 }
 
 if( group_key != null && trim(group_key) != '' && group_key != 'null' ){

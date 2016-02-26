@@ -78,8 +78,8 @@
 			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
 			   Left Join adProductMaster T4 On T1.productCode=T4.productCode
 			   Left Join ofCode T5 On T1.asState=T5.codeId And T5.codeGroupId='AS01' 
-         WHERE T1.customerKey = #{customerKey}
-               AND T1.groupId= #{groupId}
+         WHERE T1.customerKey = '01067471995'
+               AND T1.groupId= 'BD008'
          ORDER BY asStartDateTime desc ,asNo desc
   LIMIT ${page_limit_val1} , ${page_limit_val2}        
 </select>
@@ -87,8 +87,8 @@
 <select id="getAsCnt" resultType="int">
 	SELECT count(*) AS TOT_COUNT
   		FROM smAs T1
-         WHERE T1.customerKey = #{customerKey}
-         AND T1.groupId= #{groupId}
+         WHERE T1.customerKey = '01067471995'
+         AND T1.groupId= 'BD008'
 </select>
 
 <select id="getAsDetail" resultMap="asListVO" parameterType="com.offact.salesb.vo.comunity.AsVO" >

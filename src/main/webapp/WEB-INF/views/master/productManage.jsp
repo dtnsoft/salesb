@@ -191,5 +191,4 @@
 <%@ include file="/WEB-INF/views/admin/footer.jsp" %>
 <script>
 fcProductMaster_listSearch();
-MM_nbGroup('down','group3','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1);
 </script>

@@ -56,10 +56,12 @@ import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.SmsService;
+import com.offact.salesb.service.comunity.AsService;
 import com.offact.salesb.service.comunity.ComunityService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.common.GroupVO;
 import com.offact.salesb.vo.common.SmsVO;
+import com.offact.salesb.vo.comunity.AsVO;
 import com.offact.salesb.vo.comunity.ComunityVO;
 
 /**
@@ -143,6 +145,9 @@ public class CommonController {
     @Autowired
     private SmsService smsSvc;
     
+    @Autowired
+    private AsService asSvc;
+    
     public String generateState()
     {
         SecureRandom random = new SecureRandom();
@@ -165,6 +170,26 @@ public class CommonController {
 		ModelAndView  mv = new ModelAndView();
 
     	mv.setViewName("/admin/index");
+
+		return mv;
+	}
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/intro", method = RequestMethod.GET)
+	public ModelAndView intro(HttpServletRequest request,
+			                   HttpServletResponse response,  
+			                   Model model, 
+			                   Locale locale) throws BizException 
+	{
+
+		logger.info("Welcome intro");
+		
+		ModelAndView  mv = new ModelAndView();
+
+    	mv.setViewName("/common/intro");
 
 		return mv;
 	}
@@ -846,78 +871,32 @@ public class CommonController {
 		
 		ModelAndView  mv = new ModelAndView();
 		
-		String customerKey = StringUtil.nvl(request.getParameter("customerKey"));
-		String customerPw = StringUtil.nvl(request.getParameter("customerPw"));
+		String memberType = StringUtil.nvl(request.getParameter("memberType"));
+		String sbPhoneNumber = StringUtil.nvl(request.getParameter("sbPhoneNumber"));
+		String sbPw = StringUtil.nvl(request.getParameter("sbPw"));
 		String groupId = StringUtil.nvl(request.getParameter("groupId"),"SM001");
 		String groupName = StringUtil.nvl(request.getParameter("groupName"),"스마트매장");
 		
-		String id = StringUtil.nvl(request.getParameter("id"),customerKey);
+		String id = StringUtil.nvl(request.getParameter("id"),sbPhoneNumber);
 		String name = StringUtil.nvl(request.getParameter("name"),"");
 		String restfulltype = StringUtil.nvl(request.getParameter("restfulltype"),"일반");
 		String photo = StringUtil.nvl(request.getParameter("photo"),"");
 		
-		logger.info(">>>> customerKey :"+customerKey);
-		logger.info(">>>> customerPw :"+customerPw);
-		
-		String ip = request.getHeader("X-Forwarded-For");
-
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
-
-		    ip = request.getHeader("Proxy-Client-IP"); 
-		    logger.info(">>>> Proxy-Client-IP :"+ip);
-
-		} 
-
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
-
-		    ip = request.getHeader("WL-Proxy-Client-IP"); 
-		    logger.info(">>>> WL-Proxy-Client-IP :"+ip);
-
-		} 
-
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
-
-		    ip = request.getHeader("HTTP_CLIENT_IP"); 
-		    logger.info(">>>> HTTP_CLIENT_IP :"+ip);
-
-		} 
-
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
-
-		    ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
-		    logger.info(">>>> HTTP_X_FORWARDED_FOR :"+ip);
-
-		} 
-
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
-
-		    ip = request.getRemoteAddr(); 
-		    logger.info(">>>> RemoteAddr :"+ip);
-
-		}
+		logger.info(">>>> sbPhoneNumber :"+sbPhoneNumber);
+		logger.info(">>>> sbPw :"+sbPw);
 
 		String strMainUrl = "";
 		
 		// # 2. 넘겨받은 아이디로 데이터베이스를 조회하여 사용자가 있는지를 체크한다.
 		CustomerVO customerVo = new CustomerVO();
-		customerVo.setCustomerKey(customerKey);
-		customerVo.setInCustomerPw(customerPw);
+		customerVo.setSbPhoneNumber(sbPhoneNumber);
+		customerVo.setInCustomerPw(sbPw);
 		
 		CustomerVO customerChk = customerSvc.getCustomer(customerVo);		
 
-		String customerId = "";
-		String customerName = "";
-		String customerKey1 = "";
-		String customerKey2 = "";
-		String customerKey3 = "";
-		String customerKey4 = "";
-		String customerKey5 = "";
-		String customerKey6 = "";
-		String customerKey7 = "";
-		String customerKey8 = "";
-		String customerKey9 = "";
-		String customerKey10 = "";
-		String staffYn = "N";
+		String customerKey="";
+		String lastLat = "";
+		String lastlon = "";
 	
 		if(customerChk != null)
 		{
@@ -928,8 +907,9 @@ public class CommonController {
 				logger.info(">>> 비밀번호 오류");
 				strMainUrl = "common/loginFail";
 				
+				mv.addObject("memberType", memberType);
 				mv.addObject("loginType", loginType);
-				mv.addObject("customerKey", customerKey);
+				mv.addObject("sbPhoneNumber", sbPhoneNumber);
 				
 				mv.setViewName(strMainUrl);
 				
@@ -941,18 +921,10 @@ public class CommonController {
 				
 			}
 
-			customerName = customerChk.getCustomerName();
-			customerKey1 = customerChk.getCustomerKey1();
-			customerKey2 = customerChk.getCustomerKey2();
-			customerKey3 = customerChk.getCustomerKey3();
-			customerKey4 = customerChk.getCustomerKey4();
-			customerKey5 = customerChk.getCustomerKey5();
-			customerKey6 = customerChk.getCustomerKey6();
-			customerKey7 = customerChk.getCustomerKey7();
-			customerKey8 = customerChk.getCustomerKey8();
-			customerKey9 = customerChk.getCustomerKey9();
-			customerKey10 = customerChk.getCustomerKey10();
-			staffYn=customerChk.getStaffYn();
+			customerKey = customerChk.getCustomerKey();
+			sbPhoneNumber = customerChk.getSbPhoneNumber();
+			lastLat = customerChk.getLastLat();
+			lastlon=customerChk.getLastlon();
 
 			// # 3. Session 객체에 셋팅
 			
@@ -964,42 +936,45 @@ public class CommonController {
 			}
 				
 				session = request.getSession(true);
+				
+				session.setAttribute("memberType", memberType);
 				session.setAttribute("customerKey", customerKey);
-				session.setAttribute("customerId", customerId);
-				session.setAttribute("customerName", customerName);
-				session.setAttribute("customerKey1", customerKey1);
-				session.setAttribute("customerKey2", customerKey2);
-				session.setAttribute("customerKey3", customerKey3);
-				session.setAttribute("customerKey4", customerKey4);
-				session.setAttribute("customerKey5", customerKey5);
-				session.setAttribute("customerKey6", customerKey6);
-				session.setAttribute("customerKey7", customerKey7);
-				session.setAttribute("customerKey8", customerKey8);
-				session.setAttribute("customerKey9", customerKey9);
-				session.setAttribute("customerKey10", customerKey10);
-				session.setAttribute("staffYn", staffYn);
-				session.setAttribute("groupId", groupId);
-				session.setAttribute("groupName", groupName);
+				session.setAttribute("sbPhoneNumber", sbPhoneNumber);
+				session.setAttribute("lastLat", lastLat);
+				session.setAttribute("lastlon", lastlon);
 				
 				session.setAttribute("id", id);
 				session.setAttribute("name", name);
 				session.setAttribute("restfulltype", restfulltype);
 				session.setAttribute("photo", photo);
 
-				mv.addObject("customerKey", customerKey);
-				mv.addObject("staffYn", staffYn);
-				
-				if(loginType.equals("survey")){
-					strMainUrl = "survey/surveyManage";
+				if("01".equals(memberType)){
+					strMainUrl = "business/goodsManage";
 				}else{
 					
-					if(StringUtil.nvl(staffYn,"N").equals("Y")){//직원인경우 서비스선택여부 단계추가
-						strMainUrl = "common/staffCheck";
-					}else{
-						strMainUrl = "comunity/comunityManage";
-					}
-					
+					List<AsVO> asList = null;
+					AsVO asConVO = new AsVO();
+			        asConVO.setCustomerKey(customerKey);
+			        asConVO.setGroupId(groupId);
+			        
+			        // 조회조건저장
+			        mv.addObject("asConVO", asConVO);
+
+			        // 페이징코드
+			        asConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(asConVO.getCurPage(), asConVO.getRowCount()));
+			        asConVO.setPage_limit_val2(StringUtil.nvl(asConVO.getRowCount(), "10"));
+			        
+			        // 사용자목록조회
+			        asList = asSvc.getAsList(asConVO);
+			        mv.addObject("asList", asList);
+
+			        // totalCount 조회
+			        String totalCount = String.valueOf(asSvc.getAsCnt(asConVO));
+			        mv.addObject("totalCount", totalCount);
+
+					strMainUrl = "member/mytokenList";
 				}
+
 				
 			} else {//고객 정보가 없는경우
 				
@@ -1007,10 +982,7 @@ public class CommonController {
 				strMainUrl = "common/loginFail";
 
 			}
-			
-		    mv.addObject("loginType", loginType);
-			mv.addObject("customerKey", customerKey);
-			
+
 			mv.setViewName(strMainUrl);
 			
 			//log Controller execute time end
@@ -1038,21 +1010,22 @@ public class CommonController {
 		logger.info("["+logid+"] Controller start snslogin::");
 		
 		ModelAndView  mv = new ModelAndView();
-		
+
 		String loginType = StringUtil.nvl(request.getParameter("loginType"));
-		String customerKey = StringUtil.nvl(request.getParameter("customerKey"));
-		String customerPw = StringUtil.nvl(request.getParameter("customerPw"));
+		String memberType = StringUtil.nvl(request.getParameter("memberType"));
+		String sbPhoneNumber = StringUtil.nvl(request.getParameter("sbPhoneNumber"));
+		String sbPw = StringUtil.nvl(request.getParameter("sbPw"));
 		String groupId = StringUtil.nvl(request.getParameter("groupId"),"SM001");
 		String groupName = StringUtil.nvl(request.getParameter("groupName"),"스마트매장");
 		
-		String id = StringUtil.nvl(request.getParameter("id"),customerKey);
+		String id = StringUtil.nvl(request.getParameter("id"),sbPhoneNumber);
 		String name = StringUtil.nvl(request.getParameter("name"),"");
 		String restfulltype = StringUtil.nvl(request.getParameter("restfulltype"),"일반");
 		String photo = StringUtil.nvl(request.getParameter("photo"),"");
 		String access_token = StringUtil.nvl(request.getParameter("access_token"),"");
 		
-		logger.info(">>>> customerKey :"+customerKey);
-		logger.info(">>>> customerPw :"+customerPw);
+		logger.info(">>>> sbPhoneNumber :"+sbPhoneNumber);
+		logger.info(">>>> sbPw :"+sbPw);
 		logger.info(">>>> id :"+id);
 		logger.info(">>>> name :"+name);
 		logger.info(">>>> restfulltype :"+restfulltype);
@@ -1061,26 +1034,15 @@ public class CommonController {
 	
 		String strMainUrl = "";
 		
-		// # 2. 넘겨받은 아이디로 데이터베이스를 조회하여 사용자가 있는지를 체크한다.
 		CustomerVO customerVo = new CustomerVO();
-		customerVo.setCustomerKey(customerKey);
-		customerVo.setInCustomerPw(customerPw);
+		customerVo.setSbPhoneNumber(sbPhoneNumber);
+		customerVo.setInCustomerPw(sbPw);
 		
 		CustomerVO customerChk = customerSvc.getCustomer(customerVo);		
 
-		String customerId = "";
-		String customerName = "";
-		String customerKey1 = "";
-		String customerKey2 = "";
-		String customerKey3 = "";
-		String customerKey4 = "";
-		String customerKey5 = "";
-		String customerKey6 = "";
-		String customerKey7 = "";
-		String customerKey8 = "";
-		String customerKey9 = "";
-		String customerKey10 = "";
-		String staffYn = "N";
+		String customerKey="";
+		String lastLat = "";
+		String lastlon = "";
 	
 		if(customerChk != null)
 		{
@@ -1091,6 +1053,7 @@ public class CommonController {
 				logger.info(">>> 비밀번호 오류");
 				strMainUrl = "common/loginFail";
 				
+				mv.addObject("memberType", memberType);
 				mv.addObject("loginType", loginType);
 				mv.addObject("customerKey", customerKey);
 				
@@ -1104,18 +1067,10 @@ public class CommonController {
 				
 			}
 
-			customerName = customerChk.getCustomerName();
-			customerKey1 = customerChk.getCustomerKey1();
-			customerKey2 = customerChk.getCustomerKey2();
-			customerKey3 = customerChk.getCustomerKey3();
-			customerKey4 = customerChk.getCustomerKey4();
-			customerKey5 = customerChk.getCustomerKey5();
-			customerKey6 = customerChk.getCustomerKey6();
-			customerKey7 = customerChk.getCustomerKey7();
-			customerKey8 = customerChk.getCustomerKey8();
-			customerKey9 = customerChk.getCustomerKey9();
-			customerKey10 = customerChk.getCustomerKey10();
-			staffYn=customerChk.getStaffYn();
+			customerKey = customerChk.getCustomerKey();
+			sbPhoneNumber = customerChk.getSbPhoneNumber();
+			lastLat = customerChk.getLastLat();
+			lastlon=customerChk.getLastlon();
 
 			// # 3. Session 객체에 셋팅
 			
@@ -1127,33 +1082,40 @@ public class CommonController {
 			}
 				
 				session = request.getSession(true);
+				
+				session.setAttribute("memberType", memberType);
 				session.setAttribute("customerKey", customerKey);
-				session.setAttribute("customerId", customerId);
-				session.setAttribute("customerName", customerName);
-				session.setAttribute("customerKey1", customerKey1);
-				session.setAttribute("customerKey2", customerKey2);
-				session.setAttribute("customerKey3", customerKey3);
-				session.setAttribute("customerKey4", customerKey4);
-				session.setAttribute("customerKey5", customerKey5);
-				session.setAttribute("customerKey6", customerKey6);
-				session.setAttribute("customerKey7", customerKey7);
-				session.setAttribute("customerKey8", customerKey8);
-				session.setAttribute("customerKey9", customerKey9);
-				session.setAttribute("customerKey10", customerKey10);
-				session.setAttribute("staffYn", staffYn);
-				session.setAttribute("groupId", groupId);
-				session.setAttribute("groupName", groupName);
+				session.setAttribute("sbPhoneNumber", sbPhoneNumber);
+				session.setAttribute("lastLat", lastLat);
+				session.setAttribute("lastlon", lastlon);
 				
 				session.setAttribute("id", id);
 				session.setAttribute("name", name);
 				session.setAttribute("restfulltype", restfulltype);
 				session.setAttribute("photo", photo);
 				session.setAttribute("access_token", access_token);
-
-				mv.addObject("customerKey", customerKey);
-				mv.addObject("staffYn", staffYn);
 				
-				strMainUrl = "comunity/comunityManage";
+				List<AsVO> asList = null;
+				AsVO asConVO = new AsVO();
+		        asConVO.setCustomerKey(customerKey);
+		        asConVO.setGroupId(groupId);
+		        
+		        // 조회조건저장
+		        mv.addObject("asConVO", asConVO);
+
+		        // 페이징코드
+		        asConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(asConVO.getCurPage(), asConVO.getRowCount()));
+		        asConVO.setPage_limit_val2(StringUtil.nvl(asConVO.getRowCount(), "10"));
+		        
+		        // 사용자목록조회
+		        asList = asSvc.getAsList(asConVO);
+		        mv.addObject("asList", asList);
+
+		        // totalCount 조회
+		        String totalCount = String.valueOf(asSvc.getAsCnt(asConVO));
+		        mv.addObject("totalCount", totalCount);
+
+				strMainUrl = "member/mytokenList";
 				
 			} else {//고객 정보가 없는경우
 				
@@ -1161,10 +1123,7 @@ public class CommonController {
 				strMainUrl = "common/loginFail";
 
 			}
-			
-		    mv.addObject("loginType", loginType);
-			mv.addObject("customerKey", customerKey);
-			
+
 			mv.setViewName(strMainUrl);
 			
 			//log Controller execute time end

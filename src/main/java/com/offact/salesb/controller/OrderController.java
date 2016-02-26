@@ -575,6 +575,26 @@ public class OrderController {
     	
     	return token;
     }
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/orderintro", method = RequestMethod.GET)
+	public ModelAndView orderintro(HttpServletRequest request,
+			                   HttpServletResponse response,  
+			                   String key) throws BizException 
+	{
+
+		logger.info("Welcome intro");
+		
+		ModelAndView  mv = new ModelAndView();
+
+		mv.addObject("key", key);
+    	mv.setViewName("/order/intro");
+
+		return mv;
+	}
+    
     
     /**
      * 고객판매페이지

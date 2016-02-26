@@ -153,7 +153,7 @@
             	
             	var frm=document.RegistForm;
             	
-            	if(frm.customerKey.value==''){
+            	if(frm.sbPhoneNumber.value==''){
     				alert('인증된 핸드폰 번호가 없습니다.');
     				return;
     			}
@@ -163,7 +163,7 @@
        				return;
        			}
             	
-            	if(frm.customerPw.value==''){
+            	if(frm.sbPw.value==''){
     				alert('등록하실 비밀번호를  입력 하시기 바랍니다.');
     				return;
     			}
@@ -173,12 +173,12 @@
     				return;
     			}
 
-    			if(frm.customerPw.value!=frm.customerRePw.value){
+    			if(frm.sbPw.value!=frm.customerRePw.value){
     				alert('등록하실 비밀번호가 재입력 비밀번호와 같지 않습니다.');
-    				frm.customerPw.value='';
+    				frm.sbPw.value='';
     				frm.customerRePw.value='';
     				
-    				frm.customerPw.focus(1);
+    				frm.sbPw.focus(1);
     				return;
     			}
 
@@ -189,7 +189,7 @@
 
     			//if (confirm('회원 가입을 하시겠습니까?')){ 
     				
-    				setCookie("addys_customerkey", $('#customerKey').val());
+    				setCookie("addys_customerkey", $('#sbPhoneNumber').val());
     	    		
 	    		    $.ajax({
 	    		        type: "POST",
@@ -228,12 +228,12 @@
             	
             	var frm=document.RegistForm;
             	
-            	if(frm.customerKeyView.value==''){
+            	if(frm.sbPhoneNumberView.value==''){
     				alert('인증하실 핸드폰 번호가 없습니다.');
     				return;
     			}
             	
-            	frm.customerKey.value=frm.customerKeyView.value;
+            	frm.sbPhoneNumber.value=frm.sbPhoneNumberView.value;
             	
             	$.ajax({
     		        type: "POST",
@@ -245,7 +245,7 @@
     						if(result=='0'){
     							
     						    alert('인증요청을 성공했습니다.\n문자로 발송된 인증번호를 입력하시기 바랍니다.');
-    							frm.customerKeyView.disabled=true;
+    							frm.sbPhoneNumberView.disabled=true;
     							frm.tokenView.disabled=false;
     							//document.all('completebtn').style.display="inline";
     							document.all('completebtn').disabled=false;
@@ -282,7 +282,7 @@
        				return;
        			}
            		
-            	if(frm.customerKey.value==''){
+            	if(frm.sbPhoneNumber.value==''){
     				alert('인증하실 핸드폰 번호가 없습니다.');
     				return;
     			}
@@ -304,8 +304,8 @@
     						if(result=='1'){
     							
     							 //alert('인증요청을 성공했습니다.\n발송된 인증번호를 입력하시기 바랍니다.');
-    							 //document.all('pwform').style.display="inline";
-    							 document.all('agreeform').style.display="inline";
+    							 document.all('pwform').style.display="inline";
+    							 //document.all('agreeform').style.display="inline";
     							 document.all('reqbtn').style.display="none";
     							 //document.all('completebtn').style.display="none";
     							 document.all('completebtn').disabled=true;
@@ -318,6 +318,7 @@
 						    } else{
 						    	
     							 alert('인증확인을 실패했습니다.');
+    							 
     						}
     						
     						 frm.tokenstate.value=result;
@@ -331,6 +332,49 @@
     		           }
     		    });
             }
+            
+         function fbRegist(){
+        	 
+        	 alert('서비스 준비중입니다.');
+        	 return;
+      		  
+    		    var loginURL='https://www.facebook.com/dialog/oauth';
+    		    var fbAppId='${facebookfbAppId}';
+    		    var scope='public_profile';
+    		    var redirectURL='${redirectUrl}/salesb/facebooklogin';
+    	
+    		    top.location.href=loginURL + '?client_id=' + fbAppId + '&redirect_uri=' + redirectURL +'&response_type=token&scope=' + scope;
+    	
+    	  }
+            
+            
+          function kakaoRegist(){
+           	 
+           	 alert('서비스 준비중입니다.');
+           	 return;
+           	 
+    		    var loginURL='https://kauth.kakao.com/oauth/authorize';
+    		    var client_id='${kakaoclient_id}';
+    		    var redirectURL='${redirectUrl}/salesb/kakaologin';
+    		    
+    		    top.location.href=loginURL + '?client_id=' + client_id + '&redirect_uri=' + redirectURL +'&response_type=code';
+    		    
+    	  }
+            
+          function naverRegist(){
+           	 
+           	 alert('서비스 준비중입니다.');
+           	 return;
+           	 
+    		    var loginURL='https://nid.naver.com/oauth2.0/authorize';
+    		  	var client_id='${naverclient_id}';
+    			//alert('${state}');
+    		    var redirectURL='${redirectUrl}/salesb/naverlogin';
+    		  	
+    		    top.location.href=loginURL + '?client_id=' + client_id + '&redirect_uri=' + redirectURL +'&response_type=code&state=${state}';
+    		    
+    	  }
+            
         </script>
     </head>
     <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
@@ -349,29 +393,44 @@
 		      <div class="m_content form" >
 		      <!-- 타이틀 -->
         <div class="clm_acdo_tit">
-          <h1>가입하기</h1>
+          <h1>계정생성</h1>
           <div class="clm_acdo_tit_left">
-           <c:choose>
-	    		<c:when test="${type=='survey'}">
-	    		    <a href="<%= request.getContextPath() %>/surveyloginform" class="btn b_prev"><span class="sp_prev">이전</span></a>
-			 	 </c:when>
-				<c:otherwise>
-				    <a href="<%= request.getContextPath() %>/customerloginform" class="btn b_prev"><span class="sp_prev">이전</span></a>
-		 		</c:otherwise>
-			</c:choose>
+ 			 <a href="<%= request.getContextPath() %>/intro" class="btn b_prev"><span class="sp_prev">취소</span></a>
           </div>
         </div>
         <!--// 타이틀 --> 
 		        <div class="m_resbx">
+		          
+		           <div class="m_result id">
+		              <ul class="schinp_list">
+		                <div class="bnbox">
+			              <button type="button" class="bn_facebook" onclick="fbRegist()">FACEBOOK 으로 연결</button>
+			            </div>
+			            <div class="bnbox_kakao">
+			              <button type="button" class="bn_kakao" onclick="kakaoRegist()">KAKAO 로 연결</button>
+			            </div>
+                        <div class="bnbox">
+			              <button type="button" class="bn_naver" onclick="naverRegist()">NAVER 로 연결</button>
+			            </div>
+		              </ul>
+		            </div>
+		          
+		          <h6  class="m_sch_tp">-또는-</h6>
 		          <!-- 핸드폰번호 등록 -->
 		            <div class="m_result id">
-		              <h4 class="m_sch_tp">등록을 위해 단 한번의 핸드폰 인증이 필요합니다.</h4>
+		              <h6  class="m_sch_tp"></h6>
 		              <ul class="schinp_list">
 		                <li>
+		                  <label for="" class="blind">이메일</label>
+		                  <span class="inpbx certi">
+		                  <input type="text" id=sbEamilView name="sbEamilView" placeholder="name@example.com">
+		                  <input type="hidden" id=sbEamil name="sbEamil"  value=""/> 
+		                  </span><a href="javascript:getTokenEmail()" id="reqbtn" class="bn_certi" >인증요청</a></li>
+		                   <li>
 		                  <label for="" class="blind">핸드폰번호</label>
 		                  <span class="inpbx certi">
-		                  <input type="text" id=customerKeyView name="customerKeyView" placeholder="핸드폰번호 등록">
-		                  <input type="hidden" id=customerKey name="customerKey"  value=""/> 
+		                  <input type="text" id=sbPhoneNumberView name="sbPhoneNumberView" placeholder="핸드폰번호 등록">
+		                  <input type="hidden" id=sbPhoneNumber name="sbPhoneNumber"  value=""/> 
 		                  </span><a href="javascript:getToken()" id="reqbtn" class="bn_certi" >인증요청</a></li>
 		                <li>
 		                  <label for="" class="blind">인증번호</label>
@@ -382,16 +441,16 @@
 		              </ul>
 		            </div>
 		          <!--//핸드폰번호 등록 --> 
-		          <div id="agreeform" name="agreeform" style="display:none">
+		          <div id="agreeform" name="agreeform" >
 		          <!-- 비밀번호 등록 -->
-		          <div  id="pwform" name="pwform" >
+		          <div  id="pwform" name="pwform" style="display:none" >
 		            <div class="m_result pw" >
 		              <h4 class="m_sch_tp"> 비밀번호를 설정해주세요.</h4>
 		              <ul class="schinp_list">
 		                <li>
 		                  <label for="inp_pw" class="blind">비밀번호</label>
 		                  <span class="inpbx">
-		                  <input type="password" name="customerPw" id="customerPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)">
+		                  <input type="password" name="sbPw" id="sbPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)">
 		                  </span></li>
 		                <li>
 		                  <label for="inp_pw2" class="blind">비밀번호 재입력</label>
@@ -424,8 +483,13 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>핸드폰번호</td>
+										<td>핸드폰번호/이메일</td>
 										<td>고객 문의, 칭찬, 제안 등 민원 처리 결과 , A/S 회신 , 마케팅활용</td>
+										<td>문의 처리 후 3년</td>
+									</tr>
+									<tr>
+										<td>위치정보</td>
+										<td>위치기반 서비스</td>
 										<td>문의 처리 후 3년</td>
 									</tr>
 								</tbody>
@@ -447,17 +511,6 @@
 		            </div>
 		            </div>
 		            </div>
-		          <!--//개인정보수집 동의 -->
-		          <!-- 이용안내 -->
-		          <h3 class="line_tit"></h3>
-		          <div class="m_tip">
-		            <span class="ico_tip"></span>등록을 하시면 다음과 같은 서비스를 이용 가능하십니다.
-		            <ul class="m_tip_list">
-		              <li>1. 주문내역 조회</li>
-                	  <li>2. 판매내역 조회</li>
-		            </ul>
-		          </div>
-		          <!--//이용안내 -->
 		        </div>
 		      </div>
 		  </div>
@@ -475,8 +528,8 @@ var cust_frm = document.RegistForm;
 var cust_key = getCookie("addys_customerkey");
 
 if( cust_key != null && trim(cust_key) != '' && cust_key != 'null' ){
-	cust_frm.customerKeyView.value = cust_key;
-	cust_frm.customerKey.value = cust_key;
+	cust_frm.sbPhoneNumberView.value = cust_key;
+	cust_frm.sbPhoneNumber.value = cust_key;
 }
 
 </script>

@@ -37,13 +37,14 @@ button { border: 0 none; background-color: transparent; cursor: pointer; }
 .bnbox a:first-child, .bnbox button:first-child { margin-top: 0; }
 .bnbox button { width: 100%; line-height: 100%; }
 .bnbox a, .bnbox button { clear:both; display: block; height: 46px; margin-top: 6px; font-weight: bold; font-size: 18px; line-height: 46px; color: #fff; letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top; }
-.bnbox .bn_blue, .bnbox .bn_blue2 { background: #33b9ae; }
+.bnbox .bn_blue, .bnbox .bn_blue2 { background: #222222; }
 .bnbox .bn_gray, .bnbox .bn_gray2 { background: #808080; }
 .bnbox .bn_pnk, .bnbox .bn_pnk2 { background: #ff5b7e; }
-.bnbox .bn_salesb, .bnbox .bn_salesb { background: #33b9ae; }
+.bnbox .bn_salesb, .bnbox .bn_salesb { background: #222222; }
 .bnbox .bn_facebook, .bnbox .bn_facebook2 { background: #3b5998; }
 .bnbox .bn_google, .bnbox .bn_google2 { background: #f44336; }
 .bnbox .bn_naver, .bnbox .bn_naver2 { background: #1fbc02; }
+.bnbox .bn_salesb2, .bnbox .bn_salesb2 { background: #33b9ae; }
 
 .bnbox_kakao { width: 100%; margin-top: 15px; }
 .bnbox_kakao a:first-child, .bnbox_kakao button:first-child { margin-top: 0; }
@@ -69,7 +70,7 @@ button { border: 0 none; background-color: transparent; cursor: pointer; }
 .log_joinlist li { width: auto; margin-top: 8px; font-size: 12px; line-height: 24px; color: #808080; }
 .log_joinlist a {margin-left:10px; color:#fff;font-weight: bold;padding:3px 10px 6px;letter-spacing: -1px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; box-shadow: inset 0 -3px 0 rgba(255,255,255,.15); vertical-align: top; }
 .log_joinlist a.bn_pw {background: #b6b6b6; }
-.log_joinlist a.bn_join {background: #33b9ae;}
+.log_joinlist a.bn_join {background: #222222;}
 
 
 

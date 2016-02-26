@@ -100,5 +100,4 @@
 <%@ include file="/WEB-INF/views/admin/footer.jsp" %>
 <script>
 fcCompanyManage_listSearch();
-MM_nbGroup('down','group4','menu_04','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg',1);
 </script>

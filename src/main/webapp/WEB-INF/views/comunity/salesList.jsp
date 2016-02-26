@@ -11,7 +11,7 @@
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#saleslist").html(result);
+                   $("#view").html(result);
             },
             error:function(){
                 commonDim(false);
@@ -29,7 +29,7 @@
             url:  "<%= request.getContextPath() %>/comunity/salesdetail?asNo="+asNo+"&curPage="+curPage,
             success: function(result) {
              
-                   $("#saleslist").html(result);
+                   $("#view").html(result);
             },
             error:function(){
 
@@ -43,8 +43,7 @@
  <input type="hidden" name="curPage"             id="curPage"            value="1" />
  <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
  <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-  <div id="container" class="comunity" >
-    <div id="m_content" >
+ 
       <div class="clm_acdo_cont">
         <!-- 타이틀 -->
         <div class="clm_acdo_tit">
@@ -97,8 +96,7 @@
                 <!-- 페이징 -->
      <taglib:paging cbFnc="goPageSalesPageList" totalCount="${totalCount}" curPage="${asConVO.curPage}" rowCount="${asConVO.rowCount}" />
      <!-- //페이징 --> 
-    </div>   
-  </div>
+
   </form:form>
   <!-- //container -->
 

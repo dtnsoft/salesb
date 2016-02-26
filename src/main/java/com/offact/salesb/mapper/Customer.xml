@@ -4,78 +4,71 @@
 
 <resultMap id="CustomerVO" type="com.offact.salesb.vo.CustomerVO" >
   <result column="customerKey"              property="customerKey"  />
-  <result column="customerId"              property="customerId"  />
-  <result column="customerPw"              property="customerPw"  />
-  <result column="customerName"      property="customerName"  />
-  <result column="customerKey1"       property="customerKey1"  />
-  <result column="customerKey2"      property="customerKey2"  />
-  <result column="customerKey3"       property="customerKey3"  />
-  <result column="customerKey4"      property="customerKey4"  />
-  <result column="customerKey5"             property="customerKey5"  />
-  <result column="customerKey6"             property="customerKey6"  />
-  <result column="customerKey7"            property="customerKey7"  />
-  <result column="customerKey8"           property="customerKey8"  />
-  <result column="customerKey9"              property="customerKey9"  />
-  <result column="customerKey10"         property="customerKey10"  />
-  <result column="staffYn"         property="staffYn"  />
-  <result column="token"         property="token"  />
+  <result column="sbPhoneNumber"            property="sbPhoneNumber"  />
+  <result column="sbPw"      	   property="sbPw"  />
+  <result column="socialId1"       	   property="socialId1"  />
+  <result column="socialId2"              property="socialId2"  />
+  <result column="socialId3"                property="socialId3"  />
+  <result column="socialId4"            property="socialId4"  />
+  <result column="socialId5"           property="socialId5"  />
+  <result column="socialId6"            property="socialId6"  />
+  <result column="socialId7"         property="socialId7"  />
+  <result column="socialId8"   property="socialId8"  />
+  <result column="socialId9"         property="socialId9"  />
+  <result column="socialId10"   property="socialId10"  />
+  <result column="createDateTime"               property="createDateTime"  />
+  <result column="token"                  property="token"  />
+  <result column="tokenDateTime"        property="tokenDateTime"  />
+  <result column="registDateTime"      property="registDateTime"  />
+  <result column="updateDateTime"        property="updateDateTime"  />
+  <result column="usedYn"      property="usedYn"  />
+  <result column="lastloginType"               property="lastloginType"  />
+  <result column="lastLat"           property="lastLat"  />
+  <result column="lastlon"   property="lastlon"  />
 </resultMap>
 
 <select id="getCustomer" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
-SELECT T1.customerKey
-      ,T1.customerId
-      ,T1.customerPw
-      ,password(#{inCustomerPw}) As inCustomerPw
-      ,T1.customerName
-      ,T1.customerKey1
-      ,T1.customerKey2
-      ,T1.customerKey3 
-      ,T1.customerKey4
-      ,T1.customerKey5
-      ,T1.customerKey6
-      ,T1.customerKey7
-      ,T1.customerKey8
-      ,T1.customerKey9
-      ,T1.customerKey10
-      ,T2.smartYn as staffYn
-      ,T1.token
-  FROM smCustomer T1
-       Left Join ofUser T2 On T1.customerKey=replace(T2.mobliePhone,'-','')  and T2.smartYn='Y' 
+SELECT  T1.customerKey
+	  ,T1.sbPhoneNumber
+	  ,T1.sbPw As customerPw
+	  ,password(#{inCustomerPw}) As inCustomerPw
+	  ,T1.socialId1
+	  ,T1.socialId2
+	  ,T1.socialId3
+      ,T1.socialId4
+	  ,T1.socialId5
+	  ,T1.socialId6
+	  ,T1.socialId7
+	  ,T1.socialId8
+	  ,T1.socialId9
+	  ,T1.socialId10
+	  ,T1.createDateTime
+	  ,T1.token
+	  ,T1.tokenDateTime
+	  ,T1.registDateTime
+	  ,T1.updateDateTime
+	  ,ifnull(T1.usedYn,'N') as usedYn
+	  ,T1.lastloginType
+	  ,T1.lastLat
+	  ,T1.lastlon
+  FROM sbCustomer T1
   WHERE T1.usedYn='Y'
-        And T1.customerKey = #{customerKey}
+        And T1.sbPhoneNumber = #{sbPhoneNumber}
  
 </select>
 
 <update id="customerUpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
-        Update smCustomer
+        Update sbCustomer
        		Set
-  				customerKey1 = ifnull(#{customerKey1},'01')
-            	,customerKey2 = #{customerKey2}
-            	,customerKey3 = #{customerKey3}
-            	,customerKey4 = #{customerKey4}
-            	,customerKey5 = #{customerKey5}
-            	,customerKey6 = #{customerKey6}
-           	 	,customerKey7 = #{customerKey7}
-            	,customerKey8 = #{customerKey8}
-            	,customerKey9 = #{customerKey9}
-            	,customerKey10 = #{customerKey10}
+  				sbPhoneNumber = ifnull(#{sbPhoneNumber},'01')
+            	,sbPw = #{sbPw}
             	,updateDateTime = now()
  		Where customerKey = #{customerKey}
 </update>
 
 <update id="customerUpdatePwProc" parameterType="com.offact.salesb.vo.CustomerVO" >
-        Update smCustomer
-       		Set customerPw = password(#{customerPw})
-       		    ,customerKey1 = ifnull(#{customerKey1},'01')
-            	,customerKey2 = #{customerKey2}
-            	,customerKey3 = #{customerKey3}
-            	,customerKey4 = #{customerKey4}
-            	,customerKey5 = #{customerKey5}
-            	,customerKey6 = #{customerKey6}
-           	 	,customerKey7 = #{customerKey7}
-            	,customerKey8 = #{customerKey8}
-            	,customerKey9 = #{customerKey9}
-            	,customerKey10 = #{customerKey10}
+        Update sbCustomer
+       		Set sbPw = password(#{sbPw})
             	,updateDateTime = now()
  		Where customerKey = #{customerKey}
 </update>
@@ -85,19 +78,19 @@ SELECT T1.customerKey
 </select>
 
 <insert id="customerRegist" parameterType="com.offact.salesb.vo.CustomerVO">
-        INSERT INTO smCustomer( 
-        	 customerKey
-            ,customerPw
+        INSERT INTO sbCustomer( 
+        	 sbPhoneNumber
+            ,sbPw
             ,registDateTime 
             ,usedYn 
             )
         VALUES (
-	  		  #{customerKey}
-	  		, password(#{customerPw})
+	  		  #{sbPhoneNumber}
+	  		, password(#{sbPw})
 	  		, now()
 	  		, 'Y'
 	  		) 
-	  	ON DUPLICATE KEY UPDATE customerPw =  password(#{customerPw})
+	  	ON DUPLICATE KEY UPDATE sbPw =  password(#{sbPw})
             	               ,updateDateTime = now()    
             	               ,usedYn = 'Y'  
  </insert>
@@ -105,14 +98,14 @@ SELECT T1.customerKey
 
 <insert id="getToken"  parameterType="com.offact.salesb.vo.CustomerVO" >
 		 
-		 INSERT INTO smCustomer( 
-        	 customerKey
+		 INSERT INTO sbCustomer( 
+        	 sbPhoneNumber
         	,createDateTime 
         	,token
             ,tokenDateTime
             )
         VALUES (
-	  		  #{customerKey}
+	  		  #{sbPhoneNumber}
 	  		, now()
 	  		, #{token}
 	  		, now()
@@ -124,8 +117,8 @@ SELECT T1.customerKey
 
 <select id="getTokenInfo" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
 	SELECT T1.token
-  		FROM smCustomer T1
-  	WHERE T1.customerKey = #{customerKey}
+  		FROM sbCustomer T1
+  	WHERE T1.sbPhoneNumber = #{sbPhoneNumber}
  
 </select>
 </mapper>

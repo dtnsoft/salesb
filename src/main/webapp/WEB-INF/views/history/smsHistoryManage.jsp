@@ -180,5 +180,4 @@
 <%@ include file="/WEB-INF/views/admin/footer.jsp" %>
 <script>
 fcSmsManage_listSearch();
-MM_nbGroup('down','group5','menu_05','<%= request.getContextPath() %>/images/top/addys-menu_05_on.jpg',1);
 </script>

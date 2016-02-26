@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/salesb/base.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/top.jsp" %>
 	<script>
 	
 	function keyTest(){
@@ -34,11 +34,11 @@
 	 } 
 
 	</script>
+	<div id="wrap" class="wrap" >
+	<div class="container">
 <form:form class="form-inline" role="form" commandName="asConVO" id="asConForm" name="asConForm" method="post" action="" >
  </form:form>
-<!-- container -->
-  <div id="container" class="comunity" >
-    <div id="m_content" >
+
       <div class="clm_order_detail">
         <!-- 타이틀 -->
         <div class="clm_acdo_tit">
@@ -84,6 +84,5 @@
 	          <a href="javascript:orderKeyCreate();" class="btn_ty2">주문키 요청</a>
 	        </div>
 	    </div>
-    </div>
-  </div>
-  <!-- //container -->
+</div>
+</div>

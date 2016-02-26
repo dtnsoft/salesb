@@ -12,7 +12,7 @@
 	              data:dataParam,
 	            success: function(result) {
 	                   commonDim(false);
-	                   $("#orderlist").html(result);
+	                   $("#view").html(result);
 	            },
 	            error:function(){
 	                commonDim(false);
@@ -83,9 +83,7 @@
  <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
  <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
  </form:form>
-<!-- container -->
-  <div id="container" class="comunity" >
-    <div id="m_content" >
+
       <div class="clm_order_detail">
         <!-- 타이틀 -->
         <div class="clm_acdo_tit">
@@ -232,6 +230,3 @@
         <!--// 2.배송정보 -->
      	
       </div>
-    </div>
-  </div>
-  <!-- //container -->

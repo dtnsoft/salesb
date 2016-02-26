@@ -11,7 +11,7 @@
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#orderlist").html(result);
+                   $("#view").html(result);
             },
             error:function(){
                 commonDim(false);
@@ -29,7 +29,7 @@
             url:  "<%= request.getContextPath() %>/comunity/orderdetail?asNo="+asNo+"&curPage="+curPage,
             success: function(result) {
              
-                   $("#orderlist").html(result);
+                   $("#view").html(result);
             },
             error:function(){
 
@@ -40,11 +40,9 @@
 </SCRIPT>
  <!-- container -->
 <form:form class="form-inline" role="form" commandName="asConVO" id="asConForm" name="asConForm" method="post" action="" >
- <input type="hidden" name="curPage"             id="curPage"            value="1" />
- <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
- <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-  <div id="container" class="comunity" >
-    <div id="m_content" >
+	 <input type="hidden" name="curPage"             id="curPage"            value="1" />
+	 <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
+	 <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
       <div class="clm_acdo_cont">
         <!-- 타이틀 -->
         <div class="clm_acdo_tit">
@@ -94,11 +92,9 @@
           </ul>
         </div>
       </div>
-                <!-- 페이징 -->
+     <!-- 페이징 -->
      <taglib:paging cbFnc="goPageOrderPageList" totalCount="${totalCount}" curPage="${asConVO.curPage}" rowCount="${asConVO.rowCount}" />
-     <!-- //페이징 --> 
-    </div>   
-  </div>
+     <!-- //페이징 -->   
   </form:form>
   <!-- //container -->
 

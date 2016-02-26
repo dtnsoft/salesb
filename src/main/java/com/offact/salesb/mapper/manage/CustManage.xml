@@ -52,9 +52,6 @@
 			  ,T1.lastlon
           FROM sbCustomer T1
          WHERE 1=1
-           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
-
-           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -76,9 +73,6 @@
 		SELECT count(*) AS TOT_COUNT
   			          FROM sbCustomer T1
          WHERE 1=1
-           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
-
-           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
