@@ -56,13 +56,17 @@ import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.SmsService;
+import com.offact.salesb.service.common.UserService;
 import com.offact.salesb.service.comunity.AsService;
 import com.offact.salesb.service.comunity.ComunityService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.common.GroupVO;
 import com.offact.salesb.vo.common.SmsVO;
+import com.offact.salesb.vo.common.UserVO;
+import com.offact.salesb.vo.common.WorkVO;
 import com.offact.salesb.vo.comunity.AsVO;
 import com.offact.salesb.vo.comunity.ComunityVO;
+import com.offact.salesb.vo.manage.UserManageVO;
 
 /**
  * Handles requests for the application home page.
@@ -147,6 +151,9 @@ public class CommonController {
     
     @Autowired
     private AsService asSvc;
+    
+	@Autowired
+	private UserService userSvc;
     
     public String generateState()
     {
@@ -1411,6 +1418,65 @@ public class CommonController {
 	
 			return mv;
 		}
+		
+		/**
+		 * Logout 처리
+		 * @param request
+		 * @return
+		 * @throws Exception 
+		 */
+		@RequestMapping(value = "/common/businesslogout")
+		public ModelAndView businesslogout(HttpServletRequest request) throws BizException
+		{
+			
+			logger.info("Good bye  business! ");
+
+			HttpSession session = request.getSession(false);
+			
+			String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+			String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+			String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+			
+		 	session.removeAttribute("strUserId");
+	        session.removeAttribute("strUserName");
+	        session.removeAttribute("strGroupId");
+	        session.removeAttribute("strGroupName");
+	        session.removeAttribute("strAuthId");
+	        session.removeAttribute("strAuthName");
+	        session.removeAttribute("strExcelAuth");
+	        session.removeAttribute("strPassword");
+	        session.removeAttribute("strOfficePhone");
+	        session.removeAttribute("strOfficePhoneFormat");
+	        session.removeAttribute("strMobliePhone");
+	        session.removeAttribute("strMobliePhoneFormat");
+	        session.removeAttribute("strEmail");
+	        session.removeAttribute("strIp");
+	        session.removeAttribute("strAuth");
+	        session.removeAttribute("sClientIP");
+	        session.removeAttribute("pwdChangeDateTime");
+	        session.removeAttribute("pwCycleDate");
+	        
+	        //로그인 상태처리		
+			UserVO userState =new UserVO();
+			userState.setUserId(strUserId);
+			userState.setLoginYn("N");
+			userState.setIp(strIp);
+			userState.setConnectIp(sClientIP);
+			userSvc.regiLoginYnUpdate(userState);
+	        
+	        //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkIp(strIp);
+			work.setWorkCategory("CM");
+			work.setWorkCode("CM002");
+			commonSvc.regiHistoryInsert(work);
+		
+	        ModelAndView mv = new ModelAndView();
+	        mv.setViewName("common/customerLoginForm");
+
+			return mv;
+		}
 		/**
 	     * 고객정보 수정폼
 	     *
@@ -1443,8 +1509,7 @@ public class CommonController {
 	        
 	        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
 
-	 	       	//mv.setViewName("/common/customerLoginForm");
-	        	mv.setViewName("/common/sessionOut");
+	 	       	mv.setViewName("/common/customerLoginForm");
 	        	return mv;
 			}
 	        
@@ -1455,6 +1520,56 @@ public class CommonController {
 	        
 			mv.addObject("customer", customer);
 	        mv.setViewName("/common/customerModifyForm");
+	        
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return mv;
+	    }
+	    /**
+	     * 고객정보(사업자) 수정폼
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/common/businessmodifyform")
+	    public ModelAndView businessModifyForm(HttpServletRequest request, 
+	    		                       HttpServletResponse response,
+			                           String customerKey) throws BizException 
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start customerKey:"+customerKey);
+	
+	        ModelAndView mv = new ModelAndView();
+	        
+	     // 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+	        	mv.setViewName("/common/customerLoginForm");
+	        	return mv;
+			}
+	        
+	        UserVO userChkVo = new UserVO();
+			userChkVo.setUserId(strUserId);
+			
+			UserVO userChk = userSvc.getUser(userChkVo);		
+	        
+			mv.addObject("business", userChk);
+	        mv.setViewName("/common/businessModifyForm");
 	        
 	       //log Controller execute time end
 	      	long t2 = System.currentTimeMillis();
@@ -1942,4 +2057,257 @@ public class CommonController {
 	      	
 	        return content;
 	    }
+	    
+	    
+	    /**
+		 * (사업자) Login 처리
+		 * @param request
+		 * @param response
+		 * @return
+		 * @throws Exception 
+		 */
+		@SuppressWarnings("null")
+		@RequestMapping(value = "/business/login", method = RequestMethod.POST)
+		public ModelAndView businesslogin(HttpServletRequest request,
+				                          HttpServletResponse response) throws Exception
+		{
+			
+			//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start");
+			
+			ModelAndView  mv = new ModelAndView();
+
+			String workCode="CM001";
+			
+			String strUserId = StringUtil.nvl(request.getParameter("businessId"));
+			String strUserPw = StringUtil.nvl(request.getParameter("businessPw"));
+			String sClientIP = StringUtil.nvl(request.getParameter("sClientIP"));
+			
+			logger.info(">>>> userId :"+strUserId);
+			logger.info(">>>> userPw :"+strUserPw);
+			logger.info(">>>> sClientIP :"+sClientIP);
+			
+			String ip = request.getHeader("X-Forwarded-For");
+
+			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+			    ip = request.getHeader("Proxy-Client-IP"); 
+			    logger.info(">>>> Proxy-Client-IP :"+ip);
+
+			} 
+
+			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+			    ip = request.getHeader("WL-Proxy-Client-IP"); 
+			    logger.info(">>>> WL-Proxy-Client-IP :"+ip);
+
+			} 
+
+			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+			    ip = request.getHeader("HTTP_CLIENT_IP"); 
+			    logger.info(">>>> HTTP_CLIENT_IP :"+ip);
+
+			} 
+
+			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+			    ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
+			    logger.info(">>>> HTTP_X_FORWARDED_FOR :"+ip);
+
+			} 
+
+			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+			    ip = request.getRemoteAddr(); 
+			    logger.info(">>>> RemoteAddr :"+ip);
+
+			}
+
+			String strMainUrl = "";
+			
+			// # 2. 넘겨받은 아이디로 데이터베이스를 조회하여 사용자가 있는지를 체크한다.
+			UserVO userChkVo = new UserVO();
+			userChkVo.setUserId(strUserId);
+			userChkVo.setInPassword(strUserPw);
+			UserVO userChk = userSvc.getUser(userChkVo);		
+
+			String strUserName = "";
+			String strGroupId = "";
+			String strGroupName = "";
+			String strAuthId = "";
+			String strAuth = "";
+			String strAuthName = "";
+			String strExcelAuth = "";
+			String strPassword = "";
+			String strOfficePhone = "";
+			String strOfficePhoneFormat = "";
+			String strMobliePhone = "";
+			String strMobliePhoneFormat = "";
+			String strEmail = "";
+			String strIp = "";
+			String strPwdChangeDateTime = "";
+			String strPwCycleDate = "";
+			String smsAlarmYn = "";
+			String smsAlarmPoint = "";
+			
+			strIp = ip;//Client 외부IP or G/W
+			
+			//서버 IP/MAC정보
+			
+			sClientIP = request.getLocalAddr();
+			/*
+			InetAddress serverIp;
+			serverIp=InetAddress.getLocalHost();
+			NetworkInterface network = NetworkInterface.getByInetAddress(serverIp);
+			byte[] mac = network.getHardwareAddress();
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
+			}
+			logger.info(">>>> [Current MAC address ] ");
+			logger.info("@@@@ [serverIp] :"+serverIp);
+			logger.info("@@@@ [MAC addres] :"+sb.toString());
+			*/
+			logger.info(">>>> [strIp] :"+strIp);
+			logger.info(">>>> [sClientIP] :"+sClientIP);
+		
+			if(userChk != null)
+			{
+				//패스워드 체크
+				if(!userChk.getPassword().equals(userChk.getInPassword())){
+					
+					logger.info(">>> 비밀번호 오류");
+					strMainUrl = "admin/loginFail";
+					workCode="CM006";
+					
+					mv.addObject("userId", strUserId);
+					
+					mv.setViewName(strMainUrl);
+					
+					//작업이력
+					WorkVO work = new WorkVO();
+					work.setWorkUserId(strUserId);
+					work.setWorkIp(strIp);
+					work.setWorkCategory("CM");
+					work.setWorkCode(workCode);
+					commonSvc.regiHistoryInsert(work);
+					
+					//log Controller execute time end
+			      	long t2 = System.currentTimeMillis();
+			      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			      	
+					return mv;
+					
+				}
+				
+				strUserId= userChk.getUserId();
+				strUserName = userChk.getUserName();
+				strGroupId = userChk.getGroupId();
+				strGroupName = userChk.getGroupName();
+				strAuthId = userChk.getAuthId();
+				strAuthName = userChk.getAuthName();
+				strExcelAuth = userChk.getExcelAuth();
+				strPassword = userChk.getPassword();
+				strOfficePhone = userChk.getOfficePhone();
+				strOfficePhoneFormat = userChk.getOfficePhoneFormat();
+				strMobliePhone = userChk.getMobliePhone();
+				strMobliePhoneFormat = userChk.getMobliePhoneFormat();
+				strEmail = userChk.getEmail();
+				strAuth =userChk.getAuth();
+				strPwdChangeDateTime =userChk.getPwdChangeDateTime();
+				strPwCycleDate =userChk.getPwCycleDate();
+				smsAlarmYn =userChk.getSmsAlarmYn();
+				smsAlarmPoint =userChk.getSmsAlarmPoint();
+
+				// # 3. Session 객체에 셋팅
+				
+				HttpSession session = request.getSession(false);
+				
+				if(session != null)
+				{
+					session.invalidate();
+				}
+					
+					session = request.getSession(true);
+					session.setAttribute("strUserId", strUserId);
+					session.setAttribute("strUserName", strUserName);
+					session.setAttribute("strGroupId", strGroupId);
+					session.setAttribute("strGroupName", strGroupName);
+					session.setAttribute("strAuthId", strAuthId);
+					session.setAttribute("strAuthName", strAuthName);
+					session.setAttribute("strExcelAuth", strExcelAuth);
+					session.setAttribute("strPassword", strPassword);
+					session.setAttribute("strOfficePhone", strOfficePhone);
+					session.setAttribute("strOfficePhoneFormat", strOfficePhoneFormat);
+					session.setAttribute("strMobliePhone", strMobliePhone);
+					session.setAttribute("strMobliePhoneFormat", strMobliePhoneFormat);
+					session.setAttribute("strEmail", strEmail);
+					session.setAttribute("strIp", strIp);
+					session.setAttribute("strAuth", strAuth);
+					session.setAttribute("sClientIP", sClientIP);
+					session.setAttribute("pwdChangeDateTime", strPwdChangeDateTime);
+					session.setAttribute("pwCycleDate", strPwCycleDate);
+					session.setAttribute("smsAlarmYn", smsAlarmYn);
+					session.setAttribute("smsAlarmPoint", smsAlarmPoint);
+					
+					//로그인 상태처리		
+					
+					userChk.setUserId(strUserId);
+					userChk.setLoginYn("Y");
+					userChk.setIp(strIp);
+					userChk.setConnectIp(sClientIP);
+					try{
+						userSvc.regiLoginYnUpdate(userChk);
+					}catch(Exception e){
+						logger.debug("[Error]USER SQL lock 오류");
+					}
+			        
+					mv.addObject("userId", strUserId);
+			
+			        UserManageVO userConVO = new UserManageVO();
+			        
+			        userConVO.setUserId(strUserId);
+			        userConVO.setGroupId(strGroupId);
+
+			        // 조회조건저장
+			        mv.addObject("userConVO", userConVO);
+
+			        //조직정보 조회
+			        GroupVO group = new GroupVO();
+			        group.setGroupId(strGroupId);
+			        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+			        mv.addObject("group_comboList", group_comboList);
+			        
+			        strMainUrl = "business/goodsManage";
+
+						
+				} else {//app 상요자 정보가 없는경우
+		
+					logger.info(">>> 상담App 사용자 정보 없음");
+					strMainUrl = "common/loginFail";
+					workCode="CM005";
+				}
+				
+			    //작업이력
+				WorkVO work = new WorkVO();
+				work.setWorkUserId(strUserId);
+				work.setWorkIp(strIp);
+				work.setWorkCategory("CM");
+				work.setWorkCode(workCode);
+				commonSvc.regiHistoryInsert(work);
+			
+				mv.addObject("userId", strUserId);
+				
+				mv.setViewName(strMainUrl);
+				
+				//log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+				return mv;
+			}
 }

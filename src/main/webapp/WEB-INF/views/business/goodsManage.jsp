@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/salesb/top.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/topBusiness.jsp" %>
 <SCRIPT>
     // 리스트 조회
     function fcGoods_listSearch(curPage){
@@ -99,7 +99,6 @@
     }
 
 </SCRIPT>
-<div id="wrap" class="wrap" >
 	<div class="container">
 	     <!--// 타이틀 --> 
 		 <p class="lead">
@@ -132,7 +131,7 @@
 		  <!-- 조회결과리스트 -->
 		<div id=goodsPageList></div>
 	</div>
-</div>
+
 <script>
 fcGoods_listSearch();
 </script>

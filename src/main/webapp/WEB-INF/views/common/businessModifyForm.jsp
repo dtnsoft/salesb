@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/salesb/top.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/topBusiness.jsp" %>
 <script>
 
 	//사용자 수정
@@ -152,7 +152,7 @@
 	<!-- container -->
 	  <form:form class="form-inline" role="form" commandName="customerVO" id="customerModifyForm" name="customerModifyForm" method="post" action="">
 	     <input type="hidden" id="pw_modifyYn" name="pw_modifyYn" value="Y" >
-	   	 <input type="hidden" id="sbPhoneNumber" name="sbPhoneNumber" value="${customer.sbPhoneNumber}" > 
+	   	 <input type="hidden" id="stUserId" name="stUserId" value="${business.userId}" > 
 		 <!--// 타이틀 --> 
 		 <p class="lead">
 		    <span class="glyphicon glyphicon-tags"></span>&nbsp;사용자 정보설정
@@ -182,14 +182,9 @@
 	      <div class="well">
 	           	<h5> <strong><em class="num">3. </em></strong>사용자 정보</h5>
 					<p class="tx2">
-						[sns info] : ${restfulltype} 
+						[업체명] : ${strGroupName} 
 						<br>
-						[sns name] : ${name}
-						
-						<c:if test="${photo!=''}">
-							<br>
-				        	<img src="${photo}"/>
-				       	</c:if>
+						[사용자명] : ${strUserName}
 	             </p>
 	      </div> 
           <div class="well">
@@ -199,7 +194,7 @@
 			  <tbody>
 			  	<tr>
 		          <td style="background-color:#F5F5F5">현재 비밀번호</td>
-		          <input type="hidden" id="regPassword" name="regPassword" value="${customer.sbPw}" > 
+		          <input type="hidden" id="regPassword" name="regPassword" value="${business.password}" > 
 		          <input type="hidden" id="encpassword" name="encpassword" value="" > 
 		          <input type="hidden" id="sbPw" name="sbPw" value="" > 
 		          <td><input type="password" class="form-control" id="cur_password" name="cur_password"  maxlength="50"  value="" placeholder="현재 비밀번호"></td>

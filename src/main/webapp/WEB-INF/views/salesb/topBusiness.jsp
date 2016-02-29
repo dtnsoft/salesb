@@ -2,17 +2,23 @@
 <%@ include file="/WEB-INF/views/salesb/base.jsp" %>
 <%
 
-    //session 정보
-	String memberType= (String)session.getAttribute("memberType");
-	String customerKey= (String)session.getAttribute("customerKey");
-	String sbPhoneNumber= (String)session.getAttribute("sbPhoneNumber");	
-	String lastLat= (String)session.getAttribute("lastLat");
-	String lastlon= (String)session.getAttribute("lastlon");
-	String id= (String)session.getAttribute("id");	
-	String name= (String)session.getAttribute("name");
-	String restfulltype= (String)session.getAttribute("restfulltype");
-	String photo= (String)session.getAttribute("photo");
-	String access_token= (String)session.getAttribute("access_token");
+	//session 정보
+	String strUserId= (String)session.getAttribute("strUserId");
+	String strUserName= (String)session.getAttribute("strUserName");
+	String strGroupId= (String)session.getAttribute("strGroupId");	
+	String strGroupName= (String)session.getAttribute("strGroupName");
+	String strAuthId= (String)session.getAttribute("strAuthId");
+	String strAuthName= (String)session.getAttribute("strAuthName");	
+	String strExcelAuth= (String)session.getAttribute("strExcelAuth");
+	String strOfficePhone= (String)session.getAttribute("strOfficePhone");
+	String strOfficePhoneFormat= (String)session.getAttribute("strOfficePhoneFormat");
+	String strMobliePhone= (String)session.getAttribute("strMobliePhone");
+	String strMobliePhoneFormat= (String)session.getAttribute("strMobliePhoneFormat");
+	String strEmail= (String)session.getAttribute("strEmail");
+	String strIp= (String)session.getAttribute("strIp");
+	String strAuth= (String)session.getAttribute("strAuth");
+	String pwdChangeDateTime= ((String)session.getAttribute("pwdChangeDateTime")).replaceAll("-", "");
+	String pwCycleDate= ((String)session.getAttribute("pwCycleDate")).replaceAll("-", "");
 	
 %>
 <!DOCTYPE html>
@@ -78,7 +84,7 @@
 
 		//alert('logout');
 		
-		$('#logoutForm').attr({action:"<%= request.getContextPath() %>/common/logout"});
+		$('#logoutForm').attr({action:"<%= request.getContextPath() %>/common/businesslogout"});
 		
 		try {
 			logoutForm.submit();
@@ -910,76 +916,42 @@
 	                    <span class="icon-bar"></span>
 	                    <span class="icon-bar"></span>
 	                </button>
-	                <c:choose>
-		               	<c:when test="${name!=''}">
-		               		  <table>
-								  <tr>
-								  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
-								    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;(${name})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
-								  </tr>
-							  </table>
-		               	</c:when>
-						<c:otherwise>
-							 <c:if test="${sbPhoneNumber!=''}">
-							  <table>
-								  <tr>
-								  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
-								    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;(${sbPhoneNumber})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
-								  </tr>
-							  </table>
-							</c:if>
-		               </c:otherwise>
-					</c:choose>
+              		<table>
+					  <tr>
+					  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
+					    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;${strGroupName}(${strUserName})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
+					  </tr>
+				  	</table>
 	            </div>
 	            <!-- Collect the nav links, forms, and other content for toggling -->
 	            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	                <c:choose>
-		               	<c:when test="${memberType=='01'}">
-							  <ul class="nav navbar-nav">
-						        <li class="dropdown">
-						          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">상품등록/변경<span class="caret"></span></a>
-						           <ul class="dropdown-menu">
-						            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsregistform')">개별상품등록</a></li>
-						            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsexcelform')">일괄상품등록</a></li>
-						            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsmanage')">등록상품 목록 및 수정</a></li>
-						          </ul>
-						        </li>
-						      </ul>
-						      <ul class="nav navbar-nav">
-						        <li class="dropdown">
-						          <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/tokencreate')" >토근발급</a>
-						        </li>
-						      </ul>
-						      <ul class="nav navbar-nav">
-						        <li >
-						          <a href="#">판매관리</a>
-						        </li>
-						      </ul>
-						      <ul class="nav navbar-nav">
-						        <li class="dropdown">
-						          <a href="#" >정산관리</a>
-						        </li>
-						      </ul>
-						</c:when>
-						<c:otherwise>
-							 <ul class="nav navbar-nav">
-						        <li class="dropdown">
-						          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">나의상품<span class="caret"></span></a>
-						           <ul class="dropdown-menu">
-						            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenlist')">상품 토큰 현황</a></li>
-						            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/goodsmakeform')">상품 페이지 제작</a></li>
-						          </ul>
-						        </li>
-						      </ul>
-						      <ul class="nav navbar-nav">
-						        <li >
-						          <a href="#">판매현황</a>
-						        </li>
-						      </ul>
-						</c:otherwise>
-					</c:choose>
+	                <ul class="nav navbar-nav">
+				        <li class="dropdown">
+				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">상품등록/변경<span class="caret"></span></a>
+				           <ul class="dropdown-menu">
+				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsregistform')">개별상품등록</a></li>
+				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsexcelform')">일괄상품등록</a></li>
+				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsmanage')">등록상품 목록 및 수정</a></li>
+				          </ul>
+				        </li>
+				      </ul>
+				      <ul class="nav navbar-nav">
+				        <li class="dropdown">
+				          <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/tokencreate')" >토근발급</a>
+				        </li>
+				      </ul>
+				      <ul class="nav navbar-nav">
+				        <li >
+				          <a href="#">판매관리</a>
+				        </li>
+				      </ul>
+				      <ul class="nav navbar-nav">
+				        <li class="dropdown">
+				          <a href="#" >정산관리</a>
+				        </li>
+				      </ul>
 					<ul class="nav navbar-nav navbar-right">
-			        <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/common/customermodifyform')" class="b_cog"><strong class="ico_cog"><span>설정</span></strong></a></li>
+			        <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/common/businessmodifyform')" class="b_cog"><strong class="ico_cog"><span>설정</span></strong></a></li>
 					<li><a href="javascript:goLogout()" class="b_logout"><strong>로그아웃</strong></a></li>
 			      </ul>
 	            </div>
@@ -1000,7 +972,7 @@
 </html>
 <script>
 
-if('${customerKey}'==null || '${customerKey}'=='null' ){
+if('${strUserId}'==null || '${strUserId}'=='null' ){
 	goLogout();
 }
 </script>

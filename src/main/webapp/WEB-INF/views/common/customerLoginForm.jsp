@@ -76,9 +76,30 @@
 		frm.groupName.value='물류정상';
 
 		try {
+			document.loginForm.action="<%= request.getContextPath() %>/customer/login";
 			document.loginForm.submit();
 		} catch(e) {}
 		
+	}
+	
+	function goBusiness(){
+
+		var frm = document.loginForm;
+
+		if(frm.businessId==''){
+			alert('사업자 회원 아이디를 입력하시기 바랍니다.');
+			return;
+		}
+		
+		if(frm.businessPw==''){
+			alert('사업자 회원 Password를 입력하시기 바랍니다.');
+			return;
+		}
+
+		try {
+			document.loginForm.action="<%= request.getContextPath() %>/business/login";
+			document.loginForm.submit();
+		} catch(e) {}
 	}
 
 	function goPrivateForm(){
@@ -271,7 +292,7 @@
 		                  
 			            <!-- //로그인 -->
 			            <div class="bnbox">
-			              <button type="button" class="bn_salesb" onclick="goLogin()">Login</button>
+			              <button type="button" class="bn_salesb" onclick="goBusiness()">Login</button>
 			            </div>
 		              </ul>
 		            </div>

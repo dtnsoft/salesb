@@ -151,8 +151,7 @@ public class MemberController {
         
         if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
 
- 	       	//mv.setViewName("/common/customerLoginForm");
-        	mv.setViewName("/common/sessionOut");
+ 	       	mv.setViewName("/common/customerLoginForm");
         	return mv;
 		}
         
@@ -182,6 +181,52 @@ public class MemberController {
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
        	
+        return mv;
+    }
+    
+    /**
+     * 상품제작
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/member/goodsmakeform")
+    public ModelAndView goodsMakeForm(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("groupId"));
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	mv.setViewName("/common/customerLoginForm");
+
+        	return mv;
+		}
+        
+        mv.setViewName("/member/goodsMakeForm");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
         return mv;
     }
 
