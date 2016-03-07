@@ -50,21 +50,17 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.framework.util.StringUtil;
 import com.offact.salesb.service.CustomerService;
+import com.offact.salesb.service.business.ProductService;
+import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.MailService;
-import com.offact.salesb.service.comunity.ComunityService;
-import com.offact.salesb.service.comunity.AsService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.MultipartFileVO;
-import com.offact.salesb.vo.comunity.ComunityVO;
-import com.offact.salesb.vo.comunity.CounselVO;
 import com.offact.salesb.vo.common.EmailVO;
 import com.offact.salesb.vo.common.GroupVO;
 import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.common.UserVO;
 import com.offact.salesb.vo.common.WorkVO;
-import com.offact.salesb.vo.comunity.AsVO;
-import com.offact.salesb.vo.manage.UserManageVO;
-import com.offact.salesb.vo.master.ProductMasterVO;
+import com.offact.salesb.vo.business.ProductMasterVO;
 
 /**
  * Handles requests for the application home page.
@@ -113,14 +109,14 @@ public class BusinessController {
 	@Autowired
 	private CustomerService customerSvc;
 	
-	@Autowired
-	private ComunityService comunitySvc;
-	
-    @Autowired
-    private AsService asSvc;
-	
     @Autowired
     private MailService mailSvc;
+    
+    @Autowired
+    private CommonService commonSvc;
+    
+    @Autowired
+    private ProductService productSvc;
    
     /**
      * 상품관리 화면 로딩
@@ -177,7 +173,7 @@ public class BusinessController {
      * @throws BizException
      */
     @RequestMapping(value = "/business/goodspagelist")
-    public ModelAndView goodsPageList(@ModelAttribute("asConVO") AsVO asConVO, 
+    public ModelAndView goodsPageList(@ModelAttribute("productConVO") ProductMasterVO productConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
@@ -185,7 +181,7 @@ public class BusinessController {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : asConVO" + asConVO);
+		logger.info("["+logid+"] Controller start : productConVO" + productConVO);
 
         ModelAndView mv = new ModelAndView();
 
@@ -202,24 +198,24 @@ public class BusinessController {
         	return mv;
 		}
         
-        List<AsVO> asList = null;
+        List<ProductMasterVO> productList = null;
         
-        asConVO.setCustomerKey("01067471995");
-        asConVO.setGroupId("BD008");
+        productConVO.setGroupId(strGroupId);
         
         // 조회조건저장
-        mv.addObject("asConVO", asConVO);
+        mv.addObject("productConVO", productConVO);
 
         // 페이징코드
-        asConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(asConVO.getCurPage(), asConVO.getRowCount()));
-        asConVO.setPage_limit_val2(StringUtil.nvl(asConVO.getRowCount(), "10"));
+        productConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(productConVO.getCurPage(), productConVO.getRowCount()));
+        productConVO.setPage_limit_val2(StringUtil.nvl(productConVO.getRowCount(), "10"));
         
-        // 사용자목록조회
-        asList = asSvc.getAsList(asConVO);
-        mv.addObject("asList", asList);
+        // 상품목록조회
+        productList = productSvc.getProductPageList(productConVO);
+        
+        mv.addObject("productList", productList);
 
         // totalCount 조회
-        String totalCount = String.valueOf(asSvc.getAsCnt(asConVO));
+        String totalCount = String.valueOf(productSvc.getProductCnt(productConVO));
         mv.addObject("totalCount", totalCount);
 
         mv.setViewName("/business/goodsPageList");
@@ -459,17 +455,9 @@ public class BusinessController {
 		        	 }
 		        		 
 		        	 if(cellItemTmp.length>0){ productMasterVO.setProductCode(cellProductCode);}
-		        	 if(cellItemTmp.length>1){ productMasterVO.setBarCode(cellItemTmp[1]);}
 		        	 if(cellItemTmp.length>2){ productMasterVO.setProductName(cellItemTmp[2]);}
 		        	 if(cellItemTmp.length>3){ productMasterVO.setProductPrice(cellItemTmp[3]);}
-		        	 if(cellItemTmp.length>4){ productMasterVO.setVatRate(cellItemTmp[4]);}
-		        	 if(cellItemTmp.length>5){ productMasterVO.setCompanyCode(cellItemTmp[5]);}
-		        	 if(cellItemTmp.length>6){ productMasterVO.setGroup1(cellItemTmp[6]);}
-		        	 if(cellItemTmp.length>7){ productMasterVO.setGroup1Name(cellItemTmp[7]);}
-		        	 if(cellItemTmp.length>8){ productMasterVO.setGroup2(cellItemTmp[8]);}
-		        	 if(cellItemTmp.length>9){ productMasterVO.setGroup2Name(cellItemTmp[9]);}
-		        	 if(cellItemTmp.length>10){ productMasterVO.setGroup3(cellItemTmp[10]);}
-		        	 if(cellItemTmp.length>11){ productMasterVO.setGroup3Name(cellItemTmp[11]);}
+
 	
 		             productMasterVO.setCreateUserId(strUserId);
 		             productMasterVO.setUpdateUserId(strUserId);
@@ -580,4 +568,281 @@ public class BusinessController {
 		mv.setViewName("/business/tokenCreate");
 		return mv;
 	}
+    
+    /**
+     * (token)상품 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/goodstokenlist")
+    public ModelAndView goodsTokenList(@ModelAttribute("productConVO") ProductMasterVO productConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : productConVO" + productConVO);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/customerLoginForm");
+        	return mv;
+		}
+        
+        List<ProductMasterVO> productList = null;
+        
+        productConVO.setGroupId(strGroupId);
+        
+        // 조회조건저장
+        mv.addObject("productConVO", productConVO);
+
+        // 페이징코드
+        productConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(productConVO.getCurPage(), productConVO.getRowCount()));
+        productConVO.setPage_limit_val2(StringUtil.nvl(productConVO.getRowCount(), "10"));
+        
+        // 상품목록조회
+        productList = productSvc.getProductPageList(productConVO);
+        
+        mv.addObject("productList", productList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(productSvc.getProductCnt(productConVO));
+        mv.addObject("totalCount", totalCount);
+
+        mv.setViewName("/business/goodsTokenList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 상품 등록처리
+     *
+     * @param ProductMasterVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/productregist", method = RequestMethod.POST)
+    public @ResponseBody
+    String productRegist(@ModelAttribute("productMasterVO") ProductMasterVO productMasterVO, 
+    		       HttpServletRequest request, 
+    		       HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : productMasterVO" + productMasterVO);
+
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        	
+		productMasterVO.setCreateUserId(strUserId);
+		productMasterVO.setGroupId(strGroupId);
+		
+		if("".equals(productMasterVO.getProductCode())){
+			productMasterVO.setProductCode(null);
+		}
+
+		int retVal=this.productSvc.productInsertProc(productMasterVO);
+
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("MU");
+		work.setWorkCode("MU001");
+		commonSvc.regiHistoryInsert(work);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    
+    /**
+     * 품목상세현황
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/productdetail")
+    public ModelAndView productDetail(HttpServletRequest request, 
+    		                                 HttpServletResponse response,
+    		                                 String idx ,
+    		                                 String curPage ) throws BizException 
+    {
+        
+ 	   //log Controller execute time start
+ 	   String logid=logid();
+ 	   long t1 = System.currentTimeMillis();
+ 	   logger.info("["+logid+"] Controller start ");
+ 	
+ 	   ModelAndView mv = new ModelAndView();
+ 	   
+ 	  // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+       	mv.setViewName("/common/customerLoginForm");
+       	return mv;
+		}
+ 	   
+ 	   ProductMasterVO productConVO = new ProductMasterVO();
+ 	   ProductMasterVO productVO = new ProductMasterVO();
+ 	 
+ 	   productConVO.setIdx(idx);
+ 	   
+        // 품목 상세조회
+ 	  productVO = productSvc.getProductDetail(productConVO);
+       mv.addObject("productVO", productVO);
+ 	  
+ 	   mv.setViewName("/business/goodsModifyForm");
+ 	   
+ 	  //log Controller execute time end
+ 	  long t2 = System.currentTimeMillis();
+ 	  logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 	 	
+ 	   return mv;
+    }
+    
+    /**
+     * 품목상세현황
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/producttokendetail")
+    public ModelAndView productTokenDetail(HttpServletRequest request, 
+    		                                 HttpServletResponse response,
+    		                                 String idx ,
+    		                                 String curPage ) throws BizException 
+    {
+        
+ 	   //log Controller execute time start
+ 	   String logid=logid();
+ 	   long t1 = System.currentTimeMillis();
+ 	   logger.info("["+logid+"] Controller start ");
+ 	
+ 	   ModelAndView mv = new ModelAndView();
+ 	   
+ 	  // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+       	mv.setViewName("/common/customerLoginForm");
+       	return mv;
+		}
+ 	   
+ 	   ProductMasterVO productConVO = new ProductMasterVO();
+ 	   ProductMasterVO productVO = new ProductMasterVO();
+ 	 
+ 	   productConVO.setIdx(idx);
+ 	   
+        // 품목 상세조회
+ 	  productVO = productSvc.getProductDetail(productConVO);
+       mv.addObject("productVO", productVO);
+ 	  
+ 	   mv.setViewName("/business/goodsTokenDetail");
+ 	   
+ 	  //log Controller execute time end
+ 	  long t2 = System.currentTimeMillis();
+ 	  logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 	 	
+ 	   return mv;
+    }
+    
+    /**
+     * 상품 수정처리
+     *
+     * @param ProductMasterVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/productmodify", method = RequestMethod.POST)
+    public @ResponseBody
+    String productModify(@ModelAttribute("productMasterVO") ProductMasterVO productMasterVO, 
+    		       HttpServletRequest request, 
+    		       HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : productMasterVO" + productMasterVO);
+
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        	
+		productMasterVO.setCreateUserId(strUserId);
+		productMasterVO.setGroupId(strGroupId);
+		
+		if("".equals(productMasterVO.getProductCode())){
+			productMasterVO.setProductCode(null);
+		}
+
+		int retVal=this.productSvc.productInsertProc(productMasterVO);
+
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("MU");
+		work.setWorkCode("MU001");
+		commonSvc.regiHistoryInsert(work);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+
 }

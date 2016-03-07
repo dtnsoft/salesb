@@ -157,6 +157,7 @@
 		 <p class="lead">
 		    <span class="glyphicon glyphicon-tags"></span>&nbsp;사용자 정보설정
 		 </p>
+		 <hr>
 		 <!--// 타이틀 -->
 		 <div class="well">
 	           	<h5> <strong><em class="num">1.</em></strong>지도옵션설정</h5>

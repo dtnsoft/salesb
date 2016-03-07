@@ -107,12 +107,10 @@
 		 <hr>
 	      <!--// 타이틀 --> 
 		  <!-- 조회조건 -->
-		  <form:form class="form-inline" role="form" commandName="goodsConVO" id="goodsManageConForm" name="goodsManageConForm" method="post" action="" >
+		  <form:form class="form-inline" role="form" commandName="productConVO" id="goodsManageConForm" name="goodsManageConForm" method="post" action="" >
 	        <input type="hidden" name="curPage"             id="curPage"            value="1" />
-	        <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
+	        <input type="hidden" name="rowCount"            id="rowCount"           value="5"/>
 	        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-	        <input type="hidden" name="con_customerKey"          id="con_customerKey"         value=""  />
-	        <input type="hidden" name="customerKey"              id="customerKey"         value=""  />
 	        <!-- Blog Search Well -->
 	         <div class="well">
 	             <div class="input-group">

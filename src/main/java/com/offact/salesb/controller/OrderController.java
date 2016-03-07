@@ -49,9 +49,11 @@ import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.framework.util.StringUtil;
 import com.offact.salesb.service.UserMenuService;
 import com.offact.salesb.service.common.MailService;
+import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.UserMenuVO;
 import com.offact.salesb.vo.common.EmailVO;
+import com.offact.salesb.vo.common.SmsVO;
 import com.offact.common.JSONDataParser;
 
 /**
@@ -90,7 +92,7 @@ public class OrderController {
     @Value("#{config['offact.dev.option']}")
     private String devOption;
     
-    @Value("#{config['offact.dev.sms']}")
+	@Value("#{config['offact.dev.sms']}")
     private String devSms;
     
     @Value("#{config['offact.sms.smsid']}")
@@ -101,9 +103,15 @@ public class OrderController {
     
     @Value("#{config['offact.sms.smstype']}")
     private String smsType;
+    
+    @Value("#{config['offact.sms.sendno']}")
+    private String sendno;
 
     @Autowired
     private MailService mailSvc;
+    
+    @Autowired
+    private SmsService smsSvc;
 	
 	/**
      *
@@ -335,9 +343,10 @@ public class OrderController {
      */
     @RequestMapping({"/order/orderkeycreate"})
     public @ResponseBody
-    String orderKeyCreate(String customerKey,
-    		String productCode,
-    		String email,
+    String orderKeyCreate(String tokenemail,
+    		String tokenphone,
+    		String productkey,
+    		String productname,
             HttpServletRequest request, 
             HttpServletResponse response) throws BizException
     {
@@ -346,31 +355,16 @@ public class OrderController {
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 		
-		logger.info("["+logid+"] Controller start customerKey="+customerKey);
+		logger.info("["+logid+"] Controller start productkey="+productkey);
 		
-		String emaillist="dev@addys.co.kr;kevin.jeon@offact.com";
-		productCode="90030114";
+		String emaillist=tokenemail;
 		
-		// 사용자 세션정보
+ 	   // 사용자 세션정보
         HttpSession session = request.getSession();
-        
-        String s_customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
-        String customerKey2 = StringUtil.nvl((String) session.getAttribute("customerKey2")); 
-        
-        logger.info("["+logid+"] Controller start customerKey2="+customerKey2);
-        
-        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
-
-        	customerKey=s_customerKey;
-        	
-        	
-        	if(customerKey2.equals("") || customerKey2.equals("null") || customerKey2.equals(null)){
-               
-        	}else{
-        		emaillist=customerKey2; 
-        	}
- 
-		}
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
 
         String keyvalue="";
         
@@ -380,7 +374,7 @@ public class OrderController {
         
         String token=tokenCreate();
 
-        encryptValue=token+"|"+productCode+"|"+customerKey;
+        encryptValue=token+"|"+productkey+"|"+tokenemail+"|"+tokenphone;
         
         encrypt = CipherDecipherUtil.encrypt(encryptValue, "We are sales and livingsocials !");
         
@@ -436,7 +430,9 @@ public class OrderController {
             e.printStackTrace();
           }
         
-      //이메일 리스틑 조회 user
+        //token 정보저장 DB insert
+        
+        //이메일 리스틑 조회 user
 		
 		String cclist="";
 		
@@ -500,7 +496,7 @@ public class OrderController {
         szContent += "</table>";
         szContent += "<table width='500' cellspacing='0' cellpadding='0' style='margin-top:18px'>";
         szContent += "<tr>";
-        szContent += "<td valign='top' style='padding:10px 0 0 0'>구매하신 상품(아이피타임 무선 랜카드 N150UA)에 대한 주문키가 생성되었습니다.<br><br>아래 개인 판매 URL을 이용하여 동일 상품을 판매 진행 가능하십니다.<br><br>1.SNS에 아래 주문 URL을 포함하여 개인 상품평(상품사진 포함)및 소개등록<br>2.상대방이 소개글을 확인 후 개인 주문 URL을 통해 구매하시면 구매금액의 10%를 환급 받으실 수 있습니다.<br><br>개인 판매 URL : <font color='bule'>"+shortUrl+"</font><br><br>판매내역 확인하러 가기 =><a href='"+domainUrl+"'>http://salesb.net</a></td>";
+        szContent += "<td valign='top' style='padding:10px 0 0 0'>구매하신 상품("+productname+")에 대한 주문키가 생성되었습니다.<br><br>생성된 주문키는 sales baron 사이트에서 활성화 시키신후 사용 가능합니다.<br><br>활성화된 개인 판매 URL을 이용하여 동일 상품을 판매 진행 가능하십니다.<br><br>1.SNS에 아래 주문 URL을 포함하여 개인 상품평(상품사진 포함)및 소개등록<br>2.상대방이 소개글을 확인 후 개인 주문 URL을 통해 구매하시면 구매금액의 10%를 환급 받으실 수 있습니다.<br><br>주문키 활성화하러 가기 =><a href='"+domainUrl+"'>http://salesb.net</a><br><br>개인 판매 URL : <font color='bule'>"+shortUrl+"</font></td>";
         szContent += "</tr>";
         szContent += "</table></td>";
         szContent += "</tr>";
@@ -549,6 +545,50 @@ public class OrderController {
 	       	return "-1";
 	    	
 	    }
+		
+		try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			//즉시전송 세팅
+			smsVO.setSmsDirectYn("Y");
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(tokenphone);
+			smsVO.setSmsFrom(sendno);
+			smsVO.setSmsMsg("주문키가 생성되었습니다. http://salesb.net 에서 활성화 하신후 사용하시기 바랍니다.주문키 : "+shortUrl);
+	
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int i=0;i<devSmss.length;i++){
+					
+					if(devSmss[i].equals(tokenphone.trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+				}
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
+			}
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+            
+	       	return "-1";
+			
+		}
         
         //keyvalue = CipherDecipherUtil.decrypt(encrypt, "We are sales and livingsocials !");
 
@@ -654,12 +694,13 @@ public class OrderController {
         logger.info("["+logid+"] CipherDecipherUtil decrypt1::"+keys[0]);
         logger.info("["+logid+"] CipherDecipherUtil decrypt2::"+keys[1]);
         logger.info("["+logid+"] CipherDecipherUtil decrypt3::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil decrypt4::"+keys[3]);
         
         mv.addObject("token", keys[0]);
         mv.addObject("productCode", keys[1]);
         mv.addObject("productName", "좋은상품");
         mv.addObject("productPrice", "1500");
-        mv.addObject("customerKey", keys[2]);
+        mv.addObject("customerKey", keys[3]);
         mv.addObject("key", key);
         
         mv.addObject("req_tx", req_tx);

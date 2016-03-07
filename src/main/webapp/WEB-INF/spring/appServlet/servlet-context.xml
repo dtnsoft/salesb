@@ -53,9 +53,6 @@
         <!-- beans:property name="maxUploadSize" value="512000"></beans:property -->
     </beans:bean>
     
-    <!-- Custom View -->
-    <beans:bean id="customBlobView" class="com.offact.framework.view.CustomBlobView" />
-    
     <!-- Custom File DownLoadView -->
     <beans:bean id="customFileDownLoadView" class="com.offact.framework.view.CustomFileDownLoadView" />
     

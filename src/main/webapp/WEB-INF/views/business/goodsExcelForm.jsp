@@ -66,6 +66,7 @@ function uploadClose(msg,obj){
 		 <p class="lead">
 		    <span class="glyphicon glyphicon-tags"></span>&nbsp;일괄 상품 등록
 		 </p>
+		 <hr>
 		 <!--// 타이틀 --> 
           <div class="well">
            	<h5> <strong><em class="num">1. </em></strong>업로드 파일선택</h5>

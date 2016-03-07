@@ -50,16 +50,18 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.framework.util.StringUtil;
 import com.offact.salesb.service.CustomerService;
+import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.MailService;
-import com.offact.salesb.service.comunity.ComunityService;
-import com.offact.salesb.service.comunity.AsService;
+import com.offact.salesb.service.business.ProductService;
+import com.offact.salesb.service.member.TokenService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.MultipartFileVO;
-import com.offact.salesb.vo.comunity.ComunityVO;
-import com.offact.salesb.vo.comunity.CounselVO;
 import com.offact.salesb.vo.common.EmailVO;
 import com.offact.salesb.vo.common.SmsVO;
-import com.offact.salesb.vo.comunity.AsVO;
+import com.offact.salesb.vo.common.WorkVO;
+import com.offact.salesb.vo.business.ProductMasterVO;
+import com.offact.salesb.vo.member.TokenVO;
+import com.offact.salesb.vo.manage.UserManageVO;
 
 /**
  * Handles requests for the application home page.
@@ -107,16 +109,61 @@ public class MemberController {
     
 	@Autowired
 	private CustomerService customerSvc;
-	
-	@Autowired
-	private ComunityService comunitySvc;
-	
-    @Autowired
-    private AsService asSvc;
-	
+
     @Autowired
     private MailService mailSvc;
-   
+    
+    @Autowired
+    private CommonService commonSvc;
+    
+    @Autowired
+    private TokenService tokenSvc;
+
+    /**
+     * 상품관리 화면 로딩
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/member/mytokenmanage")
+    public ModelAndView myTokenManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("groupId"));
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	mv.setViewName("/common/customerLoginForm");
+        	return mv;
+		}
+        
+        mv.setViewName("/member/myTokenManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
     /**
      * 나의 토근 목록조회
      * 
@@ -129,7 +176,7 @@ public class MemberController {
      * @throws BizException
      */
     @RequestMapping(value = "/member/mytokenlist")
-    public ModelAndView mytokenList(@ModelAttribute("asConVO") AsVO asConVO, 
+    public ModelAndView myTokenList(@ModelAttribute("tokenConVO") TokenVO tokenConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
@@ -137,7 +184,7 @@ public class MemberController {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : asConVO" + asConVO);
+		logger.info("["+logid+"] Controller start : tokenConVO" + tokenConVO);
 
         ModelAndView mv = new ModelAndView();
 
@@ -155,27 +202,27 @@ public class MemberController {
         	return mv;
 		}
         
-        List<AsVO> asList = null;
+        List<TokenVO> tokenList = null;
         
-        asConVO.setCustomerKey(customerKey);
-        asConVO.setGroupId(groupId);
+        tokenConVO.setCustomerKey(customerKey);
+        tokenConVO.setGroupId(groupId);
         
         // 조회조건저장
-        mv.addObject("asConVO", asConVO);
+        mv.addObject("tokenConVO", tokenConVO);
 
         // 페이징코드
-        asConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(asConVO.getCurPage(), asConVO.getRowCount()));
-        asConVO.setPage_limit_val2(StringUtil.nvl(asConVO.getRowCount(), "10"));
+        tokenConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(tokenConVO.getCurPage(), tokenConVO.getRowCount()));
+        tokenConVO.setPage_limit_val2(StringUtil.nvl(tokenConVO.getRowCount(), "10"));
         
         // 사용자목록조회
-        asList = asSvc.getAsList(asConVO);
-        mv.addObject("asList", asList);
+        tokenList = tokenSvc.getTokenPageList(tokenConVO);
+        mv.addObject("tokenList", tokenList);
 
         // totalCount 조회
-        String totalCount = String.valueOf(asSvc.getAsCnt(asConVO));
+        String totalCount ="0";// String.valueOf(asSvc.getAsCnt(asConVO));
         mv.addObject("totalCount", totalCount);
 
-        mv.setViewName("/member/mytokenList");
+        mv.setViewName("member/myTokenList");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -229,5 +276,189 @@ public class MemberController {
       	
         return mv;
     }
+    
+    /**
+     * 글올리기
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/member/goodsmake")
+    public ModelAndView goodsMake(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
+    		                           HttpServletRequest request, 
+    		                           HttpServletResponse response,
+    		                           String fileName, 
+    		                           String extension, 
+		                               String comment) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start comment:"+comment);
+		logger.info("["+logid+"] Controller start : fileVO" + fileVO);
 
+        ModelAndView mv = new ModelAndView();
+        
+        String fname ="";
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("groupId"));
+        String staffYn = StringUtil.nvl((String) session.getAttribute("staffYn"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	mv.setViewName("/common/sessionOut");
+       		return mv;
+		}
+        
+        
+        TokenVO tokenVO = new TokenVO();
+        tokenVO.setCreateUserId(customerKey);
+        
+        String imagePath="member/"+strToday+"/";
+
+        ResourceBundle rb = ResourceBundle.getBundle("config");
+        String uploadFilePath = rb.getString("offact.upload.path") + imagePath;
+
+        this.logger.debug("파일정보:" + fileName + extension);
+        this.logger.debug("file:" + fileVO);
+
+        try {
+        
+	        if (fileName != null && fileName != "") {
+		    	  
+		        List<MultipartFile> files = fileVO.getFiles();
+		        List fileNames = new ArrayList();
+		        String orgFileName = null;
+
+		        if ((files != null) && (files.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : files)
+		          {
+		            orgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("orgFileName 1 :" + orgFileName);
+		            orgFileName = t1 +"."+ extension;
+		            this.logger.debug("orgFileName 2 :" + orgFileName);
+		            
+		            /*
+		            String br="";
+		            
+		            if(!comment.equals("")){
+		            	br="<br>";
+		            }
+		            
+		            String imageAttach=br+"<img src='"+hostUrl+"/upload/"+imagePath+orgFileName+"' id='I"+orgFileName+"' /><script>"
+		            		+ "if(document.all('I"+orgFileName+"').width>300){"
+		            		+ "document.all('I"+orgFileName+"').width=300"
+		            		+ "};</script>";
+		            */
+		            
+		            tokenVO.setImage1(hostUrl+"/upload/"+imagePath+orgFileName);
+		         		   
+		            boolean check=setDirectory(uploadFilePath);
+
+		            String filePath = uploadFilePath;
+
+		            File file = new File(filePath + orgFileName);
+		            multipartFile.transferTo(file);
+		            fileNames.add(orgFileName);
+		          }
+		     
+		        }
+		        
+		        fname = uploadFilePath + orgFileName;
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        
+        int retVal= 0;//this.comunitySvc.commentInsert(comunityVO);
+        
+        mv.setViewName("/member/fileResult");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+	/**
+	 * 업로드 디렉토리 세팅
+	 */
+	private static boolean setDirectory( String directory) {
+		File wantedDirectory = new File(directory);
+		if (wantedDirectory.isDirectory())
+			return true;
+	    
+		return wantedDirectory.mkdirs();
+	}
+	
+	/**
+     * 이미지보기
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/member/imageview")
+    public ModelAndView imageView(HttpServletRequest request, 
+    		                      HttpServletResponse response,
+    		                      String imageurl) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start imageView");
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        String staffYn = StringUtil.nvl((String) session.getAttribute("staffYn"));
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	mv.setViewName("/common/sessionOut");
+       		return mv;
+		}
+        
+        mv.addObject("imageurl", imageurl);
+
+        mv.setViewName("/member/imageView");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+   
 }

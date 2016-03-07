@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Product">
+
+<resultMap id="productMasterVO" type="com.offact.salesb.vo.business.ProductMasterVO" >
+  <result column="idx"      property="idx"  />
+  <result column="productCode"          property="productCode"  />
+  <result column="productName"      property="productName"  /> 
+  <result column="modelName"          property="modelName"  />
+  <result column="productCategory"      property="productCategory"  />
+  <result column="makeCompany"      property="makeCompany"  />
+  <result column="suplycompany"     property="suplycompany"  />
+  <result column="salesPrice"           property="salesPrice"  />
+  <result column="setteleRate"       property="setteleRate"  />
+  <result column="stockCnt"         	property="stockCnt"  />
+  <result column="deliveryOption"   	property="deliveryOption"  />
+  <result column="createUserId"     property="createUserId"  />
+  <result column="createUserName"   property="createUserName"  />
+  <result column="createDateTime"   property="createDateTime"  />
+  <result column="updateUserId"     property="updateUserId"  />
+  <result column="updateUserName"   property="updateUserName"  />
+  <result column="updateDateTime"   property="updateDateTime"  />
+  <result column="deletedYn"        property="deletedYn"  />
+</resultMap>
+
+<select id="getProductPageList"  resultMap="productMasterVO" parameterType="com.offact.salesb.vo.business.ProductMasterVO" >
+        SELECT T1.idx
+			  ,T1.productCode
+			  ,T1.productCategory
+			  ,T1.productName
+			  ,T1.modelName
+			  ,T1.makeCompany
+			  ,T1.suplycompany
+			  ,T1.productPrice
+			  ,T1.salesPrice
+			  ,T1.setteleRate
+			  ,T1.stockCnt
+		      ,T1.deliveryOption
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.deletedYn
+          FROM sbProductMaster T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.deletedYn='N' And T1.groupId=#{groupId}
+           <if test="searchValue != null and searchValue != ''" >
+             AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
+           </if>
+         ORDER BY createDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getProductCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM sbProductMaster T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.deletedYn='N' And T1.groupId=#{groupId}
+          <if test="searchValue != null and searchValue != ''" >
+             AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
+           </if>
+</select>
+
+<select id="getProductDetail" resultMap="productMasterVO" parameterType="com.offact.salesb.vo.business.ProductMasterVO" >
+
+		SELECT T1.idx
+			  ,T1.productCode
+			  ,T1.productCategory
+			  ,T1.productName
+			  ,T1.modelName
+			  ,T1.makeCompany
+			  ,T1.suplycompany
+			  ,T1.productPrice
+			  ,T1.salesPrice
+			  ,T1.setteleRate
+			  ,T1.stockCnt
+		      ,T1.deliveryOption
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.deletedYn
+          FROM sbProductMaster T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+		 Where T1.idx = #{idx} And T1.deletedYn='N'
+</select>
+
+<update id="productDeleteAll" parameterType="java.util.Map" >
+        Update sbProductMaster
+       		Set
+  				deletedYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where 1=1
+</update>
+
+<insert id="insertExcelProduct"  parameterType="com.offact.salesb.vo.business.ProductMasterVO" >
+		insert into sbProductMaster (
+				 productCode
+            	,productCategory
+            	,productName 
+            	,modelName
+            	,makeCompany
+            	,suplycompany
+           		,productPrice
+            	,salesPrice
+            	,stockCnt
+            	,deliveryOption
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+				 #{productCode}
+	  			, #{productCategory}
+	  			, #{productName}
+	  			, #{modelName}
+	  			, #{makeCompany}
+	  			, #{suplycompany}
+	  			, #{productPrice}
+	  		    , #{salesPrice}
+	  		    , #{stockCnt}
+	  		    , #{deliveryOption}
+	  			, #{createUserId}
+	  			, now()
+	  			, #{deletedYn}
+		)
+		ON DUPLICATE KEY UPDATE productCode = #{productCode},
+		                        productCategory = #{productCategory},
+		                        productName = #{productName},
+		                        modelName = #{modelName},
+		                        makeCompany = #{makeCompany},
+		                        suplycompany = #{suplycompany},
+		                        productPrice = #{productPrice},
+		                        salesPrice = #{salesPrice},
+		                        stockCnt = #{stockCnt},
+		                        deliveryOption = #{deliveryOption},
+		                        updateUserId = #{updateUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = #{deletedYn}
+		                        
+</insert>
+
+<insert id="productInsertProc" parameterType="com.offact.salesb.vo.business.ProductMasterVO" >
+  	insert into sbProductMaster (
+				 productCode
+				,groupId
+            	,productCategory
+            	,productName 
+            	,modelName
+            	,makeCompany
+            	,suplycompany
+           		,productPrice
+            	,salesPrice
+            	,setteleRate
+            	,stockCnt
+            	,deliveryOption
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+				  ifnull(#{productCode},nextval('product_seq'))
+				, #{groupId}
+	  			, #{productCategory}
+	  			, #{productName}
+	  			, #{modelName}
+	  			, #{makeCompany}
+	  			, #{suplycompany}
+	  			, #{productPrice}
+	  		    , #{salesPrice}
+	  		    , #{setteleRate}
+	  		    , #{stockCnt}
+	  		    , #{deliveryOption}
+	  			, #{createUserId}
+	  			, now()
+	  			, 'N'
+		)
+		ON DUPLICATE KEY UPDATE productCode = #{productCode},
+								groupId = #{groupId},
+		                        productCategory = #{productCategory},
+		                        productName = #{productName},
+		                        modelName = #{modelName},
+		                        makeCompany = #{makeCompany},
+		                        suplycompany = #{suplycompany},
+		                        productPrice = #{productPrice},
+		                        salesPrice = #{salesPrice},
+		                        setteleRate = #{setteleRate},
+		                        stockCnt = #{stockCnt},
+		                        deliveryOption = #{deliveryOption},
+		                        updateUserId = #{updateUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = #{deletedYn}
+</insert>
+
+</mapper>

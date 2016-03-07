@@ -2,16 +2,27 @@
 <SCRIPT>
     // 페이지 이동
     function goPageGoodsPageList(page) {
-        document.goodsManageConForm.curPage.value = page;
-        var dataParam = $("#goodsManageConForm").serialize();
+        document.goodsTokenConForm.curPage.value = page;
+        var dataParam = $("#goodsTokenConForm").serialize();
         //commonDim(true);
         $.ajax({
             type: "POST",
-               url:  "<%= request.getContextPath() %>/business/goodspagelist",
+               url:  "<%= request.getContextPath() %>/business/goodstokenlist",
                	data:dataParam,
                success: function(result) {
                    //commonDim(false);
-                   $("#goodsPageList").html(result);
+                   $("#goodsTokenList").html(result);
+                   
+                   if(goodsTokenConForm.prodId.length!=undefined){
+                	   if(goodsTokenConForm.prodId.length>1){
+                		   goodsTokenConForm.prodIdRadio[0].checked=true;
+                           fcGoods_View(0);
+                       }else{
+                    	   goodsTokenConForm.prodIdRadio.checked=true;
+                           fcGoods_View(0);
+                       } 
+                   }
+                   
                },
                error:function() {
                   // commonDim(false);
@@ -19,39 +30,25 @@
         });
 
     }
-    
-    // 페이지 이동
-    function fcGoods_View(idx) {
-
-    	var curPage='${productConVO.curPage}';
-    	var url="<%= request.getContextPath() %>/business/productdetail?idx="+idx+"&curPage="+curPage;
-
-    	fcMenu(url);
-    }
 
 </SCRIPT>
     <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" />개 검색 </span></p>  
 	<table  class="table table-bordered table-hover table-striped">
 	  <thead>
-	    <tr>
-	      <th>상품명</th>
-	         <th>상품코드</th>
-	         <th>수정확인</th>
-	    </tr>
 	  </thead>
 	  <tbody>
 	  	<c:if test="${!empty productList}">
 	          <c:forEach items="${productList}" var="ProductVO" varStatus="status">
-	          <tr id="select_tr_${ProductVO.idx}">
+	          <input type="hidden" id="prodId" name="prodId" value="${ProductVO.idx}">
+	          <tr id="select_tr_${ProductVO.idx}" onClick="fcGoods_View('${status.count-1}');">
+	              <td style="width:30px"><input type="radio" name="prodIdRadio" id="prodIdRadio"></td>
 	              <td><c:out value="${ProductVO.productName}"></c:out></td>
-	              <td><c:out value="${ProductVO.productCode}"></c:out></td>
-	              <td><button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcGoods_View('${ProductVO.idx}');">수정</button></td>
 	           </tr>
 	          </c:forEach>
 	         </c:if>
 	        <c:if test="${empty productList}">
 	        <tr>
-	            <td colspan='3' class='text-center'>조회된 데이터가 없습니다.</td>
+	            <td colspan='1' class='text-center'>조회된 상품이 없습니다.</td>
 	        </tr>
 	       </c:if>
 	  </tbody>

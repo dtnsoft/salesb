@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Token">
+
+<resultMap id="tokenVO" type="com.offact.salesb.vo.member.TokenVO" >
+  <result column="tokenkey"      property="tokenkey"  />
+  <result column="token"          property="token"  />
+  <result column="customerKey"      property="customerKey"  /> 
+  <result column="image1"          property="image1"  />
+  <result column="image2"      property="image2"  />
+  <result column="image3"      property="image3"  />
+  <result column="productEtc"     property="productEtc"  />
+  <result column="groupId"           property="groupId"  />
+  <result column="productCode"       property="productCode"  />
+  <result column="createUserId"     property="createUserId"  />
+  <result column="createUserName"   property="createUserName"  />
+  <result column="createDateTime"   property="createDateTime"  />
+  <result column="updateUserId"     property="updateUserId"  />
+  <result column="updateUserName"   property="updateUserName"  />
+  <result column="updateDateTime"   property="updateDateTime"  />
+  <result column="activeYn"        property="activeYn"  />
+</resultMap>
+
+<select id="getTokenPageList"  resultMap="tokenVO" parameterType="com.offact.salesb.vo.member.TokenVO" >
+        SELECT T1.tokenkey
+			  ,T1.token
+			  ,T1.customerKey
+			  ,T1.image1
+			  ,T1.image2
+			  ,T1.image3
+			  ,T1.productEtc
+			  ,T1.groupId
+			  ,T1.productCode
+			  ,T4.productName
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.activeYn
+          FROM sbToken T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+			   Left Join sbProductMaster T4 On T1.productCode=T4.idx
+         WHERE T1.customerKey = #{customerKey} 
+         ORDER BY createDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getTokenCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			 FROM sbToken T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+			   Left Join sbProductMaster T4 On T1.productCode=T4.idx
+         WHERE T1.customerKey = #{customerKey} 
+</select>
+
+<select id="getTokenDetail" resultMap="tokenVO" parameterType="com.offact.salesb.vo.member.TokenVO" >
+
+		SELECT  T1.tokenkey
+			  ,T1.token
+			  ,T1.customerKey
+			  ,T1.image1
+			  ,T1.image2
+			  ,T1.image3
+			  ,T1.productEtc
+			  ,T1.groupId
+			  ,T1.productCode
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.activeYn
+          FROM sbToken T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+		 Where T1.tokenkey = #{tokenkey} 
+</select>
+
+</mapper>

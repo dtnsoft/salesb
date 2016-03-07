@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/addys/base.jsp" %>
+<%@ include file="/WEB-INF/views/admin/base.jsp" %>
 <SCRIPT>
   
   var errorMsg='${errorMsgList}';

@@ -1,9 +1,9 @@
 <%@ include file="/WEB-INF/views/salesb/topBusiness.jsp" %>
 <script>
 
-	function fcGoods_regist(){
+	function fcGoods_modify(){
 		
-		var frm=document.productRegistForm;
+		var frm=document.productModifyForm;
 		
 		if(frm.productName.value==''){
 			alert('상품명을 입력하세요');
@@ -21,26 +21,26 @@
 		}
 
 		
-		if (confirm('개별 상품정보를 등록 하시겠습니까?')){ 
+		if (confirm('개별 상품정보를 수정 하시겠습니까?')){ 
 		
 		    $.ajax({
 		        type: "POST",
 		        async:false,
-		           url:  "<%= request.getContextPath() %>/business/productregist",
-		           data:$("#productRegistForm").serialize(),
+		           url:  "<%= request.getContextPath() %>/business/productmodify",
+		           data:$("#productModifyForm").serialize(),
 		           success: function(result) {
 
 						if(result>0){
-							 alert('개별 상품정보를 등록을 성공했습니다.');
+							 alert('개별 상품정보를 수정을 성공했습니다.');
 							 fcMenu('<%= request.getContextPath() %>/business/goodsmanage');
 						} else{
-							 alert('개별 상품정보를 등록에 실패했습니다.');
+							 alert('개별 상품정보를 수정에 실패했습니다.');
 						}
 						
 		           },
 		           error:function(){
 		        	   
-		        	   alert('개별 상품정보를 등록에 실패했습니다.');
+		        	   alert('개별 상품정보를 수정에 실패했습니다.');
 		        	   
 		           }
 		    });
@@ -50,10 +50,11 @@
 </script>
 	<div class="container">
 	<!-- container -->
-	  <form:form class="form-inline" role="form" commandName="productMasterVO" id="productRegistForm" name="productRegistForm" method="post" action="">
+	  <form:form class="form-inline" role="form" commandName="productMasterVO" id="productModifyForm" name="productModifyForm" method="post" action="">
+	     <input type="hidden" id="idx" name="idx" value="${productVO.idx}" >
 		 <!--// 타이틀 --> 
 		 <p class="lead">
-		    <span class="glyphicon glyphicon-tags"></span>&nbsp;개별 상품 등록
+		    <span class="glyphicon glyphicon-tags"></span>&nbsp;개별 상품 수정
 		 </p>
 		 <hr>
 		 <!--// 타이틀 --> 
@@ -77,39 +78,39 @@
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">상품명</td>
-		          <td><input type="text" class="form-control" id="productName" name="productName"  maxlength="50"  value="" placeholder="상품명"></td>
+		          <td><input type="text" class="form-control" id="productName" name="productName"  maxlength="50"  value="${productVO.productName}" placeholder="상품명"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">상품코드</td>
-		          <td><input type="text" class="form-control" id="productCode" name="productCode"  maxlength="10"  value="" placeholder="상품코드(미입력시자동생성)"></td>
+		          <td><input type="text" class="form-control" id="productCode" name="productCode"  maxlength="10"  value="${productVO.productCode}" placeholder="상품코드(미입력시자동생성)"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">모델명</td>
-		          <td><input type="text" class="form-control" id="modelName" name="modelName"  maxlength="50"  value="" placeholder="모델명"></td>
+		          <td><input type="text" class="form-control" id="modelName" name="modelName"  maxlength="50"  value="${productVO.modelName}" placeholder="모델명"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">제조사</td>
-		          <td><input type="text" class="form-control" id="makeCompany" name="makeCompany"  maxlength="50"  value="" placeholder="제조사"></td>
+		          <td><input type="text" class="form-control" id="makeCompany" name="makeCompany"  maxlength="50"  value="${productVO.makeCompany}" placeholder="제조사"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">공급처</td>
-		          <td><input type="text" class="form-control" id="suplycompany" name="suplycompany"  maxlength="50"  value="" placeholder="공급처"></td>
+		          <td><input type="text" class="form-control" id="suplycompany" name="suplycompany"  maxlength="50"  value="${productVO.suplycompany}" placeholder="공급처"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">원가</td>
-		          <td><input type="text" class="form-control" id="productPrice" name="productPrice"  maxlength="50"  value="0" placeholder="원가"></td>
+		          <td><input type="text" class="form-control" id="productPrice" name="productPrice"  maxlength="50"  value="${productVO.productPrice}" placeholder="원가"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">소비자가</td>
-		          <td><input type="text" class="form-control" id="salesPrice" name="salesPrice"  maxlength="50"  value="0" placeholder="소비자가격"></td>
+		          <td><input type="text" class="form-control" id="salesPrice" name="salesPrice"  maxlength="50"  value="${productVO.salesPrice}" placeholder="소비자가격"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">1차 구매자 판매 수수료율</td>
-		          <td><input type="text" class="form-control" id="setteleRate" name="setteleRate"  maxlength="50"  value="0.00" placeholder="소비자가격"></td>
+		          <td><input type="text" class="form-control" id="setteleRate" name="setteleRate"  maxlength="50"  value="${productVO.setteleRate}" placeholder="소비자가격"></td>
 			    </tr>
 			    <tr>
 		          <td style="background-color:#F5F5F5">재고수량</td>
-		          <td><input type="text" class="form-control" id="stockCnt" name="stockCnt"  maxlength="5"  value="0" placeholder="재고수량"></td>
+		          <td><input type="text" class="form-control" id="stockCnt" name="stockCnt"  maxlength="5"  value="${productVO.stockCnt}" placeholder="재고수량"></td>
 			    </tr>
 			  </tbody>
 		    </table>
@@ -151,7 +152,7 @@
          </div> 
      	 <div class="clm_detail_btn">
 	         <div class="clm_btn">
-	           <a href="javascript:fcGoods_regist();" class="btn_ty2">등록하기</a>
+	           <a href="javascript:fcGoods_modify();" class="btn_ty2">수정하기</a>
 	         </div>
          </div>
   	</form:form>

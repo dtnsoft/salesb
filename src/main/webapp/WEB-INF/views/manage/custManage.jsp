@@ -164,7 +164,7 @@
 <div class="container-fluid">
     <!-- 서브타이틀 영역 : 시작 -->
 	<div class="sub_title">
-   		<p class="titleP">고객관리</p>
+   		<p class="titleP">일반 회원관리</p>
 	</div>
 	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->

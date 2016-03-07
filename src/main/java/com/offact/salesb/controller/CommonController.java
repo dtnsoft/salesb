@@ -57,15 +57,11 @@ import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.service.common.UserService;
-import com.offact.salesb.service.comunity.AsService;
-import com.offact.salesb.service.comunity.ComunityService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.common.GroupVO;
 import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.common.UserVO;
 import com.offact.salesb.vo.common.WorkVO;
-import com.offact.salesb.vo.comunity.AsVO;
-import com.offact.salesb.vo.comunity.ComunityVO;
 import com.offact.salesb.vo.manage.UserManageVO;
 
 /**
@@ -143,14 +139,8 @@ public class CommonController {
 	@Autowired
 	private CustomerService customerSvc;
 	
-	@Autowired
-	private ComunityService comunitySvc;
-	
     @Autowired
     private SmsService smsSvc;
-    
-    @Autowired
-    private AsService asSvc;
     
 	@Autowired
 	private UserService userSvc;
@@ -230,8 +220,7 @@ public class CommonController {
         	
         	//List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         	//mv.addObject("group_comboList", group_comboList);
-        	
-        	
+
         	String state = generateState();
 
         	session = request.getSession(true);
@@ -253,8 +242,7 @@ public class CommonController {
        		return mv;
 		}
 
-        mv.addObject("hostUrl", hostUrl);
-		mv.setViewName("comunity/comunityManage");
+        mv.setViewName("member/myTokenManage");
 
 		return mv;
 	}
@@ -271,8 +259,6 @@ public class CommonController {
 			                   Locale locale) throws BizException 
 	{
 
-		logger.info("Welcome customer");
-		
 		ModelAndView  mv = new ModelAndView();
 		
 		mv.addObject("type", type);
@@ -352,7 +338,7 @@ public class CommonController {
     /**
      * 고객 등록
      *
-     * @param UserManageVO
+     * @param 
      * @param request
      * @param response
      * @param model
@@ -472,7 +458,7 @@ public class CommonController {
 				smsVO.setSmsType(smsType);
 				smsVO.setSmsTo(customerVo.getCustomerKey());
 				smsVO.setSmsFrom(sendno);
-				smsVO.setSmsMsg("["+token+"]애디스에서 발송된 인증번호입니다");
+				smsVO.setSmsMsg("["+token+"]salesb 에서 발송된 인증번호입니다");
 
 				logger.debug("#########devOption :"+devOption);
 				String[] devSmss= devSms.split("\\^");
@@ -569,7 +555,7 @@ public class CommonController {
 				smsVO.setSmsType(smsType);
 				smsVO.setSmsTo(customerVo.getCustomerKey());
 				smsVO.setSmsFrom(sendno);
-				smsVO.setSmsMsg("["+token+"] 애디스에서 발송된 인증번호입니다");
+				smsVO.setSmsMsg("["+token+"] salesb 에서 발송된 인증번호입니다");
 
 				logger.debug("#########devOption :"+devOption);
 				String[] devSmss= devSms.split("\\^");
@@ -959,27 +945,8 @@ public class CommonController {
 					strMainUrl = "business/goodsManage";
 				}else{
 					
-					List<AsVO> asList = null;
-					AsVO asConVO = new AsVO();
-			        asConVO.setCustomerKey(customerKey);
-			        asConVO.setGroupId(groupId);
-			        
-			        // 조회조건저장
-			        mv.addObject("asConVO", asConVO);
-
-			        // 페이징코드
-			        asConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(asConVO.getCurPage(), asConVO.getRowCount()));
-			        asConVO.setPage_limit_val2(StringUtil.nvl(asConVO.getRowCount(), "10"));
-			        
-			        // 사용자목록조회
-			        asList = asSvc.getAsList(asConVO);
-			        mv.addObject("asList", asList);
-
-			        // totalCount 조회
-			        String totalCount = String.valueOf(asSvc.getAsCnt(asConVO));
-			        mv.addObject("totalCount", totalCount);
-
-					strMainUrl = "member/mytokenList";
+					//token list 조회
+					strMainUrl = "member/myTokenManage";
 				}
 
 				
@@ -1102,27 +1069,9 @@ public class CommonController {
 				session.setAttribute("photo", photo);
 				session.setAttribute("access_token", access_token);
 				
-				List<AsVO> asList = null;
-				AsVO asConVO = new AsVO();
-		        asConVO.setCustomerKey(customerKey);
-		        asConVO.setGroupId(groupId);
-		        
-		        // 조회조건저장
-		        mv.addObject("asConVO", asConVO);
-
-		        // 페이징코드
-		        asConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(asConVO.getCurPage(), asConVO.getRowCount()));
-		        asConVO.setPage_limit_val2(StringUtil.nvl(asConVO.getRowCount(), "10"));
-		        
-		        // 사용자목록조회
-		        asList = asSvc.getAsList(asConVO);
-		        mv.addObject("asList", asList);
-
-		        // totalCount 조회
-		        String totalCount = String.valueOf(asSvc.getAsCnt(asConVO));
-		        mv.addObject("totalCount", totalCount);
-
-				strMainUrl = "member/mytokenList";
+				//token list 조회
+				
+				strMainUrl = "member/myTokenManage";
 				
 			} else {//고객 정보가 없는경우
 				
@@ -1332,30 +1281,6 @@ public class CommonController {
 		 * @return
 		 * @throws Exception 
 		 */
-		@RequestMapping(value = "/common/staffselect")
-		public ModelAndView staffSelect(String staffYn ,
-				                   HttpServletRequest request) throws BizException
-		{
-			
-			logger.info(" staffYn : "+staffYn);
-	
-			HttpSession session = request.getSession(false);
-	
-			session = request.getSession(true);
-			session.setAttribute("staffYn", staffYn);
-
-	        ModelAndView mv = new ModelAndView();
-	        
-	        mv.setViewName("/comunity/comunityManage");
-	
-			return mv;
-		}
-		/**
-		 * Logout 처리
-		 * @param request
-		 * @return
-		 * @throws Exception 
-		 */
 		@RequestMapping(value = "/common/logout")
 		public ModelAndView logout(String loginType ,
 				                   HttpServletRequest request) throws BizException
@@ -1391,30 +1316,25 @@ public class CommonController {
         	
         	List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         	mv.addObject("group_comboList", group_comboList);
-	        
-	        if(StringUtil.nvl(loginType,"").equals("survey")){
-	         	mv.setViewName("/common/surveyLoginForm");
-			}else{
-				
-	        	String state = generateState();
-
-	        	session = request.getSession(true);
-				session.setAttribute("state", state);
-
-				mv.addObject("state", state);
-				mv.addObject("hostUrl", hostUrl);
-				mv.addObject("domainUrl", domainUrl);
-				mv.addObject("redirectUrl", redirectUrl);
-				mv.addObject("redirectUrl2", redirectUrl2);
-				mv.addObject("kakaoclient_id", kakaoclient_id);
-				mv.addObject("naverclient_id", naverclient_id);
-				mv.addObject("naverclient_secret", naverclient_secret);
-				mv.addObject("facebookfbAppId", facebookfbAppId);
-				mv.addObject("googleclient_id", googleclient_id);
-				mv.addObject("pinterestclient_id", pinterestclient_id);
 	
-			 	mv.setViewName("/common/customerLoginForm");
-			}
+        	String state = generateState();
+
+        	session = request.getSession(true);
+			session.setAttribute("state", state);
+
+			mv.addObject("state", state);
+			mv.addObject("hostUrl", hostUrl);
+			mv.addObject("domainUrl", domainUrl);
+			mv.addObject("redirectUrl", redirectUrl);
+			mv.addObject("redirectUrl2", redirectUrl2);
+			mv.addObject("kakaoclient_id", kakaoclient_id);
+			mv.addObject("naverclient_id", naverclient_id);
+			mv.addObject("naverclient_secret", naverclient_secret);
+			mv.addObject("facebookfbAppId", facebookfbAppId);
+			mv.addObject("googleclient_id", googleclient_id);
+			mv.addObject("pinterestclient_id", pinterestclient_id);
+
+		 	mv.setViewName("/common/customerLoginForm");
 	
 			return mv;
 		}

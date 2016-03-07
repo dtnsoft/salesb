@@ -204,13 +204,14 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">관리<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정 관리</a></li>
-            <li><a href="<%= request.getContextPath() %>/manage/custmanage">고객 관리</a></li>
-            <li><a href="<%= request.getContextPath() %>/manage/companymanage">업체 관리</a></li>
-            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/manage/usermanage">사업자 회원관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/manage/custmanage">일반 회원관리</a></li>
+           <!-- <li><a href="<%= request.getContextPath() %>/manage/companymanage">업체 관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li> -->
           </ul>
         </li>
       </ul>
+      <!-- 
       <ul class="nav navbar-nav">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">이력<span class="caret"></span></a>
@@ -219,7 +220,7 @@
             <li><a href="<%= request.getContextPath() %>/history/workhistorymanage">업무 처리이력</a></li>
           </ul>
         </li>
-      </ul>
+      </ul> -->
 	  <ul class="nav navbar-nav navbar-right">
         <li><a href="#">사용자 : <strong> <%=strUserName %></strong></a></li>
         <li><a href="javascript:goMyInfo('<%=strUserId %>');">비밀번호 변경</a></li>
