@@ -22,7 +22,7 @@
     // 페이지 이동
     function fcShow_Token(tokenKey) {
 
-    	fcMenu('<%= request.getContextPath() %>/member/goodsmakeform');
+    	fcMenu('<%= request.getContextPath() %>/member/goodsmakeform?tokenKey='+tokenKey);
     }
 
 </SCRIPT>
@@ -37,7 +37,18 @@
 	              <div class="clm_acont ">
 	                <div class="order_acont">
 	                  <div class="display_store">
-	                    <span class="place"> <span class="date" style="color:blue">${TokenVO.token}</span> </span> <span class="type"><span class="type_in">활성화</span></span>
+	                    <span class="place"> <span class="date" style="color:blue">${TokenVO.token}</span> </span> 
+	                    <span class="type">
+	                     	<c:choose>
+				                <c:when test="${TokenVO.activeYn=='Y'  }">
+									 <span class="type_in"><span class="type_in">사용가능</span></span>
+								</c:when>
+								<c:otherwise>
+									 <span class="type_out" ><span class="type_out" >미등록</span></span>
+								</c:otherwise>
+							</c:choose>
+	                    
+	                    </span>
 	                  </div>
 	                  <span class="img_area"> <span> <img src="${TokenVO.image1}" alt="상품이미지" > </span> </span>
 	                  <div class="summary">

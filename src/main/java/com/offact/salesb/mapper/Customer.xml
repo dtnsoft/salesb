@@ -121,4 +121,63 @@ SELECT  T1.customerKey
   	WHERE T1.sbPhoneNumber = #{sbPhoneNumber}
  
 </select>
+
+<select id="getCustKeyInfo" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+	SELECT T1.customerKey,
+		   T1.sbPhoneNumber,
+		   T1.sbEmail,
+		   T1.socialId1,
+		   T1.socialId2,
+		   T1.socialId3,
+		   T1.socialId4,
+		   T1.socialId5,
+	       T1.usedYn
+  		FROM sbCustomer T1
+  	WHERE 1=1
+        <if test="searchType != null and searchType != ''" >
+          <choose>
+            <when test="searchType.equals('01')">
+       		  AND T1.sbPhoneNumber = #{sbPhoneNumber}
+            </when>
+            <when test="searchType.equals('02')">
+        	  AND T1.sbEmail = #{sbEmail}
+            </when>
+            <when test="searchType.equals('03')">
+        	  AND T1.sbPhoneNumber = #{sbPhoneNumber} And T1.sbEmail = #{sbEmail}
+            </when>
+            <when test="searchType.equals('04')">
+        	  AND T1.socialId1 = #{socialId1}
+            </when>
+            <when test="searchType.equals('05')">
+        	  AND T1.socialId2 = #{socialId2}
+            </when>
+            <when test="searchType.equals('06')">
+        	  AND T1.socialId3 = #{socialId3}
+            </when>
+            <when test="searchType.equals('07')">
+        	  AND T1.socialId4 = #{socialId4}
+            </when>
+            <when test="searchType.equals('08')">
+        	  AND T1.socialId5 = #{socialId5}
+            </when>
+          </choose>
+        </if>
+ 
+</select>
+
+<insert id="customerInsert" parameterType="com.offact.salesb.vo.CustomerVO">
+        INSERT INTO sbCustomer( 
+        	 sbPhoneNumber
+            ,sbEmail
+            ,registDateTime 
+            ,usedYn 
+            )
+        VALUES (
+	  		  #{sbPhoneNumber}
+	  		, #{sbEmail}
+	  		, now()
+	  		, 'N'
+	  		) 
+ </insert>
+
 </mapper>

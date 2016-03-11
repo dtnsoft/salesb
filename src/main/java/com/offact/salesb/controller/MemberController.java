@@ -83,6 +83,15 @@ public class MemberController {
 		
 		return logid;
 	}
+    @Value("#{config['oauth.facebook.fbAppId']}")
+    private String facebookfbAppId;
+    
+    @Value("#{config['oauth.kakao.client_id']}")
+    private String kakaoclient_id;
+    
+    @Value("#{config['oauth.redirect.url']}")
+    private String redirectUrl;
+    
     @Value("#{config['offact.host.url']}")
     private String hostUrl;
 
@@ -242,8 +251,9 @@ public class MemberController {
      * @throws BizException
      */
     @RequestMapping(value = "/member/goodsmakeform")
-    public ModelAndView goodsMakeForm(HttpServletRequest request, 
-    		                       HttpServletResponse response) throws BizException 
+    public ModelAndView goodsMakeForm(String tokenKey,
+    		                          HttpServletRequest request, 
+    		                          HttpServletResponse response) throws BizException 
     {
         
     	//log Controller execute time start
@@ -268,6 +278,17 @@ public class MemberController {
         	return mv;
 		}
         
+        TokenVO token = new TokenVO();
+        
+        token.setTokenkey(tokenKey);
+        
+        token = tokenSvc.getTokenDetail(token);
+
+        mv.addObject("token", token);
+		mv.addObject("redirectUrl", redirectUrl);
+		mv.addObject("kakaoclient_id", kakaoclient_id);
+		mv.addObject("facebookfbAppId", facebookfbAppId);
+		
         mv.setViewName("/member/goodsMakeForm");
         
        //log Controller execute time end
@@ -287,50 +308,62 @@ public class MemberController {
      * @return
      * @throws BizException
      */
-    @RequestMapping(value = "/member/goodsmake")
-    public ModelAndView goodsMake(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
-    		                           HttpServletRequest request, 
-    		                           HttpServletResponse response,
-    		                           String fileName, 
-    		                           String extension, 
-		                               String comment) throws BizException 
-    {
+    @RequestMapping(value = "/member/goodsmake", method = RequestMethod.POST)
+    public @ResponseBody
+    ModelAndView goodsMake(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
+    		                      String tokenkey,
+    		                      String image1,
+    		                      String image2,
+    		                      String image3,
+    		                      String image4,
+    		                      String image5,
+    		                      String productEtc,
+		                          HttpServletRequest request, 
+		                          HttpServletResponse response,
+		                          String fileName, 
+		                          String extension) throws BizException 
+    {  
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start comment:"+comment);
+		
+		ModelAndView mv = new ModelAndView();
+		
 		logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+		logger.info("["+logid+"] Controller start tokenkey:"+tokenkey);
+		logger.info("["+logid+"] Controller start image1:"+image1);
+		logger.info("["+logid+"] Controller start image2:"+image2);
+		logger.info("["+logid+"] Controller start image3:"+image3);
+		logger.info("["+logid+"] Controller start image4:"+image4);
+		logger.info("["+logid+"] Controller start image5:"+image5);
+		logger.info("["+logid+"] Controller start productEtc:"+productEtc);
 
-        ModelAndView mv = new ModelAndView();
-        
         String fname ="";
         
       	// 사용자 세션정보
         HttpSession session = request.getSession();
         
         String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
-        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
-        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("groupId"));
-        String staffYn = StringUtil.nvl((String) session.getAttribute("staffYn"));
         
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
         
-        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
-
- 	       	mv.setViewName("/common/sessionOut");
-       		return mv;
-		}
-        
-        
         TokenVO tokenVO = new TokenVO();
-        tokenVO.setCreateUserId(customerKey);
         
-        String imagePath="member/"+strToday+"/";
+        tokenVO.setTokenkey(tokenkey);
+        tokenVO.setImage1(image1);
+        tokenVO.setImage2(image2);
+        tokenVO.setImage3(image3);
+        tokenVO.setImage4(image4);
+        tokenVO.setImage5(image5);
+        tokenVO.setProductEtc(productEtc);
+        
+        tokenVO.setUpdateUserId(customerKey);
+        
+        String imagePath="goods/"+strToday+"/";
 
         ResourceBundle rb = ResourceBundle.getBundle("config");
         String uploadFilePath = rb.getString("offact.upload.path") + imagePath;
@@ -345,43 +378,48 @@ public class MemberController {
 		        List<MultipartFile> files = fileVO.getFiles();
 		        List fileNames = new ArrayList();
 		        String orgFileName = null;
+		        String realFileName = null;
+		        
+		        int fileIndex=1;
 
 		        if ((files != null) && (files.size() > 0))
 		        {
 		          for (MultipartFile multipartFile : files)
 		          {
 		            orgFileName = multipartFile.getOriginalFilename();
-		            this.logger.debug("orgFileName 1 :" + orgFileName);
-		            orgFileName = t1 +"."+ extension;
-		            this.logger.debug("orgFileName 2 :" + orgFileName);
+		            this.logger.debug("orgFileName  :" + orgFileName);
+		            realFileName = t1 + fileIndex +"."+ extension;
+		            this.logger.debug("realFileName  :" + realFileName);
 		            
-		            /*
-		            String br="";
-		            
-		            if(!comment.equals("")){
-		            	br="<br>";
+		            if(!orgFileName.equals("")){
+ 
+			            boolean check=setDirectory(uploadFilePath);
+	
+			            String filePath = uploadFilePath;
+	
+			            File file = new File(filePath + realFileName);
+			            multipartFile.transferTo(file);
+			            fileNames.add(realFileName);
+			            
+			            if(fileIndex==1){
+			            	tokenVO.setImage1(hostUrl+"/upload/"+imagePath+realFileName);
+			            }else if (fileIndex==2){
+			            	tokenVO.setImage2(hostUrl+"/upload/"+imagePath+realFileName);
+			            }else if (fileIndex==3){
+			            	tokenVO.setImage3(hostUrl+"/upload/"+imagePath+realFileName);
+			            }else if (fileIndex==4){
+			            	tokenVO.setImage4(hostUrl+"/upload/"+imagePath+realFileName);
+			            }else if (fileIndex==5){
+			            	tokenVO.setImage5(hostUrl+"/upload/"+imagePath+realFileName);
+			            }
+
 		            }
 		            
-		            String imageAttach=br+"<img src='"+hostUrl+"/upload/"+imagePath+orgFileName+"' id='I"+orgFileName+"' /><script>"
-		            		+ "if(document.all('I"+orgFileName+"').width>300){"
-		            		+ "document.all('I"+orgFileName+"').width=300"
-		            		+ "};</script>";
-		            */
+		            fileIndex++;
 		            
-		            tokenVO.setImage1(hostUrl+"/upload/"+imagePath+orgFileName);
-		         		   
-		            boolean check=setDirectory(uploadFilePath);
-
-		            String filePath = uploadFilePath;
-
-		            File file = new File(filePath + orgFileName);
-		            multipartFile.transferTo(file);
-		            fileNames.add(orgFileName);
 		          }
 		     
 		        }
-		        
-		        fname = uploadFilePath + orgFileName;
 
 	        }
         }catch (Exception e){
@@ -390,9 +428,17 @@ public class MemberController {
         	
         }
         
-        int retVal= 0;//this.comunitySvc.commentInsert(comunityVO);
+        this.logger.debug("getImage1  :" + tokenVO.getImage1());
+        this.logger.debug("getImage2  :" + tokenVO.getImage2());
+        this.logger.debug("getImage3  :" + tokenVO.getImage3());
+        this.logger.debug("getImage4  :" + tokenVO.getImage4());
+        this.logger.debug("getImage5  :" + tokenVO.getImage5());
         
-        mv.setViewName("/member/fileResult");
+        int retVal= tokenSvc.tokenUpdateProc(tokenVO);
+        
+        mv.addObject("tokenVO", tokenVO);
+		
+    	mv.setViewName("/member/fileResult");
         
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();

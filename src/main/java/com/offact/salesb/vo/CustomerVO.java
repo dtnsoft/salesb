@@ -7,7 +7,9 @@ package com.offact.salesb.vo;
 public class CustomerVO extends AbstractVO {
 	
 	    private String customerKey;
+	    private String searchType;
 		private String sbPhoneNumber;
+		private String sbEmail;
 		private String sbPw;
 		private String socialId1;
 		private String socialId2;
@@ -299,5 +301,22 @@ public class CustomerVO extends AbstractVO {
 		public void setPw_modifyYn(String pw_modifyYn) {
 			this.pw_modifyYn = pw_modifyYn;
 		}
+
+		public String getSbEmail() {
+			return sbEmail;
+		}
+
+		public void setSbEmail(String sbEmail) {
+			this.sbEmail = sbEmail;
+		}
+
+		public String getSearchType() {
+			return searchType;
+		}
+
+		public void setSearchType(String searchType) {
+			this.searchType = searchType;
+		}
+
 
 }

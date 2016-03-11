@@ -39,6 +39,20 @@ public interface TokenService {
      */
     public TokenVO getTokenDetail(TokenVO token) throws BizException;
     
-
+    /**
+     * Token 저장
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int tokenInsertProc(TokenVO token) throws BizException;
+    
+    /**
+     * Token 업덷이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int tokenUpdateProc(TokenVO token) throws BizException;
 
 }

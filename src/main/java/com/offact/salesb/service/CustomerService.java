@@ -59,5 +59,20 @@ public interface CustomerService {
 	 * @throws BizException
 	 */
 	public CustomerVO getTokenInfo(CustomerVO customer) throws BizException;
+	
+	/**
+	 * 코객키값 조회
+	 * @param user
+	 * @return
+	 * @throws BizException
+	 */
+	public CustomerVO getCustKeyInfo(CustomerVO customer) throws BizException;
     
+	/**
+	 * 고객등록
+	 * @param user
+	 * @return
+	 * @throws BizException
+	 */
+	public int customerInsert(CustomerVO customer) throws BizException;    
 }

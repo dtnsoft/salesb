@@ -19,6 +19,7 @@ encoding//src/main/webapp/WEB-INF/views/common/businessModifyForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/customerLoginForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/customerModifyForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/oauth2google.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/common/oauth2kakaostory.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/errors/404.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/errors/500.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/errors/error.html=UTF-8

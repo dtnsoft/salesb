@@ -125,7 +125,7 @@
 		  
 		    var loginURL='https://www.facebook.com/dialog/oauth';
 		    var fbAppId='${facebookfbAppId}';
-		    var scope='public_profile';
+		    var scope='email,public_profile,user_friends,publish_actions';
 		    var redirectURL='${redirectUrl}/salesb/facebooklogin';
 	
 		    top.location.href=loginURL + '?client_id=' + fbAppId + '&redirect_uri=' + redirectURL +'&response_type=token&scope=' + scope;

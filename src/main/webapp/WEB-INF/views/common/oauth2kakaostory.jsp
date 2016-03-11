@@ -75,7 +75,7 @@
 		
 					if(access_token!=null){
 						
-						var URL2='https://kapi.kakao.com/v1/user/me';
+						var URL2='https://kapi.kakao.com/v1/api/story/post/note?content=This cafe is really awesome!&android_exec_param=cafe_id=1234&ios_exec_param=cafe_id=1234';
 						var restfullurl3=URL + '?Bearer='+access_token;
 						var authorizationToken =access_token;
 				
@@ -85,98 +85,11 @@
 						      url:  '<%= request.getContextPath() %>/common/restfullinfo3?restfullurl3='+encodeURIComponent(URL2)+'&access_token=Bearer '+access_token,
 						       success: function(data) {
 
-						    	//alert('kakao id : '+data.id);
+						    	alert('kakao story id : '+data.id);
 								//alert('kakao nickname : '+data.nickname);
 								//alert('kakao custom_field1 : '+data.custom_field1);
 								
-								frm.customerKey.value='01067471995';
-								frm.customerPw.value=1;
-								
-								frm.id.value=data.id;
-								frm.name.value=data.nickname;
-								frm.photo.value=data.profile_image;
-								frm.access_token.value=access_token;
-								
-								try {
-									document.loginForm.submit();
-								} catch(e) {}
 						
-						       },
-						       error:function(){
-						     	  
-						     	  alert('error');	          
-						
-						       }
-						 });
-
-					}
-
-			       },
-			       error:function(){
-			     	  
-			     	  alert('error');	          
-			
-			       }
-			 });
-
-		} 
-	    
-	}
-	
-	function goStory(){
-		
-		commonDim(true);
-		
-		var frm = document.loginForm;
-		 
-	    var url=window.location.href;
-		//alert(url);
-
-	    if (url.indexOf("code=") > 0) {
-			queryString = url.substr(url.indexOf('?') + 1);
-			//alert('queryString:'+queryString);
-			obj = parseQueryString(queryString);
-
-			var code = obj['code'];
-			var URL='https://kauth.kakao.com/oauth/token';
-
-		    var client_id='${kakaoclient_id}';
-		    var redirectURL='${redirectUrl}/salesb/kakaologin';
-	
-			var restfullurl=URL + '?grant_type=authorization_code&client_id=' + client_id + '&redirect_uri=' + redirectURL +'&code='+code;
-	
-			$.ajax({
-			    type: "POST",
-			    async:true,
-			      url:  '<%= request.getContextPath() %>/common/restfullinfo?restfullurl='+encodeURIComponent(restfullurl),
-			       success: function(data) {
-					
-			        //alert('access_token : '+data.access_token);		
-					var access_token=data.access_token;
-		
-					if(access_token!=null){
-						
-						var multiposturl='https://kapi.kakao.com/v1/api/story/upload/multi';
-				    	var file1="root/sample1.png";
-				    	var file2="root/sample2.png";
-				    	var file3="root/sample3.png";
-				    	
-				    	//var posturl='https://kapi.kakao.com/v1/api/story/post/note';
-				    	/*
-				    	 url:  '<%= request.getContextPath() %>/common/restkakaostorymulti?kaostorymultiurl='+encodeURIComponent(multiposturl)+'&access_token=Bearer '+access_token+'&file1='+file1+'&file2='+file2+'&file3='+file3+'&content='+encodeURIComponent(content)+'&android_exec_param=cafe_id=1234&kaostoryurl='+encodeURIComponent(posturl)+'&ios_exec_param=cafe_id=1234',
-						*/
-						  
-				    	var posturl='https://kapi.kakao.com/v1/api/story/post/photo';
-				    	var content='카카오 스토리';
-				    	
-				    	$.ajax({
-						    type: "POST",
-						    async:true,
-						     url:  '<%= request.getContextPath() %>/common/restkakaostory?kaostoryurl='+encodeURIComponent(posturl)+'&access_token='+access_token+'&android_exec_param=cafe_id=1234&ios_exec_param=cafe_id=1234',
-							      success: function(data) {
-
-						    	 // alert('kakao story id : '+data.id);
-
 						       },
 						       error:function(){
 						     	  

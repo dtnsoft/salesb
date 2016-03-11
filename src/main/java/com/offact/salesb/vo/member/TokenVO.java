@@ -12,6 +12,8 @@ public class TokenVO extends AbstractVO {
 	private String image1;
 	private String image2;
 	private String image3;
+	private String image4;
+	private String image5;
 	private String productEtc;
 	private String customerKey;
 	
@@ -327,6 +329,22 @@ public class TokenVO extends AbstractVO {
 
 	public void setTokenkey(String tokenkey) {
 		this.tokenkey = tokenkey;
+	}
+
+	public String getImage4() {
+		return image4;
+	}
+
+	public void setImage4(String image4) {
+		this.image4 = image4;
+	}
+
+	public String getImage5() {
+		return image5;
+	}
+
+	public void setImage5(String image5) {
+		this.image5 = image5;
 	}
 
 }

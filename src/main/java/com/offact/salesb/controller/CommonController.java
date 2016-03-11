@@ -1,10 +1,11 @@
 package com.offact.salesb.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.*;
+import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -63,6 +64,8 @@ import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.common.UserVO;
 import com.offact.salesb.vo.common.WorkVO;
 import com.offact.salesb.vo.manage.UserManageVO;
+
+import com.kakao.*;
 
 /**
  * Handles requests for the application home page.
@@ -1069,6 +1072,14 @@ public class CommonController {
 				session.setAttribute("photo", photo);
 				session.setAttribute("access_token", access_token);
 				
+				if(restfulltype.equals("kakao")){
+					session.setAttribute("access_token_kakao", access_token);
+				}else if(restfulltype.equals("facebook")){
+					session.setAttribute("access_token_facebook", access_token);
+				}if(restfulltype.equals("naver")){
+					session.setAttribute("access_token_naver", access_token);
+				}
+				
 				//token list 조회
 				
 				strMainUrl = "member/myTokenManage";
@@ -1239,6 +1250,41 @@ public class CommonController {
 		 * @throws Exception 
 		 */
 		@SuppressWarnings("null")
+		@RequestMapping(value = "/kakaostory", method = RequestMethod.GET)
+		public ModelAndView kakaoStory(HttpServletRequest request,
+				                          HttpServletResponse response) throws Exception
+		{
+			
+			//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start kakaoStory::"+request.getQueryString());
+			
+			ModelAndView  mv = new ModelAndView();
+			
+			mv.addObject("hostUrl", hostUrl);
+			mv.addObject("domainUrl", domainUrl);
+			mv.addObject("redirectUrl", redirectUrl);
+			
+			mv.addObject("kakaoclient_id", kakaoclient_id);
+			
+			mv.setViewName("common/oauth2kakaostory");
+			
+			//log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+			return mv;
+		}
+		
+		/**
+		 * Login 처리
+		 * @param request
+		 * @param response
+		 * @return
+		 * @throws Exception 
+		 */
+		@SuppressWarnings("null")
 		@RequestMapping(value = "/naverlogin", method = RequestMethod.GET)
 		public ModelAndView naverLogin(HttpServletRequest request,
 				                          HttpServletResponse response) throws Exception
@@ -1306,6 +1352,15 @@ public class CommonController {
 	        session.removeAttribute("staffYn");
 	        session.removeAttribute("groupId");
 	        session.removeAttribute("groupName");
+	        
+	        session.removeAttribute("id");
+	        session.removeAttribute("name");
+	        session.removeAttribute("restfulltype");
+	        session.removeAttribute("photo");
+	        session.removeAttribute("access_token");
+	        session.removeAttribute("access_token_kakao");
+	        session.removeAttribute("access_token_facebook");
+	        session.removeAttribute("access_token_naver");
 	        
 	        logger.info("logout ok!");
 	        
@@ -1848,6 +1903,349 @@ public class CommonController {
 	     * @return
 	     * @throws BizException
 	     */
+	    @RequestMapping({"/common/restkakaostory"})
+	    public @ResponseBody
+	    JSONObject restKakaoStory(String kaostoryurl,
+	    		String access_token,
+	    		String content,
+	    		String image1 ,
+	    		String image2 ,
+	    		String image3 ,
+	    		String image4 ,
+	    		String image5 ,
+	    		String android_exec_param,
+	    		String ios_exec_param ,
+	            HttpServletRequest request, 
+	            HttpServletResponse response) throws BizException
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			
+			logger.info("["+logid+"] Controller start kaostory "+kaostoryurl);
+			logger.info("["+logid+"] Controller start access_token "+access_token);
+
+			    JSONObject object =null;
+			    
+			    KakaoRestApiHelper apiHelper = new KakaoRestApiHelper();
+			    
+			    // access token 지정
+		        apiHelper.setAccessToken(access_token);
+
+			  
+			    final String TEST_MYSTORY_ID = "[TEST MY STORY ID]";
+		        final String TEST_SCRAP_URL = "https://kapi.kakao.com";
+
+		        ResourceBundle rb = ResourceBundle.getBundle("config");
+	            String uploadFilePath = rb.getString("offact.upload.path") + "goods";
+		        // on Linux or Mac
+	            File TEST_UPLOAD_FILE1=null;
+	            File TEST_UPLOAD_FILE2=null;
+	            File TEST_UPLOAD_FILE3=null;
+	            File TEST_UPLOAD_FILE4=null;
+	            File TEST_UPLOAD_FILE5=null;
+	            
+	            int index1=image1.indexOf("goods");
+	            int index2=image2.indexOf("goods");
+	            int index3=image3.indexOf("goods");
+	            int index4=image4.indexOf("goods");
+	            int index5=image5.indexOf("goods");
+	            
+	            logger.info("["+logid+"] Controller index1 "+index1);
+	            logger.info("["+logid+"] Controller index2 "+index2);
+	            logger.info("["+logid+"] Controller index3 "+index3);
+	            logger.info("["+logid+"] Controller index4 "+index4);
+	            logger.info("["+logid+"] Controller index5 "+index5);
+	            
+	            if(index1>0){image1=image1.substring(index1+5); TEST_UPLOAD_FILE1 = new File(uploadFilePath+image1);}
+	            if(index2>0){image2=image2.substring(index2+5); TEST_UPLOAD_FILE2 = new File(uploadFilePath+image2);}
+	            if(index3>0){image3=image3.substring(index3+5); TEST_UPLOAD_FILE3 = new File(uploadFilePath+image3);}
+	            if(index4>0){image4=image4.substring(index4+5); TEST_UPLOAD_FILE4 = new File(uploadFilePath+image4);}
+	            if(index5>0){image5=image1.substring(index5+5); TEST_UPLOAD_FILE5 = new File(uploadFilePath+image5);}
+	            
+	            logger.info("["+logid+"] Controller image1 "+image1);
+	            logger.info("["+logid+"] Controller image2 "+image2);
+	            logger.info("["+logid+"] Controller image3 "+image3);
+	            logger.info("["+logid+"] Controller image4 "+image4);
+	            logger.info("["+logid+"] Controller image5 "+image5);
+
+		        File[] fiiles = new File[]{TEST_UPLOAD_FILE1, TEST_UPLOAD_FILE2,TEST_UPLOAD_FILE3, TEST_UPLOAD_FILE4, TEST_UPLOAD_FILE5} ;
+		        
+		        Map<String, String> paramMap;
+		        
+		        // 스토리 포스팅 공통 파라미터. 필요한 것만 선택하여 사용.
+		        paramMap = new HashMap<String, String>();
+		        paramMap.put("permission", "A"); // A : 전체공개, F: 친구에게만 공개, M: 나만보기
+		        paramMap.put("enable_share", "true"); // 공개 기능 허용 여부
+		        paramMap.put("android_exec_param", "cafe_id=1234"); // 앱 이동시 추가 파라미터
+		        paramMap.put("ios_exec_param", "cafe_id=1234");
+		        paramMap.put("android_market_param", "cafe_id=1234");
+		        paramMap.put("ios_market_param", "cafe_id=1234");
+
+		        // 글 포스팅일 경우에는 content는 필수지만 링크/사진 포스팅일 때는 옵션.
+		        paramMap.put("content", content);
+
+		        String result;
+			 
+			  // 사진 포스팅 (최대 10개까지 가능)
+		        String uploadedImageObj = apiHelper.uploadMulti(fiiles);
+		        if (uploadedImageObj != null) {
+		        	logger.info("["+logid+"] uploaded file(s) successfully.");
+		        	logger.info("["+logid+"] uploadedImageObj : "+uploadedImageObj);
+		            paramMap.put("image_url_list", uploadedImageObj);
+		            result = apiHelper.postPhoto(paramMap);
+		            if (result != null && result.indexOf("code\":-") == -1) {
+		                String postedId = result.split("\"")[3];
+		                logger.info("["+logid+"] postedId:" + postedId);
+		                object.put("id", postedId);
+		                /*
+		                if (apiHelper.deleteMyStory(postedId).equals(""))
+		                    System.out.println("deleted test my story " + postedId);
+		            */
+		            }
+
+		        } else {
+		            System.out.println("failed to upload");
+		        }
+			
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return object;
+	    }
+	    
+	    /* RestFull 정보받기
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping({"/common/restkakaostorymulti"})
+	    public @ResponseBody
+	    JSONObject restKakaoStoryMulti(String kaostorymultiurl,
+	    		String kaostoryurl,
+	    		String access_token,
+	    		String content,
+	    		String file1,
+	    		String file2 ,
+	    		String file3 ,
+	    		String android_exec_param,
+	    		String ios_exec_param ,
+	            HttpServletRequest request, 
+	            HttpServletResponse response) throws BizException
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			
+			logger.info("["+logid+"] Controller start kaostory "+kaostoryurl);
+			logger.info("["+logid+"] Controller start access_token "+access_token);
+
+			 JSONObject object =null;
+			 String inputLine = null;
+			 String resultcontent = "";
+			 
+			 String CRLF = "\r\n";
+		     String TWO_HYPHENS = "--";
+		     String BOUNDARY = "---------------------------012345678901234567890123456";
+		     HttpsURLConnection conn = null;
+		     DataOutputStream dos = null;
+		     FileInputStream fis = null;
+     
+	         int bytesRead, bytesAvailable, bufferSize;
+	         byte[] buffer;
+	         int MAX_BUFFER_SIZE = 1 * 1024 * 1024;
+	         
+	         String image_url_list="";
+
+		    try{
+
+	            BufferedReader input = null;
+	
+	            URL mUrl = new URL(kaostorymultiurl);
+	            
+	            conn = (HttpsURLConnection)mUrl.openConnection();
+	            
+	            conn.setDoInput(true);
+	            conn.setDoOutput(true);
+	            conn.setUseCaches(false);
+	            conn.setRequestMethod("POST");
+
+	            conn.setRequestProperty("Connection", "Keep-Alive");
+	            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + 
+	                                      BOUNDARY);
+	            conn.setRequestProperty("Authorization", access_token);
+	            conn.setRequestProperty("Cache-Control", "no-cache");
+	       
+	            dos = new DataOutputStream(conn.getOutputStream());
+ 
+	            ResourceBundle rb = ResourceBundle.getBundle("config");
+	            String uploadFilePath = rb.getString("offact.upload.path") + "goods";
+	            
+	            //File[] files={new File(uploadFilePath+"/salesbaron.jpg"), new File(uploadFilePath+"/salesbaron.jpg")};
+	            File[] files={new File(uploadFilePath+"/salesbaron.jpg")};
+
+
+	            for (File f : files) {
+	                dos.writeBytes(TWO_HYPHENS + BOUNDARY + CRLF);
+	                dos.writeBytes("Content-Disposition: form-data; name=\"file\";" +
+	                                " filename=\"" + f.getName() + "\"" + CRLF);
+	                dos.writeBytes(CRLF);
+	                fis = new FileInputStream(f);
+	                bytesAvailable = fis.available();
+	                bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+	                buffer = new byte[bufferSize];
+	                bytesRead = fis.read(buffer, 0, bufferSize);
+	                
+	                while (bytesRead > 0) {
+	                    dos.write(buffer, 0, bufferSize);
+	                    bytesAvailable = fis.available();
+	                    bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+	                    bytesRead = fis.read(buffer, 0, bufferSize);
+	                }
+	                
+	                logger.info("["+files.length+"]@" );
+	                
+	                dos.writeBytes(CRLF);
+	            }
+
+	            // finish delimiter
+	            dos.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+	            logger.info("["+logid+"] TWO_HYPHENS "+TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+	            
+	            fis.close();
+	            dos.flush();
+	            dos.close();
+ 	    
+		    } catch (MalformedURLException ex) {
+	            ex.printStackTrace();
+	        } catch (IOException ioe) {
+	            ioe.printStackTrace();
+	        } finally {
+	            if (fis != null) try { fis.close(); } catch (IOException ignore) { }
+	            if (dos != null) try { dos.close(); } catch (IOException ignore) { }
+	        }
+
+	        // Response
+	        InputStream inputStream = null;
+	        BufferedReader reader = null;
+	        try {
+	            inputStream = new BufferedInputStream(conn.getInputStream());
+	            reader = new BufferedReader(new InputStreamReader(inputStream));
+	            String line;
+	            StringBuilder builder = new StringBuilder();
+	            while ((line = reader.readLine()) != null) {
+	                builder.append(line).append("\n");
+	                logger.info("[line] "+line);
+	            }
+	            image_url_list=line;
+	            logger.info("[builder] "+builder);
+ 
+	            reader.close();
+	            
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } finally {
+	            if (reader != null) {
+	                try { reader.close(); } catch (IOException ignore) {}
+	            }
+	            if (inputStream != null) {
+	                try { inputStream.close(); } catch (IOException ignore) {}
+	            }
+	            conn.disconnect();
+	        }
+	        
+	        try{
+
+	            BufferedReader input = null;
+	
+	            URL url = new URL(kaostoryurl);
+	            
+	            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+	            
+	            connection.setRequestMethod("POST");
+	           
+	            connection.setRequestProperty("Authorization", access_token);
+
+		    	connection.setDoOutput(true);
+		    	
+		    	 // 파라미터 전송.
+	            StringBuilder sb = new StringBuilder();
+	            sb.append("content=")
+	              .append(content)
+	              .append("&image_url_list=")
+	              .append(image_url_list)
+	              .append("&android_exec_param=")
+	              .append(android_exec_param)
+	              .append("&ios_exec_param=")
+	              .append(ios_exec_param);
+	            
+	            
+	            OutputStream writer = connection.getOutputStream();
+	            writer.write(sb.toString().getBytes("UTF-8"));
+	            writer.flush();
+	            writer.close();
+	            
+	            //////////////////////////////////////////////////
+	            ////////////////// If GET Method  ////////////////            
+	            //String urlStrings = "http://......";
+	            //urlStrings += "&sender=";
+	            //HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	            //////////////////////////////////////////////////
+	            int responseCode = connection.getResponseCode();   
+	            if (responseCode == HttpURLConnection.HTTP_OK) {
+	            	
+	                // 발송성공..
+		                input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+			            while ((inputLine = input.readLine()) != null) {
+			            	
+			            	resultcontent += inputLine;
+			            }
+			            
+			            input.close();
+		            
+	            } else {
+	                // 발송실패..
+	            }
+
+
+	            logger.info("["+logid+"] content::"+resultcontent);
+	            
+	            Object obj = JSONValue.parse(resultcontent);
+	            
+	            object = (JSONObject)obj;
+
+	            logger.info("["+logid+"] restfullinfo3 id::"+object.get("id"));
+  	    
+	          }
+	          catch (Exception e) {
+	            e.printStackTrace();
+	          }
+
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return object;
+	    }
+	    
+	    
+	    /* RestFull 정보받기
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
 	    @RequestMapping({"/common/restfullinfo4"})
 	    public @ResponseBody
 	    JSONObject restFullInfo4(String restfullurl3,
@@ -1916,6 +2314,119 @@ public class CommonController {
 	          catch (Exception e) {
 	            e.printStackTrace();
 	          }
+			
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return object;
+	    }
+	    
+	    /* RestFull 정보받기
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping({"/common/facebookpost"})
+	    public @ResponseBody
+	    JSONObject facebookPost(String facebookurl,
+	    		String message,
+	    		String access_token,
+	    		String picture,
+	    		String link,
+	    		String caption,
+	    		String discription,
+	    		String source,
+	            HttpServletRequest request, 
+	            HttpServletResponse response) throws BizException
+	    {
+
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			
+			logger.info("["+logid+"] Controller start facebookurl "+facebookurl);
+			logger.info("["+logid+"] Controller start message "+message);
+			logger.info("["+logid+"] Controller start access_token "+access_token);
+
+			 JSONObject object =null;
+			 String inputLine = null;
+			 String content = "";
+
+			 try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(facebookurl);
+		            
+		            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		            
+		            connection.setRequestMethod("POST");
+
+			    	connection.setDoOutput(true);
+			    	
+			    	 // 파라미터 전송.
+		            StringBuilder sb = new StringBuilder();
+		            sb.append("message=")
+		              .append(message)
+		              .append("&picture=")
+		              .append(picture)
+		              .append("&link=")
+		              .append(link)
+		              .append("&caption=")
+		              .append(caption)
+		              .append("&discription=")
+		              .append(discription)
+		              .append("&source=")
+		              .append(source)
+		              .append("&access_token=")
+		              .append(access_token);
+
+		            OutputStream writer = connection.getOutputStream();
+		            writer.write(sb.toString().getBytes("UTF-8"));
+		            writer.flush();
+		            writer.close();
+		            
+		            //////////////////////////////////////////////////
+		            ////////////////// If GET Method  ////////////////            
+		            //String urlStrings = "http://......";
+		            //urlStrings += "&sender=";
+		            //HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		            //////////////////////////////////////////////////
+		            int responseCode = connection.getResponseCode();   
+		            if (responseCode == HttpURLConnection.HTTP_OK) {
+		            	
+		                // 발송성공..
+			                input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+				            while ((inputLine = input.readLine()) != null) {
+				            	
+				            	content += inputLine;
+				            }
+				            
+				            input.close();
+			            
+		            } else {
+		                // 발송실패..
+		            }
+
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+		            Object obj = JSONValue.parse(content);
+		            
+		            object = (JSONObject)obj;
+
+		            logger.info("["+logid+"] restfullinfo3 id::"+object.get("id"));
+	  	    
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
 			
 	       //log Controller execute time end
 	      	long t2 = System.currentTimeMillis();

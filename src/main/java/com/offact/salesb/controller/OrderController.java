@@ -47,13 +47,16 @@ import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.framework.util.StringUtil;
+import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.UserMenuService;
 import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.service.common.SmsService;
+import com.offact.salesb.service.member.TokenService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.UserMenuVO;
 import com.offact.salesb.vo.common.EmailVO;
 import com.offact.salesb.vo.common.SmsVO;
+import com.offact.salesb.vo.member.TokenVO;
 import com.offact.common.JSONDataParser;
 
 /**
@@ -112,6 +115,12 @@ public class OrderController {
     
     @Autowired
     private SmsService smsSvc;
+    
+	@Autowired
+	private CustomerService customerSvc;
+	
+    @Autowired
+    private TokenService tokenSvc;
 	
 	/**
      *
@@ -430,7 +439,49 @@ public class OrderController {
             e.printStackTrace();
           }
         
+        CustomerVO custVo = new CustomerVO();
+
+        custVo.setSearchType("03");
+        custVo.setSbPhoneNumber(tokenphone);
+        custVo.setSbEmail(tokenemail);
+        
+        //고객키 조회
+        custVo=customerSvc.getCustKeyInfo(custVo);
+        
+        if(custVo==null){
+        	
+        	CustomerVO reCustVo = new CustomerVO();
+        	reCustVo.setSearchType("03");
+   		 	reCustVo.setSbPhoneNumber(tokenphone);
+   		 	reCustVo.setSbEmail(tokenemail);
+        	
+        	int reVal=customerSvc.customerInsert(reCustVo);
+        	
+        	if(reVal>0){
+        		 
+        		 custVo=customerSvc.getCustKeyInfo(reCustVo);
+        	}
+        }
+        
         //token 정보저장 DB insert
+        TokenVO tokenVo = new TokenVO();
+		
+		tokenVo.setToken(shortUrl);
+		tokenVo.setCustomerKey(custVo.getCustomerKey());
+		tokenVo.setProductCode(productkey);
+		tokenVo.setGroupId(strGroupId);
+		tokenVo.setCreateUserId(strUserId);
+		
+		int tokenResult=tokenSvc.tokenInsertProc(tokenVo);
+		
+		if(tokenResult==0){
+			logger.info("["+logid+"] Controller token 생성오류");
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	        
+	       	return "-1";
+		}
         
         //이메일 리스틑 조회 user
 		
@@ -594,8 +645,7 @@ public class OrderController {
 
         
         //logger.info("["+logid+"] CipherDecipherUtil decrypt::"+keyvalue);
-        
-	
+
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();
       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");

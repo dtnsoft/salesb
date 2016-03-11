@@ -939,7 +939,6 @@
 				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">나의상품<span class="caret"></span></a>
 				           <ul class="dropdown-menu">
 				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')">상품 토큰 현황</a></li>
-				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/goodsmakeform')">상품 페이지 제작</a></li>
 				          </ul>
 				        </li>
 				      </ul>

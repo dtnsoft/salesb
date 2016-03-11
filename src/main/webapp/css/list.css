@@ -75,6 +75,7 @@ border-radius: 3px;	  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);  
 .odr_goods_lst .order_acont .display_store .place .date { color: #222222; font-size: 14px; }
 .odr_goods_lst .order_acont .display_store .type { display: inline-block; vertical-align: top; }
 .odr_goods_lst .order_acont .display_store .type .type_in { display: inline-block; padding: 0 6px; border: 1px solid #7fd4c8; background: #9cd9d1; font-size: 11px; line-height: 18px; color: #fff; vertical-align: top; /*box-shadow: inset 0 0 0 1px #fff;*/ font-weight: bold; letter-spacing: 0; }
+.odr_goods_lst .order_acont .display_store .type .type_out { display: inline-block; padding: 0 6px; border: 1px solid #C0C0C0; background: #C0C0C0; font-size: 11px; line-height: 18px; color: #fff; vertical-align: top; /*box-shadow: inset 0 0 0 1px #fff;*/ font-weight: bold; letter-spacing: 0; }
 .odr_goods_lst .order_acont .img_area { display: inline-block; position: absolute; left: 0; top: 0; vertical-align: top; }
 .clm_acdo_sec .odr_goods_lst .order_acont { padding-left: 69px; padding-bottom: 0; }
 .clm_acdo_sec .odr_goods_lst .order_acont .img_area img { width: 60px; height: 60px; }
