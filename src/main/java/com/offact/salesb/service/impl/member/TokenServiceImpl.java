@@ -51,6 +51,14 @@ public class TokenServiceImpl implements TokenService {
     }
     
     @Override
+    public TokenVO getTokenCheck(TokenVO token) throws BizException {
+    	
+    	TokenVO tokenDetailVO = commonDao.selectOne("Token.getTokenCheck", token);
+
+        return tokenDetailVO;
+    }
+    
+    @Override
     public int tokenInsertProc(TokenVO token) throws BizException {
 
     	return commonDao.update("Token.tokenInsertProc", token);

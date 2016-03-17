@@ -99,7 +99,7 @@
 	<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
 	
 	<link href="<%= request.getContextPath() %>/kcp/mobile_sample/css/style.css" rel="stylesheet" type="text/css" id="cssLink"/>
-
+  	
 	<script>
 
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -298,6 +298,38 @@
       document.order_info.van_code.value = "SCHM";
     }
   }
+  
+  function orderKey(){
+	  
+  	//주문정보 입력 (주문키생성)
+     	$.ajax({
+ 		        type: "POST",
+ 		        async:false,
+ 		           url:  "<%= request.getContextPath() %>/order/orderkey",
+ 		           data:$("#OrderProcessForm").serialize(),
+ 		           success: function(result) {
+
+ 						if(result!='N'){
+ 						    var form = document.order_info;
+ 							form.ordr_idxx.value=result;
+ 							kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');
+                             
+ 						} else{
+					    	
+ 							 alert('주문키 생성을 실패했습니다.');
+ 							 return;
+ 							 
+ 						}
+
+ 		           },
+ 		           error:function(){
+ 		        	   
+ 		        	   alert('[error]주문키 생성을 실패했습니다.');
+ 		        	   return;
+ 		           }
+ 		    });
+	  
+  }
     </script>
 
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
@@ -305,7 +337,6 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
 
 <body onload="jsf__chk_type();init_orderid();chk_pay();">
-	<div id="wrap" class="wrap"  >
 		<!-- 헤더 -->
 		  <header>
 		   <div class="mb_top">
@@ -323,20 +354,29 @@
 	        </div>
 	        <!--// 타이틀 --> 
 			<form:form class="form-inline" role="form"  id="orderResultForm" name="orderResultForm" method="post" action="" >   
-	        <!-- 1.접수정보 -->
+	        <!-- 1.판매자정보 -->
 	        <div class="clm_acdo_tit2">
-	          <h2 class="h2_txo"> <strong><em class="num">1. </em></strong>고객정보</h2>
+	          <h2 class="h2_txo"> <strong><em class="num">1. </em></strong>판매자정보</h2>
 	        </div>
 	        <div class="clm_acdo_sec">
 	          <dl class="clm_ip2">
-	            <dt><span class="tit">고객키</span></dt>
+	            <dt><span class="tit">핸드폰</span></dt>
 	            <dd>
-	              <p class="tx1" id="customerKey">${customerKey}</p>
+	              <p class="tx1" id="sbPhoneNumber">${customer.sbPhoneNumber}</p>
 	            </dd>
 	          </dl>
 	        </div>
-	        <!--// 1. 접수정보 --> 
-	        <!-- 2.배송정보 -->
+	        <hr class="odr_line_ty1">
+	        <div class="clm_acdo_sec">
+	          <dl class="clm_ip2">
+	            <dt><span class="tit">이메일</span></dt>
+	            <dd>
+	              <p class="tx1" id="sbEmail">${customer.sbEmail}</p>
+	            </dd>
+	          </dl>
+	        </div>
+	        <!--// 1. 판매자정보 --> 
+	        <!-- 2.상품정보 -->
 	        <div class="clm_acdo_tit2">
 	          <h2 class="h2_txo"> <strong><em class="date">2.</em></strong>&nbsp;상품정보</h2>
 	        </div>
@@ -344,57 +384,73 @@
 	          <dl class="clm_ip2">
 	            <dt><span class="tit">상품명</span></dt>
 	            <dd>
-	              <p class="tx1" id="productName">${productName}</p>
-	            </dd>
-	          </dl>
-	          <hr class="odr_line_ty1">
-	          <dl class="clm_ip2">
-	            <dt><span class="tit">상품코드</span></dt>
-	            <dd>
-	              <p class="tx1" id="productCode">${productCode}</p>
+	              <p class="tx1" id="productName">${goods.productName}</p>
 	            </dd>
 	          </dl>
 	          <hr class="odr_line_ty1">
 	          <dl class="clm_ip2">
 	            <dt><span class="tit">상품가격</span></dt>
 	            <dd>
-	              <p class="tx1" id="productPrice">${productPrice}</p>
+	              <p class="tx1" id="salesPrice">${goods.salesPrice}</p>
 	            </dd>
+	          </dl>
+	         <hr class="odr_line_ty1">
+	          <dl class="clm_ip2">
+	            <dt><span class="tit">상품이미지</span></dt>
+	             <div id="slides">
+	              <c:if test="${token.image1!=null && token.image1!=''}">
+			      <img id="image1" src="${token.image1}"  width="200" height="200" alt="이미지">
+			      </c:if>
+			      <c:if test="${token.image2!=null && token.image2!=''}">
+			      <img id="image2" src="${token.image2}"  width="200" height="200" alt="이미지">
+			      </c:if>
+			      <c:if test="${token.image3!=null && token.image3!=''}">
+			      <img id="image3" src="${token.image3}"  width="200" height="200" alt="이미지">
+			      </c:if>
+			      <c:if test="${token.image4!=null && token.image4!=''}">
+			      <img id="image4" src="${token.image4}"  width="200" height="200" alt="이미지">
+			      </c:if>
+			      <c:if test="${token.image5!=null && token.image5!=''}">
+			      <img id="image5" src="${token.image5}"  width="200" height="200" alt="이미지">
+			      </c:if>
+			    </div>
 	          </dl>
 	        </div>
 	        </form:form>
+	        <!--// 2. 상품정보 --> 
+	        <!-- 3.결재 -->
+	        <form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
+	           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
+	           <input type="hidden" name="customerKey" value="${customer.customerKey}" />
+	           <input type="hidden" name="productCode" value="${goods.idx}" />
+	           <input type="hidden" name="salesPrice" value="${goods.salesPrice}" />
+	           <input type="hidden" name="groupId" value="${token.groupId}" />
+	           <input type="hidden" name="orderState" value="01" />
+	        </form>
+	        <form name="order_info" method="post">
+	        <div class="clm_acdo_tit2">
+	          <h2 class="h2_txo"> <strong><em class="date">3.</em></strong>&nbsp;결재</h2>
 	        </div>
-	        
-	        <div class="clm_detail_btn">
-	          <div class="clm_btn">
-	            <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
-								    data-name="offact" 
-								    data-button="buynow" 
-								    data-quantity="1" 
-								    data-callback="http://dev.addys.co.kr" 
-								    data-env="sandbox"
-								    data-charset="UTF-8"
-								></script>
-	          </div>
-	          <br></br>
+			<div class="clm_acdo_sec">
+	          <dl class="clm_ip2">
 	          <div align="center" id="cert_info">
 				<!-- 주문정보 입력 form : order_info -->
-				<form name="order_info" method="post">
+
 		
 				   <!-- 신용카드 -->
 		
 				   <!-- 주문번호(ordr_idxx) -->
 				   <input type="hidden" name="ordr_idxx" value="" />
 				   <!-- 상품명(good_name) -->
-				   <input type="hidden" name="good_name" value="좋은상품" />
+				   <input type="hidden" name="good_name" value="${goods.productName}" />
 				    <!-- 결제금액(good_mny) - ※ 필수 : 값 설정시 ,(콤마)를 제외한 숫자만 입력하여 주십시오. -->
-				   <input type="hidden" name="good_mny" value="1500" />
+				   <input type="hidden" name="good_mny" value=">${goods.salesPrice}" />
 				    <!-- 주문자명(buyr_name) -->
-				   <input type="hidden" name="buyr_name" value="박영준" />
+				   <input type="hidden" name="buyr_name" value="${customer.customerKey}" />
 				   <!-- 주문자 E-mail(buyr_mail) -->
-				   <input type="hidden" name="buyr_mail" value="test@test.co.kr" />
+				   <input type="hidden" name="buyr_mail" value="${customer.sbEmail}" />
 				   <!-- 주문자 연락처1(buyr_tel1) -->
-				   <input type="hidden" name="buyr_tel1" value="02-2108-1000" />
+				   <input type="hidden" name="buyr_tel1" value="${customer.sbPhoneNumber}" />
 				   <!-- 휴대폰번호(buyr_tel2) -->
 				   <input type="hidden" name="buyr_tel2" value="010-0000-0000" />
 
@@ -416,11 +472,23 @@
 					                <option value="schm">해피머니</option>
 					            </select>
 		                      </td>
-		                 <input name="" type="button" class="submit" value="결제요청" onclick="kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');">
+		                 <input name="" type="button" class="submit" value="결제요청" onclick="orderKey();">
 		           </div>
 	        </div>
+			</dl>
+			 <hr class="odr_line_ty1">
+			 <dl class="clm_ip2">
+	            <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
+								    data-name="offact" 
+								    data-button="buynow" 
+								    data-quantity="1" 
+								    data-callback="http://dev.addys.co.kr" 
+								    data-env="sandbox"
+								    data-charset="UTF-8"
+								></script>
+	          </dl>
 
-      </div>
+      	</div>
 
   <!-- 공통정보 -->
   <input type="hidden" name="req_tx"          value="pay">                           <!-- 요청 구분 -->
@@ -498,14 +566,14 @@
     /* =   옵션 정보 END                                                            = */
     /* ============================================================================== */
 %>
-		</form>		   
-	 </div>
+		</form>
+	  </div> 
+	</div>
    </div>
    <div id="footer" class="footer">
     <span class="Copyright">Copyright 2015 ⓒ salesb Corp. All rights reserved. v1.0.0</span>
   </div>
-   
- </div>
+
 
  <!-- 스마트폰에서 KCP 결제창을 레이어 형태로 구현-->
 <div id="layer_all" style="position:absolute; left:0px; top:0px; width:100%;height:100%; z-index:1; display:none;">

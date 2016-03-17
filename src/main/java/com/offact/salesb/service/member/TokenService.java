@@ -40,6 +40,15 @@ public interface TokenService {
     public TokenVO getTokenDetail(TokenVO token) throws BizException;
     
     /**
+     * Token 유효성확인
+     * 
+     * @param productCode
+     * @return
+     * @throws BizException
+     */
+    public TokenVO getTokenCheck(TokenVO token) throws BizException;
+    
+    /**
      * Token 저장
      * 
      * @return

@@ -395,27 +395,18 @@
         <div class="clm_acdo_tit">
           <h1>계정생성</h1>
           <div class="clm_acdo_tit_left">
- 			 <a href="<%= request.getContextPath() %>/intro" class="btn b_prev"><span class="sp_prev">취소</span></a>
+          <c:choose>
+               <c:when test="${key=='N'}">
+				 <a href="<%= request.getContextPath() %>/intro" class="btn b_prev"><span class="sp_prev">취소</span></a>
+			</c:when>
+			<c:otherwise>
+				 <a href="<%= request.getContextPath() %>/orderintro?key=${key}" class="btn b_prev"><span class="sp_prev">취소</span></a>
+			</c:otherwise>
+		  </c:choose>
           </div>
         </div>
         <!--// 타이틀 --> 
 		        <div class="m_resbx">
-		          
-		           <div class="m_result id">
-		              <ul class="schinp_list">
-		                <div class="bnbox">
-			              <button type="button" class="bn_facebook" onclick="fbRegist()">FACEBOOK 으로 연결</button>
-			            </div>
-			            <div class="bnbox_kakao">
-			              <button type="button" class="bn_kakao" onclick="kakaoRegist()">KAKAO 로 연결</button>
-			            </div>
-                        <div class="bnbox">
-			              <button type="button" class="bn_naver" onclick="naverRegist()">NAVER 로 연결</button>
-			            </div>
-		              </ul>
-		            </div>
-		          
-		          <h6  class="m_sch_tp">-또는-</h6>
 		          <!-- 핸드폰번호 등록 -->
 		            <div class="m_result id">
 		              <h6  class="m_sch_tp"></h6>

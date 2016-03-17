@@ -220,6 +220,7 @@
 		        <!--// 타이틀 --> 
 		        <div class="m_resbx">
 		        <form id="login_form" method="post">
+		           <c:if test="${key=='N'}">	
 		            <div class="m_result id">
 	<!-- 
 						    <select id="flip-1" name="flip-1" data-role="slider">
@@ -236,6 +237,7 @@
 							</label>
 						</h4>
 		            </div>
+		            </c:if>
 		          <div id="memberView" >
 		           <div class="m_result id">
 		              <ul class="schinp_list">

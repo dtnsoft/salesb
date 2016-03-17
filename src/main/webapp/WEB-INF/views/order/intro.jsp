@@ -23,21 +23,15 @@
         $('#myCarousel2').carousel('cycle');
     });
     
-	function goPrivateForm(){
-
-		location.href="<%= request.getContextPath() %>/customerregistform";
-		//location.href="<%= request.getContextPath() %>/customerprivateinfo";
+	function goRegistBuy(){
+		var key='${key}';
+		location.href="<%= request.getContextPath() %>/customerregistform?key="+key;
 		
 	}
 	
-	function goGuest(){
-		
-
-	}
-	
-	function goLogin(){
-		
-		location.href="<%= request.getContextPath() %>/customerloginform";
+	function goLoginBuy(){
+		var key='${key}';
+		location.href="<%= request.getContextPath() %>/customerloginform?key="+key;
 		
 	}
 	
@@ -89,13 +83,13 @@
 				<h3>환영합니다.</h3>
 				<p>복잡한 쇼핑몰 구축이나 오픈 마켓 입점 없이누구나 무료로 온라인 쇼핑몰의 사장님이 되실 수 있습니다.</p>
 				<div class="bnbox">
-		         <button type="button" class="bn_salesb" onclick="goLogin()">회원구매</button>
+		         <button type="button" class="bn_salesb" onclick="goLoginBuy()">회원구매</button>
 		       	</div>
 		       	<div class="bnbox">
 		         <button type="button" class="bn_gray" data-toggle="modal" data-target="#myModal">비회원구매</button>
 		        </div>
 		        <div class="bnbox">
-		         <button type="button" class="bn_salesb2" onclick="goPrivateForm()">일반회원가입</button>
+		         <button type="button" class="bn_salesb2" onclick="goRegistBuy()">일반회원가입</button>
 		       	</div>
 	      </div>      
 	    </div>
@@ -106,13 +100,13 @@
 				<h3>환영합니다.</h3>
 				<p>복잡한 쇼핑몰 구축이나 오픈 마켓 입점 없이누구나 무료로 온라인 쇼핑몰의 사장님이 되실 수 있습니다.</p>
 				<div class="bnbox">
-		         <button type="button" class="bn_salesb" onclick="goLogin()">회원구매</button>
+		         <button type="button" class="bn_salesb" onclick="goLoginBuy()">회원구매</button>
 		       	</div>
 		       	<div class="bnbox">
 		         <button type="button" class="bn_gray" data-toggle="modal" data-target="#myModal">비회원구매</button>
 		        </div>
 		        <div class="bnbox">
-		         <button type="button" class="bn_salesb2" onclick="goPrivateForm()">일반회원가입</button>
+		         <button type="button" class="bn_salesb2" onclick="goRegistBuy()">일반회원가입</button>
 		       	</div>
 		    </div>      
 		</div>
@@ -124,13 +118,13 @@
 				<h3>동영상 사용자메뉴얼</h3>
 				<p>사용자 메뉴얼을 재생하시기 바랍니다.</p>
 				<div class="bnbox">
-		         <button type="button" class="bn_salesb" onclick="goLogin()">회원구매</button>
+		         <button type="button" class="bn_salesb" onclick="goLoginBuy()">회원구매</button>
 		       	</div>
 		       	<div class="bnbox">
 		         <button type="button" class="bn_gray" data-toggle="modal" data-target="#myModal">비회원구매</button>
 		        </div>
 		        <div class="bnbox">
-		         <button type="button" class="bn_salesb2" onclick="goPrivateForm()">일반회원가입</button>
+		         <button type="button" class="bn_salesb2" onclick="goRegistBuy()">일반회원가입</button>
 		       	</div>
 		    </div>
 	  </div>
@@ -163,3 +157,4 @@
 </div>
 </body>
 </html>
+

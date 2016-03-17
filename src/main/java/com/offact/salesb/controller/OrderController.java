@@ -49,14 +49,18 @@ import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.framework.util.StringUtil;
 import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.UserMenuService;
+import com.offact.salesb.service.business.ProductService;
 import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.service.member.TokenService;
+import com.offact.salesb.service.order.OrderService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.UserMenuVO;
 import com.offact.salesb.vo.common.EmailVO;
 import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.member.TokenVO;
+import com.offact.salesb.vo.order.OrderVO;
+import com.offact.salesb.vo.business.ProductMasterVO;
 import com.offact.common.JSONDataParser;
 
 /**
@@ -121,6 +125,14 @@ public class OrderController {
 	
     @Autowired
     private TokenService tokenSvc;
+    
+    @Autowired
+    private ProductService productSvc;
+    
+    @Autowired
+    private OrderService orderSvc;
+    
+   
 	
 	/**
      *
@@ -465,8 +477,9 @@ public class OrderController {
         
         //token 정보저장 DB insert
         TokenVO tokenVo = new TokenVO();
-		
-		tokenVo.setToken(shortUrl);
+
+		tokenVo.setToken(token);
+        tokenVo.setShortUrl(shortUrl);
 		tokenVo.setCustomerKey(custVo.getCustomerKey());
 		tokenVo.setProductCode(productkey);
 		tokenVo.setGroupId(strGroupId);
@@ -676,9 +689,105 @@ public class OrderController {
 	{
 
 		logger.info("Welcome intro");
-		
-		ModelAndView  mv = new ModelAndView();
+  
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
 
+		ModelAndView  mv = new ModelAndView();
+		
+		 String keyvalue = CipherDecipherUtil.decrypt(key, "We are sales and livingsocials !");
+	        
+	        logger.info("["+logid+"] CipherDecipherUtil keyvalue::"+keyvalue);
+
+	        String[] keys=null;
+	        
+	        keys=keyvalue.split("\\|");
+	        
+	        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+	        logger.info("["+logid+"] CipherDecipherUtil productkey::"+keys[1]);
+	        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+	        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
+	        
+	        //1) tokenkey / activeyn 조회
+	        // activeyn 이 n 이면 비활성화 안내처리
+	        // tokenkey 와 customerkey가 없는경우 잘못된 경로 안내
+	        
+	        CustomerVO custVo = new CustomerVO();
+	        custVo.setSbEmail(keys[2]);
+	        custVo.setSbPhoneNumber(keys[3]);
+	        custVo.setSearchType("03");
+	  
+	        //고객키 조회
+	        custVo=customerSvc.getCustKeyInfo(custVo);
+	        
+	        if(custVo==null){
+	        	
+	          //고객정보 오류 잘못된 접근 안내
+	    	  mv.addObject("ordermessage", "고객정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+	          
+	          mv.setViewName("/common/intro");
+	          
+	         //log Controller execute time end
+	        	long t2 = System.currentTimeMillis();
+	        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	        	
+	          return mv;
+	          
+	        }
+	        
+	        if(custVo.getUsedYn().equals("N")){
+	        	
+	        	  //고객정보 활성화 오류 잘못된 접근 안내
+		    	  mv.addObject("ordermessage", "고객정보가 활성화 되지 않습니다.(고객 인증 여부를 확인하세요");
+		          
+		          mv.setViewName("/common/intro");
+		          
+		         //log Controller execute time end
+		        	long t2 = System.currentTimeMillis();
+		        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		        	
+		          return mv;
+	        	
+	        }
+
+	        TokenVO tokenVo = new TokenVO();
+	        
+	        tokenVo.setToken(keys[0]);
+	        tokenVo.setProductCode(keys[1]);
+	        tokenVo.setCustomerKey(custVo.getCustomerKey());
+	        
+	        tokenVo=tokenSvc.getTokenCheck(tokenVo);
+			
+	        if(tokenVo==null){
+	        	
+	        	//token 정보 오류 잘못된 접근 안내
+	         	mv.addObject("ordermessage", "토큰정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+	            
+	            mv.setViewName("/common/intro");
+	            
+	           //log Controller execute time end
+	          	long t2 = System.currentTimeMillis();
+	          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	          	
+	            return mv;
+			}
+	        
+	        if(tokenVo.getActiveYn().equals("N")){
+	        	
+	        	//token 정보 오류 잘못된 접근 안내
+	         	mv.addObject("ordermessage", "토큰정보가 활성화 되지 않았습니다.(토큰 사용여부를 확인하세요");
+	            
+	            mv.setViewName("/common/intro");
+	            
+	           //log Controller execute time end
+	          	long t2 = System.currentTimeMillis();
+	          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	          	
+	            return mv;
+			}
+	    
+	    mv.addObject("ordermessage", "S");
 		mv.addObject("key", key);
     	mv.setViewName("/order/intro");
 
@@ -741,17 +850,106 @@ public class OrderController {
         
         keys=keyvalue.split("\\|");
         
-        logger.info("["+logid+"] CipherDecipherUtil decrypt1::"+keys[0]);
-        logger.info("["+logid+"] CipherDecipherUtil decrypt2::"+keys[1]);
-        logger.info("["+logid+"] CipherDecipherUtil decrypt3::"+keys[2]);
-        logger.info("["+logid+"] CipherDecipherUtil decrypt4::"+keys[3]);
+        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+        logger.info("["+logid+"] CipherDecipherUtil productkey::"+keys[1]);
+        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
         
-        mv.addObject("token", keys[0]);
+        //1) tokenkey / activeyn 조회
+        // activeyn 이 n 이면 비활성화 안내처리
+        // tokenkey 와 customerkey가 없는경우 잘못된 경로 안내
+        
+        CustomerVO custVo = new CustomerVO();
+        custVo.setSbEmail(keys[2]);
+        custVo.setSbPhoneNumber(keys[3]);
+        custVo.setSearchType("03");
+  
+        //고객키 조회
+        custVo=customerSvc.getCustKeyInfo(custVo);
+        
+        if(custVo==null){
+        	
+          //고객정보 오류 잘못된 접근 안내
+    	  mv.addObject("ordermessage", "고객정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+          
+          mv.setViewName("/common/intro");
+          
+         //log Controller execute time end
+        	long t2 = System.currentTimeMillis();
+        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+        	
+          return mv;
+          
+        }
+        
+        if(custVo.getUsedYn().equals("N")){
+        	
+        	  //고객정보 활성화 오류 잘못된 접근 안내
+	    	  mv.addObject("ordermessage", "고객정보가 활성화 되지 않습니다.(고객 인증 여부를 확인하세요");
+	          
+	          mv.setViewName("/common/intro");
+	          
+	         //log Controller execute time end
+	        	long t2 = System.currentTimeMillis();
+	        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	        	
+	          return mv;
+        	
+        }
+
+        TokenVO tokenVo = new TokenVO();
+        
+        tokenVo.setToken(keys[0]);
+        tokenVo.setProductCode(keys[1]);
+        tokenVo.setCustomerKey(custVo.getCustomerKey());
+        
+        tokenVo=tokenSvc.getTokenCheck(tokenVo);
+		
+        if(tokenVo==null){
+        	
+        	//token 정보 오류 잘못된 접근 안내
+         	mv.addObject("ordermessage", "토큰정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+            
+            mv.setViewName("/common/intro");
+            
+           //log Controller execute time end
+          	long t2 = System.currentTimeMillis();
+          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+          	
+            return mv;
+		}
+        
+        if(tokenVo.getActiveYn().equals("N")){
+        	
+        	//token 정보 오류 잘못된 접근 안내
+         	mv.addObject("ordermessage", "토큰정보가 활성화 되지 않았습니다.(토큰 사용여부를 확인하세요");
+            
+            mv.setViewName("/common/intro");
+            
+           //log Controller execute time end
+          	long t2 = System.currentTimeMillis();
+          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+          	
+            return mv;
+		}
+        
+        //2)productkey로 상품정보 조히 (상품명 /상품각격 등)
+        ProductMasterVO goodsVo = new ProductMasterVO();
+        
+        goodsVo.setIdx(keys[1]);
+        
+        goodsVo=productSvc.getProductDetail(goodsVo);
+
+        mv.addObject("token", tokenVo);
+        mv.addObject("goods", goodsVo);
+        mv.addObject("customer", custVo);
         mv.addObject("productCode", keys[1]);
-        mv.addObject("productName", "좋은상품");
-        mv.addObject("productPrice", "1500");
-        mv.addObject("customerKey", keys[3]);
+        mv.addObject("tokenemail", keys[2]);
+        mv.addObject("tokenphone", keys[3]);
         mv.addObject("key", key);
+        
+        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
         
         mv.addObject("req_tx", req_tx);
         mv.addObject("res_cd", res_cd);
@@ -817,15 +1015,103 @@ public class OrderController {
         
         keys=keyvalue.split("\\|");
         
-        logger.info("["+logid+"] CipherDecipherUtil decrypt1::"+keys[0]);
-        logger.info("["+logid+"] CipherDecipherUtil decrypt2::"+keys[1]);
-        logger.info("["+logid+"] CipherDecipherUtil decrypt3::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+        logger.info("["+logid+"] CipherDecipherUtil productkey::"+keys[1]);
+        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
         
-        mv.addObject("token", keys[0]);
+        //1) tokenkey / activeyn 조회
+        // activeyn 이 n 이면 비활성화 안내처리
+        // tokenkey 와 customerkey가 없는경우 잘못된 경로 안내
+        
+        CustomerVO custVo = new CustomerVO();
+        custVo.setSbEmail(keys[2]);
+        custVo.setSbPhoneNumber(keys[3]);
+        custVo.setSearchType("03");
+  
+        //고객키 조회
+        custVo=customerSvc.getCustKeyInfo(custVo);
+        
+        if(custVo==null){
+        	
+          //고객정보 오류 잘못된 접근 안내
+    	  mv.addObject("ordermessage", "고객정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+          
+          mv.setViewName("/common/intro");
+          
+         //log Controller execute time end
+        	long t2 = System.currentTimeMillis();
+        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+        	
+          return mv;
+          
+        }
+        
+        if(custVo.getUsedYn().equals("N")){
+        	
+        	  //고객정보 활성화 오류 잘못된 접근 안내
+	    	  mv.addObject("ordermessage", "고객정보가 활성화 되지 않습니다.(고객 인증 여부를 확인하세요");
+	          
+	          mv.setViewName("/common/intro");
+	          
+	         //log Controller execute time end
+	        	long t2 = System.currentTimeMillis();
+	        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	        	
+	          return mv;
+        	
+        }
+
+        TokenVO tokenVo = new TokenVO();
+        
+        tokenVo.setToken(keys[0]);
+        tokenVo.setProductCode(keys[1]);
+        tokenVo.setCustomerKey(custVo.getCustomerKey());
+        
+        tokenVo=tokenSvc.getTokenCheck(tokenVo);
+		
+        if(tokenVo==null){
+        	
+        	//token 정보 오류 잘못된 접근 안내
+         	mv.addObject("ordermessage", "토큰정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+            
+            mv.setViewName("/common/intro");
+            
+           //log Controller execute time end
+          	long t2 = System.currentTimeMillis();
+          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+          	
+            return mv;
+		}
+        
+        if(tokenVo.getActiveYn().equals("N")){
+        	
+        	//token 정보 오류 잘못된 접근 안내
+         	mv.addObject("ordermessage", "토큰정보가 활성화 되지 않았습니다.(토큰 사용여부를 확인하세요");
+            
+            mv.setViewName("/common/intro");
+            
+           //log Controller execute time end
+          	long t2 = System.currentTimeMillis();
+          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+          	
+            return mv;
+		}
+        
+        //2)productkey로 상품정보 조히 (상품명 /상품각격 등)
+        ProductMasterVO goodsVo = new ProductMasterVO();
+        
+        goodsVo.setIdx(keys[1]);
+        
+        goodsVo=productSvc.getProductDetail(goodsVo);
+
+        mv.addObject("token", tokenVo);
+        mv.addObject("goods", goodsVo);
+        mv.addObject("customer", custVo);
         mv.addObject("productCode", keys[1]);
-        mv.addObject("productName", "좋은상품");
-        mv.addObject("productPrice", "1500");
-        mv.addObject("customerKey", keys[2]);
+        mv.addObject("tokenemail", keys[2]);
+        mv.addObject("tokenphone", keys[3]);
+        mv.addObject("key", key);
 
         mv.setViewName("/order/custSale");
         
@@ -835,6 +1121,56 @@ public class OrderController {
       	
         return mv;
     }
+
+	 /**
+     * 주문입력
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/orderkey", method = RequestMethod.POST)
+    public @ResponseBody
+    String  orderKey(@ModelAttribute("orderVo") OrderVO orderVo, 
+									   HttpServletRequest request) throws BizException 
+    {
+		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderVo" + orderVo);
+
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+	    
+	    OrderVO orderKeyVo = new OrderVO();
+	    
+	    orderKeyVo=orderSvc.getOrderKey();
+	    
+	    String orderKey=orderKeyVo.getOrderkey();
+	    
+	    orderVo.setOrderkey(orderKeyVo.getOrderkey());
+
+        orderVo.setOrderUserId(customerKey);
+
+	    int retVal=orderSvc.orderInsertProc(orderVo);
+	    
+	    if(retVal<=0){
+	    	orderKey="N";
+	    }
+
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return orderKey;
+	}
 
     /**
      * 고객정보 수정폼

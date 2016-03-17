@@ -66,6 +66,30 @@ public class CustomerServiceImpl implements CustomerService {
     }
 	
 	@Override
+    public int socialId1UpdateProc(CustomerVO customer) throws BizException {
+        // 고객 상세정보 수정
+    	
+		return commonDao.update("Customer.socialId1UpdateProc", customer);
+
+    }
+	
+	@Override
+    public int socialId2UpdateProc(CustomerVO customer) throws BizException {
+        // 고객 상세정보 수정
+    	
+		return commonDao.update("Customer.socialId2UpdateProc", customer);
+
+    }
+	
+	@Override
+    public int socialId3UpdateProc(CustomerVO customer) throws BizException {
+        // 고객 상세정보 수정
+    	
+		return commonDao.update("Customer.socialId3UpdateProc", customer);
+
+    }
+	
+	@Override
     public int customerRegist(CustomerVO customer) throws BizException {
         // 고객등록
 		

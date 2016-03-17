@@ -748,7 +748,7 @@
    	 
      function imageView(imageurl) {
 
-     	var url='<%= request.getContextPath() %>/comunity/imageview';
+     	var url='<%= request.getContextPath() %>/common/imageview';
      	
      	$('#imageView').dialog({
              resizable : false, //사이즈 변경 불가능

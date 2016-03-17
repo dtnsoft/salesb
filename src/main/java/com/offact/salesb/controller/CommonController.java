@@ -1,6 +1,7 @@
 package com.offact.salesb.controller;
 
 import javax.net.ssl.HttpsURLConnection;
+
 import java.io.*;
 import java.net.URL;
 import java.net.HttpURLConnection;
@@ -51,20 +52,26 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
+import com.offact.framework.util.CipherDecipherUtil;
 import com.offact.framework.util.StringUtil;
 import com.offact.framework.util.XmlUtil;
 import com.offact.salesb.service.CustomerService;
+import com.offact.salesb.service.business.ProductService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.service.common.UserService;
+import com.offact.salesb.service.member.TokenService;
+import com.offact.salesb.service.order.OrderService;
 import com.offact.salesb.vo.CustomerVO;
+import com.offact.salesb.vo.business.ProductMasterVO;
 import com.offact.salesb.vo.common.GroupVO;
 import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.common.UserVO;
 import com.offact.salesb.vo.common.WorkVO;
 import com.offact.salesb.vo.manage.UserManageVO;
-
+import com.offact.salesb.vo.member.TokenVO;
+import com.offact.salesb.vo.order.OrderVO;
 import com.kakao.*;
 
 /**
@@ -147,6 +154,15 @@ public class CommonController {
     
 	@Autowired
 	private UserService userSvc;
+	
+    @Autowired
+    private TokenService tokenSvc;
+
+    @Autowired
+    private OrderService orderSvc;
+
+    @Autowired
+    private ProductService productSvc;
     
     public String generateState()
     {
@@ -201,11 +217,17 @@ public class CommonController {
 	@RequestMapping(value = "/customerloginform", method = RequestMethod.GET)
 	public ModelAndView customerLoginForm(HttpServletRequest request,
 			                   HttpServletResponse response,  
+			                   String key,
 			                   Model model, 
 			                   Locale locale) throws BizException 
 	{
 
-		logger.info("Welcome customer");
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : customerloginform");
+		
+		logger.info("customer key ::"+key);
 		
 		ModelAndView  mv = new ModelAndView();
 		
@@ -228,7 +250,9 @@ public class CommonController {
 
         	session = request.getSession(true);
 			session.setAttribute("state", state);
+			session.setAttribute("key", StringUtil.nvl(key,"N"));
 			
+			mv.addObject("key", StringUtil.nvl(key,"N"));
 			mv.addObject("state", state);
 			mv.addObject("hostUrl", hostUrl);
 			mv.addObject("domainUrl", domainUrl);
@@ -244,8 +268,124 @@ public class CommonController {
  	       	mv.setViewName("/common/customerLoginForm");
        		return mv;
 		}
+        
+		 if(StringUtil.nvl(key,"N").equals("N")){
 
-        mv.setViewName("member/myTokenManage");
+	        mv.setViewName("member/myTokenManage");
+
+		}else{
+
+			logger.info("["+logid+"] Controller start key="+key);
+
+	        String keyvalue = CipherDecipherUtil.decrypt(key, "We are sales and livingsocials !");
+	        
+	        logger.info("["+logid+"] CipherDecipherUtil keyvalue::"+keyvalue);
+
+	        String[] keys=null;
+	        
+	        keys=keyvalue.split("\\|");
+	        
+	        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+	        logger.info("["+logid+"] CipherDecipherUtil productkey::"+keys[1]);
+	        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+	        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
+	        
+	        //1) tokenkey / activeyn 조회
+	        // activeyn 이 n 이면 비활성화 안내처리
+	        // tokenkey 와 customerkey가 없는경우 잘못된 경로 안내
+	        
+	        CustomerVO custVo = new CustomerVO();
+	        custVo.setSbEmail(keys[2]);
+	        custVo.setSbPhoneNumber(keys[3]);
+	        custVo.setSearchType("03");
+	  
+	        //고객키 조회
+	        custVo=customerSvc.getCustKeyInfo(custVo);
+	        
+	        if(custVo==null){
+	        	
+	          //고객정보 오류 잘못된 접근 안내
+	    	  mv.addObject("ordermessage", "고객정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+	          
+	          mv.setViewName("/common/intro");
+	          
+	         //log Controller execute time end
+	        	long t2 = System.currentTimeMillis();
+	        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	        	
+	          return mv;
+	          
+	        }
+	        
+	        if(custVo.getUsedYn().equals("N")){
+	        	
+	        	  //고객정보 활성화 오류 잘못된 접근 안내
+		    	  mv.addObject("ordermessage", "고객정보가 활성화 되지 않습니다.(고객 인증 여부를 확인하세요");
+		          
+		          mv.setViewName("/common/intro");
+		          
+		         //log Controller execute time end
+		        	long t2 = System.currentTimeMillis();
+		        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		        	
+		          return mv;
+	        	
+	        }
+
+	        TokenVO tokenVo = new TokenVO();
+	        
+	        tokenVo.setToken(keys[0]);
+	        tokenVo.setProductCode(keys[1]);
+	        tokenVo.setCustomerKey(custVo.getCustomerKey());
+	        
+	        tokenVo=tokenSvc.getTokenCheck(tokenVo);
+			
+	        if(tokenVo==null){
+	        	
+	        	//token 정보 오류 잘못된 접근 안내
+	         	mv.addObject("ordermessage", "토큰정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+	            
+	            mv.setViewName("/common/intro");
+	            
+	           //log Controller execute time end
+	          	long t2 = System.currentTimeMillis();
+	          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	          	
+	            return mv;
+			}
+	        
+	        if(tokenVo.getActiveYn().equals("N")){
+	        	
+	        	//token 정보 오류 잘못된 접근 안내
+	         	mv.addObject("ordermessage", "토큰정보가 활성화 되지 않았습니다.(토큰 사용여부를 확인하세요");
+	            
+	            mv.setViewName("/common/intro");
+	            
+	           //log Controller execute time end
+	          	long t2 = System.currentTimeMillis();
+	          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	          	
+	            return mv;
+			}
+	        
+	        //2)productkey로 상품정보 조히 (상품명 /상품각격 등)
+	        ProductMasterVO goodsVo = new ProductMasterVO();
+	        
+	        goodsVo.setIdx(keys[1]);
+	        
+	        goodsVo=productSvc.getProductDetail(goodsVo);
+
+	        mv.addObject("token", tokenVo);
+	        mv.addObject("goods", goodsVo);
+	        mv.addObject("customer", custVo);
+	        mv.addObject("productCode", keys[1]);
+	        mv.addObject("tokenemail", keys[2]);
+	        mv.addObject("tokenphone", keys[3]);
+	        mv.addObject("key", key);
+
+	        mv.setViewName("/order/custMobileSale");
+
+		}
 
 		return mv;
 	}
@@ -258,12 +398,27 @@ public class CommonController {
 	public ModelAndView customerRegistForm(String type ,
 			                   HttpServletRequest request,
 			                   HttpServletResponse response,  
+			                   String key,
 			                   Model model, 
 			                   Locale locale) throws BizException 
 	{
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : customerloginform");
+		
+		logger.info("customer key ::"+key);
 
 		ModelAndView  mv = new ModelAndView();
 		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+
+        session = request.getSession(true);
+		session.setAttribute("key", StringUtil.nvl(key,"N"));
+
+		mv.addObject("key", StringUtil.nvl(key,"N"));
 		mv.addObject("type", type);
 		
     	mv.setViewName("/common/customerRegistForm");
@@ -923,8 +1078,12 @@ public class CommonController {
 			lastlon=customerChk.getLastlon();
 
 			// # 3. Session 객체에 셋팅
-			
-			HttpSession session = request.getSession(false);
+			// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        
+	        String key = StringUtil.nvl((String) session.getAttribute("key")); 
+
+			session = request.getSession(false);
 			
 			if(session != null)
 			{
@@ -944,12 +1103,128 @@ public class CommonController {
 				session.setAttribute("restfulltype", restfulltype);
 				session.setAttribute("photo", photo);
 
-				if("01".equals(memberType)){
-					strMainUrl = "business/goodsManage";
-				}else{
+				 if(StringUtil.nvl(key,"N").equals("N")){
 					
-					//token list 조회
-					strMainUrl = "member/myTokenManage";
+					if("01".equals(memberType)){
+						strMainUrl = "business/goodsManage";
+					}else{
+						
+						//token list 조회
+						strMainUrl = "member/myTokenManage";
+					}
+
+				}else{
+
+					logger.info("["+logid+"] Controller start key="+key);
+
+			        String keyvalue = CipherDecipherUtil.decrypt(key, "We are sales and livingsocials !");
+			        
+			        logger.info("["+logid+"] CipherDecipherUtil keyvalue::"+keyvalue);
+
+			        String[] keys=null;
+			        
+			        keys=keyvalue.split("\\|");
+			        
+			        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+			        logger.info("["+logid+"] CipherDecipherUtil productkey::"+keys[1]);
+			        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+			        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
+			        
+			        //1) tokenkey / activeyn 조회
+			        // activeyn 이 n 이면 비활성화 안내처리
+			        // tokenkey 와 customerkey가 없는경우 잘못된 경로 안내
+			        
+			        CustomerVO custVo = new CustomerVO();
+			        custVo.setSbEmail(keys[2]);
+			        custVo.setSbPhoneNumber(keys[3]);
+			        custVo.setSearchType("03");
+			  
+			        //고객키 조회
+			        custVo=customerSvc.getCustKeyInfo(custVo);
+			        
+			        if(custVo==null){
+			        	
+			          //고객정보 오류 잘못된 접근 안내
+			    	  mv.addObject("ordermessage", "고객정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+			          
+			          mv.setViewName("/common/intro");
+			          
+			         //log Controller execute time end
+			        	long t2 = System.currentTimeMillis();
+			        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			        	
+			          return mv;
+			          
+			        }
+			        
+			        if(custVo.getUsedYn().equals("N")){
+			        	
+			        	  //고객정보 활성화 오류 잘못된 접근 안내
+				    	  mv.addObject("ordermessage", "고객정보가 활성화 되지 않습니다.(고객 인증 여부를 확인하세요");
+				          
+				          mv.setViewName("/common/intro");
+				          
+				         //log Controller execute time end
+				        	long t2 = System.currentTimeMillis();
+				        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+				        	
+				          return mv;
+			        	
+			        }
+
+			        TokenVO tokenVo = new TokenVO();
+			        
+			        tokenVo.setToken(keys[0]);
+			        tokenVo.setProductCode(keys[1]);
+			        tokenVo.setCustomerKey(custVo.getCustomerKey());
+			        
+			        tokenVo=tokenSvc.getTokenCheck(tokenVo);
+					
+			        if(tokenVo==null){
+			        	
+			        	//token 정보 오류 잘못된 접근 안내
+			         	mv.addObject("ordermessage", "토큰정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+			            
+			            mv.setViewName("/common/intro");
+			            
+			           //log Controller execute time end
+			          	long t2 = System.currentTimeMillis();
+			          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			          	
+			            return mv;
+					}
+			        
+			        if(tokenVo.getActiveYn().equals("N")){
+			        	
+			        	//token 정보 오류 잘못된 접근 안내
+			         	mv.addObject("ordermessage", "토큰정보가 활성화 되지 않았습니다.(토큰 사용여부를 확인하세요");
+			            
+			            mv.setViewName("/common/intro");
+			            
+			           //log Controller execute time end
+			          	long t2 = System.currentTimeMillis();
+			          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			          	
+			            return mv;
+					}
+			        
+			        //2)productkey로 상품정보 조히 (상품명 /상품각격 등)
+			        ProductMasterVO goodsVo = new ProductMasterVO();
+			        
+			        goodsVo.setIdx(keys[1]);
+			        
+			        goodsVo=productSvc.getProductDetail(goodsVo);
+	
+			        mv.addObject("token", tokenVo);
+			        mv.addObject("goods", goodsVo);
+			        mv.addObject("customer", custVo);
+			        mv.addObject("productCode", keys[1]);
+			        mv.addObject("tokenemail", keys[2]);
+			        mv.addObject("tokenphone", keys[3]);
+			        mv.addObject("key", key);
+
+			        strMainUrl = "order/custMobileSale";
+
 				}
 
 				
@@ -1023,35 +1298,18 @@ public class CommonController {
 	
 		if(customerChk != null)
 		{
-
-			//패스워드 체크
-			if(!customerChk.getCustomerPw().equals(customerChk.getInCustomerPw())){
-				
-				logger.info(">>> 비밀번호 오류");
-				strMainUrl = "common/loginFail";
-				
-				mv.addObject("memberType", memberType);
-				mv.addObject("loginType", loginType);
-				mv.addObject("customerKey", customerKey);
-				
-				mv.setViewName(strMainUrl);
-				
-				//log Controller execute time end
-		      	long t2 = System.currentTimeMillis();
-		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-		      	
-				return mv;
-				
-			}
-
 			customerKey = customerChk.getCustomerKey();
 			sbPhoneNumber = customerChk.getSbPhoneNumber();
 			lastLat = customerChk.getLastLat();
 			lastlon=customerChk.getLastlon();
 
 			// # 3. Session 객체에 셋팅
-			
-			HttpSession session = request.getSession(false);
+			// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        
+	        String key = StringUtil.nvl((String) session.getAttribute("key")); 
+
+			session = request.getSession(false);
 			
 			if(session != null)
 			{
@@ -1080,9 +1338,124 @@ public class CommonController {
 					session.setAttribute("access_token_naver", access_token);
 				}
 				
-				//token list 조회
-				
-				strMainUrl = "member/myTokenManage";
+				 if(StringUtil.nvl(key,"N").equals("N")){
+					
+					//token list 조회
+					strMainUrl = "member/myTokenManage";
+
+				}else{
+
+					logger.info("["+logid+"] Controller start key="+key);
+
+			        String keyvalue = CipherDecipherUtil.decrypt(key, "We are sales and livingsocials !");
+			        
+			        logger.info("["+logid+"] CipherDecipherUtil keyvalue::"+keyvalue);
+
+			        String[] keys=null;
+			        
+			        keys=keyvalue.split("\\|");
+			        
+			        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+			        logger.info("["+logid+"] CipherDecipherUtil productkey::"+keys[1]);
+			        logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
+			        logger.info("["+logid+"] CipherDecipherUtil tokenphone::"+keys[3]);
+			        
+			        //1) tokenkey / activeyn 조회
+			        // activeyn 이 n 이면 비활성화 안내처리
+			        // tokenkey 와 customerkey가 없는경우 잘못된 경로 안내
+			        
+			        CustomerVO custVo = new CustomerVO();
+			        custVo.setSbEmail(keys[2]);
+			        custVo.setSbPhoneNumber(keys[3]);
+			        custVo.setSearchType("03");
+			  
+			        //고객키 조회
+			        custVo=customerSvc.getCustKeyInfo(custVo);
+			        
+			        if(custVo==null){
+			        	
+			          //고객정보 오류 잘못된 접근 안내
+			    	  mv.addObject("ordermessage", "고객정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+			          
+			          mv.setViewName("/common/intro");
+			          
+			         //log Controller execute time end
+			        	long t2 = System.currentTimeMillis();
+			        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			        	
+			          return mv;
+			          
+			        }
+			        
+			        if(custVo.getUsedYn().equals("N")){
+			        	
+			        	  //고객정보 활성화 오류 잘못된 접근 안내
+				    	  mv.addObject("ordermessage", "고객정보가 활성화 되지 않습니다.(고객 인증 여부를 확인하세요");
+				          
+				          mv.setViewName("/common/intro");
+				          
+				         //log Controller execute time end
+				        	long t2 = System.currentTimeMillis();
+				        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+				        	
+				          return mv;
+			        	
+			        }
+
+			        TokenVO tokenVo = new TokenVO();
+			        
+			        tokenVo.setToken(keys[0]);
+			        tokenVo.setProductCode(keys[1]);
+			        tokenVo.setCustomerKey(custVo.getCustomerKey());
+			        
+			        tokenVo=tokenSvc.getTokenCheck(tokenVo);
+					
+			        if(tokenVo==null){
+			        	
+			        	//token 정보 오류 잘못된 접근 안내
+			         	mv.addObject("ordermessage", "토큰정보가 일치하지 않습니다.(정상경로 여부를 확인하세요");
+			            
+			            mv.setViewName("/common/intro");
+			            
+			           //log Controller execute time end
+			          	long t2 = System.currentTimeMillis();
+			          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			          	
+			            return mv;
+					}
+			        
+			        if(tokenVo.getActiveYn().equals("N")){
+			        	
+			        	//token 정보 오류 잘못된 접근 안내
+			         	mv.addObject("ordermessage", "토큰정보가 활성화 되지 않았습니다.(토큰 사용여부를 확인하세요");
+			            
+			            mv.setViewName("/common/intro");
+			            
+			           //log Controller execute time end
+			          	long t2 = System.currentTimeMillis();
+			          	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			          	
+			            return mv;
+					}
+			        
+			        //2)productkey로 상품정보 조히 (상품명 /상품각격 등)
+			        ProductMasterVO goodsVo = new ProductMasterVO();
+			        
+			        goodsVo.setIdx(keys[1]);
+			        
+			        goodsVo=productSvc.getProductDetail(goodsVo);
+
+			        mv.addObject("token", tokenVo);
+			        mv.addObject("goods", goodsVo);
+			        mv.addObject("customer", custVo);
+			        mv.addObject("productCode", keys[1]);
+			        mv.addObject("tokenemail", keys[2]);
+			        mv.addObject("tokenphone", keys[3]);
+			        mv.addObject("key", key);
+
+			        strMainUrl = "order/custMobileSale";
+
+				}
 				
 			} else {//고객 정보가 없는경우
 				
@@ -2741,4 +3114,578 @@ public class CommonController {
 		      	
 				return mv;
 			}
+		
+			/**
+		     * 이미지 보기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping(value = "/common/imageview")
+		    public ModelAndView imageView(HttpServletRequest request, 
+		    		                      HttpServletResponse response,
+		    		                      String imageurl) throws BizException 
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				logger.info("["+logid+"] Controller start imageView");
+		
+		        ModelAndView mv = new ModelAndView();
+		      
+		        mv.addObject("imageurl", imageurl);
+	
+		        mv.setViewName("/common/imageView");
+		        
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return mv;
+		    }
+		    
+		    /* facebooklogin 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/facebooklogin"})
+		    public @ResponseBody
+		    JSONObject facebookLogin(String restfullurl,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start facebooklogin "+restfullurl);
+
+				 JSONObject object =null;
+				 String inputLine = null;
+				 String content = "";
+
+			    try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(restfullurl);
+		            input = new BufferedReader(new InputStreamReader(url.openStream()));
+
+		            while ((inputLine = input.readLine()) != null) {
+		            	
+		            	 content += inputLine;
+		            }
+		            
+		            input.close();
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+		            Object obj = JSONValue.parse(content);
+		            
+		            object = (JSONObject)obj;
+		            
+		            logger.info("["+logid+"] id::"+object.get("id"));
+		            
+		            CustomerVO custVo = new CustomerVO();
+
+		            custVo.setSearchType("06");
+		            custVo.setSocialId3((String)object.get("id"));
+		            
+		            //고객키 조회
+		            custVo=customerSvc.getCustKeyInfo(custVo);
+		            
+		            if(custVo==null){
+		            	
+		            	 object.put("customerKey", "N");
+		            	 
+		            }else{
+		            	
+		            	 object.put("customerKey", custVo.getCustomerKey());
+		            }
+
+		            /*
+		            JSONArray array = (JSONArray)obj;
+		            this.logger.debug("array ==>" + array);
+		            List jasonList = new ArrayList();
+
+		            Object arryObj = null;
+
+		            for (int i = 0; i < array.size(); i++)
+		            {
+		              arryObj = JSONValue.parse(array.get(i).toString());
+		              JSONObject arryObject = (JSONObject)arryObj;
+		              jasonList.add(arryObject);
+		            }
+		            */
+		        	    
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
+				
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return object;
+		    }
+		    /**
+		     * 고객정보 수정처리
+		     *
+		     * @param UserManageVO
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping(value = "/common/facebooklink", method = RequestMethod.POST)
+		    public @ResponseBody
+		    String facebookLink(@ModelAttribute("customerVO") CustomerVO customerVO, 
+		    		          HttpServletRequest request, 
+		    		          HttpServletResponse response) throws BizException
+		    {
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				logger.info("["+logid+"] Controller start : customerVO" + customerVO);
+				
+				 String linkResult="";
+				 int retVal=0;
+				 
+				 String socialId3=customerVO.getSocialId3();
+				 
+			     //고객키 조회
+				 customerVO.setInCustomerPw(customerVO.getSbPw());
+				 
+				 customerVO=customerSvc.getCustKeyInfo(customerVO);
+   
+			     if(customerVO==null){
+			        	
+			    	linkResult="00";//고객정보 미등록
+			    	 
+					//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+			        return linkResult;
+			     }
+			     
+			     if(customerVO.getUsedYn().equals("N")){
+			    	 
+			    	 linkResult="01";//고객정보 비활성화
+			    	 
+			     
+			     }else{
+			    	 
+			    	//패스워드 체크
+					if(!customerVO.getCustomerPw().equals(customerVO.getInCustomerPw())){
+						
+						linkResult="02";//패스워드 오류
+						
+					}else{
+					 
+				    	 customerVO.setSocialId3(socialId3);
+				    	 retVal=this.customerSvc.socialId3UpdateProc(customerVO);
+				    	 
+				    	 if(retVal<=0){
+				    		 linkResult="03";//고객정보 연동실패
+				    	 }else{
+				    		 linkResult=customerVO.getCustomerKey();//고객정보 연동성공
+				    	 }
+				    	 
+					}
+			    	 
+			     }
+
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return linkResult;
+		    }
+		    
+		    /* RestFull 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/kakaologin"})
+		    public @ResponseBody
+		    JSONObject kakaoLogin(String restfullurl3,
+		    		String access_token,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start restfullinfo3 "+restfullurl3);
+				logger.info("["+logid+"] Controller start access_token "+access_token);
+
+				 JSONObject object =null;
+				 JSONObject object2 =null;
+				 String inputLine = null;
+				 String content = "";
+
+			    try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(restfullurl3);
+		            
+		            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		           
+		            connection.setRequestProperty("Authorization", access_token);
+
+			    	connection.setDoOutput(true);
+			    	
+			    	input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+		            while ((inputLine = input.readLine()) != null) {
+		            	
+		            	 content += inputLine;
+		            }
+		            
+		            input.close();
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+		            Object obj = JSONValue.parse(content);
+		            
+		            object = (JSONObject)obj;
+
+		            logger.info("["+logid+"] restfullinfo3 id::"+object.get("id"));
+		            logger.info("["+logid+"] restfullinfo3 properties::"+object.get("properties"));
+		            
+		            Object obj2 = JSONValue.parse(object.get("properties").toString());
+		            
+		            object2 = (JSONObject)obj2;
+		            
+		            String kakaoId=String.valueOf(object.get("id"));
+		            
+		            object2.put("id", object.get("id"));
+		            
+		            logger.info("["+logid+"] CipherDecipherUtil nickname::"+object2.get("nickname"));
+		            logger.info("["+logid+"] CipherDecipherUtil custom_field1::"+object2.get("custom_field1"));
+		            logger.info("["+logid+"] CipherDecipherUtil custom_field2::"+object2.get("custom_field2"));
+	
+		            
+		            CustomerVO custVo = new CustomerVO();
+		            
+		            custVo.setSearchType("04");
+		            custVo.setSocialId1(kakaoId);
+		            
+		            //고객키 조회
+		            custVo=customerSvc.getCustKeyInfo(custVo);
+		            
+		            if(custVo==null){
+		            	
+		            	object2.put("customerKey", "N");
+		            	 
+		            }else{
+		            	
+		            	object2.put("customerKey", custVo.getCustomerKey());
+		            }
+		           
+		            /*
+		            JSONArray array = (JSONArray)obj;
+		            this.logger.debug("array ==>" + array);
+		            List jasonList = new ArrayList();
+
+		            Object arryObj = null;
+
+		            for (int i = 0; i < array.size(); i++)
+		            {
+		              arryObj = JSONValue.parse(array.get(i).toString());
+		              JSONObject arryObject = (JSONObject)arryObj;
+		              jasonList.add(arryObject);
+		            }
+		            */
+		        	    
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
+				
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return object2;
+		    }
+		    
+		    /**
+		     * 고객정보 수정처리
+		     *
+		     * @param UserManageVO
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping(value = "/common/kakaolink", method = RequestMethod.POST)
+		    public @ResponseBody
+		    String kakaoLink(@ModelAttribute("customerVO") CustomerVO customerVO, 
+		    		          HttpServletRequest request, 
+		    		          HttpServletResponse response) throws BizException
+		    {
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				logger.info("["+logid+"] Controller start : customerVO" + customerVO);
+				
+				 String linkResult="";
+				 int retVal=0;
+				 
+				 String socialId1=customerVO.getSocialId1();
+				 
+			     //고객키 조회
+				 customerVO.setInCustomerPw(customerVO.getSbPw());
+				 
+				 customerVO=customerSvc.getCustKeyInfo(customerVO);
+   
+			     if(customerVO==null){
+			        	
+			    	linkResult="00";//고객정보 미등록
+			    	 
+					//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+			        return linkResult;
+			     }
+			     
+			     if(customerVO.getUsedYn().equals("N")){
+			    	 
+			    	 linkResult="01";//고객정보 비활성화
+			    	 
+			     
+			     }else{
+			    	 
+			    	//패스워드 체크
+					if(!customerVO.getCustomerPw().equals(customerVO.getInCustomerPw())){
+						
+						linkResult="02";//패스워드 오류
+						
+					}else{
+					 
+				    	 customerVO.setSocialId1(socialId1);
+				    	 retVal=this.customerSvc.socialId1UpdateProc(customerVO);
+				    	 
+				    	 if(retVal<=0){
+				    		 linkResult="03";//고객정보 연동실패
+				    	 }else{
+				    		 linkResult=customerVO.getCustomerKey();//고객정보 연동성공
+				    	 }
+				    	 
+					}
+			    	 
+			     }
+
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return linkResult;
+		    }
+		    
+		    /* RestFull 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/naverlogin"})
+		    public @ResponseBody
+		    JSONObject naverLogin(String restfullurl3,
+		    		String access_token,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start restfullinfo4 "+restfullurl3);
+				logger.info("["+logid+"] Controller start access_token "+access_token);
+
+				 JSONObject object =new JSONObject();
+				 String inputLine = null;
+				 String content = "";
+
+			    try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(restfullurl3);
+		            
+		            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		           
+		            connection.setRequestProperty("Authorization",access_token);
+
+			    	connection.setDoOutput(true);
+			    	
+			    	input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+		            while ((inputLine = input.readLine()) != null) {
+		            	
+		            	 content += inputLine;
+		            }
+		            
+		            input.close();
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+			        Element root = XmlUtil.loadStringDocument(content.toString());
+			       	   
+		       	    String resultcode =XmlUtil.getTagValue(root, "resultcode");
+		       	    String message =XmlUtil.getTagValue(root, "message");
+		       	    String id =XmlUtil.getTagValue(root, "id");
+		       	    String nickname =XmlUtil.getTagValue(root, "nickname");
+		       	    String profile_image =XmlUtil.getTagValue(root, "profile_image");
+		       	    
+		       	    logger.info("["+logid+"] resultcode::"+resultcode);
+		       	    logger.info("["+logid+"] message::"+message);
+		            
+		            //<?xml version="1.0" encoding="UTF-8" ?><data><result><resultcode>00</resultcode><message>success</message></result><response><email><![CDATA[ranrhdwn76@naver.com]]></email><nickname><![CDATA[ranrhd****]]></nickname><enc_id><![CDATA[fa53b513469bce9ab8f80513c9bd691256416ec50676dc8fc264b7713e4e1077]]></enc_id><profile_image><![CDATA[https://phinf.pstatic.net/contactthumb/profile/blog/1/13/ranrhdwn76.jpg?type=s80]]></profile_image><age><![CDATA[40-49]]></age><gender>F</gender><id><![CDATA[57891596]]></id><name><![CDATA[김정란]]></name><birthday><![CDATA[02-08]]></birthday></response></data>
+   
+		            object.put("resultcode", resultcode);
+		            object.put("id", id);
+		            object.put("nickname", nickname);
+		            object.put("profile_image", profile_image);
+		            
+		       	    CustomerVO custVo = new CustomerVO();
+		            
+		            custVo.setSearchType("05");
+		            custVo.setSocialId2(id);
+		            
+		            //고객키 조회
+		            custVo=customerSvc.getCustKeyInfo(custVo);
+		            
+		            if(custVo==null){
+		            	
+		            	object.put("customerKey", "N");
+		            	 
+		            }else{
+		            	
+		            	object.put("customerKey", custVo.getCustomerKey());
+		            }
+		            
+		            logger.info("["+logid+"] CipherDecipherUtil nickname::"+object.get("nickname"));
+		            logger.info("["+logid+"] CipherDecipherUtil id::"+object.get("id"));
+		            logger.info("["+logid+"] CipherDecipherUtil profile_image::"+object.get("profile_image"));
+
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
+				
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return object;
+		    }
+		    
+		    /**
+		     * 고객정보 수정처리
+		     *
+		     * @param UserManageVO
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping(value = "/common/naverlink", method = RequestMethod.POST)
+		    public @ResponseBody
+		    String naverLink(@ModelAttribute("customerVO") CustomerVO customerVO, 
+		    		          HttpServletRequest request, 
+		    		          HttpServletResponse response) throws BizException
+		    {
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				logger.info("["+logid+"] Controller start : customerVO" + customerVO);
+				
+				 String linkResult="";
+				 int retVal=0;
+				 
+				 String socialId2=customerVO.getSocialId2();
+				 
+			     //고객키 조회
+				 customerVO.setInCustomerPw(customerVO.getSbPw());
+				 
+				 customerVO=customerSvc.getCustKeyInfo(customerVO);
+   
+			     if(customerVO==null){
+			        	
+			    	linkResult="00";//고객정보 미등록
+			    	 
+					//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+			        return linkResult;
+			     }
+			     
+			     if(customerVO.getUsedYn().equals("N")){
+			    	 
+			    	 linkResult="01";//고객정보 비활성화
+			    	 
+			     
+			     }else{
+			    	 
+			    	//패스워드 체크
+					if(!customerVO.getCustomerPw().equals(customerVO.getInCustomerPw())){
+						
+						linkResult="02";//패스워드 오류
+						
+					}else{
+					 
+				    	 customerVO.setSocialId2(socialId2);
+				    	 retVal=this.customerSvc.socialId2UpdateProc(customerVO);
+				    	 
+				    	 if(retVal<=0){
+				    		 linkResult="03";//고객정보 연동실패
+				    	 }else{
+				    		 linkResult=customerVO.getCustomerKey();//고객정보 연동성공
+				    	 }
+				    	 
+					}
+			    	 
+			     }
+
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return linkResult;
+		    }
 }

@@ -9,6 +9,7 @@ public class TokenVO extends AbstractVO {
 	
 	private String tokenkey;
 	private String token;
+	private String shortUrl;
 	private String image1;
 	private String image2;
 	private String image3;
@@ -345,6 +346,14 @@ public class TokenVO extends AbstractVO {
 
 	public void setImage5(String image5) {
 		this.image5 = image5;
+	}
+
+	public String getShortUrl() {
+		return shortUrl;
+	}
+
+	public void setShortUrl(String shortUrl) {
+		this.shortUrl = shortUrl;
 	}
 
 }

@@ -458,53 +458,5 @@ public class MemberController {
 		return wantedDirectory.mkdirs();
 	}
 	
-	/**
-     * 이미지보기
-     *
-     * @param request
-     * @param response
-     * @param model
-     * @param locale
-     * @return
-     * @throws BizException
-     */
-    @RequestMapping(value = "/member/imageview")
-    public ModelAndView imageView(HttpServletRequest request, 
-    		                      HttpServletResponse response,
-    		                      String imageurl) throws BizException 
-    {
-        
-    	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start imageView");
-
-        ModelAndView mv = new ModelAndView();
-        
-      	// 사용자 세션정보
-        HttpSession session = request.getSession();
-        
-        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
-        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
-        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
-        String staffYn = StringUtil.nvl((String) session.getAttribute("staffYn"));
-        
-        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
-
- 	       	mv.setViewName("/common/sessionOut");
-       		return mv;
-		}
-        
-        mv.addObject("imageurl", imageurl);
-
-        mv.setViewName("/member/imageView");
-        
-       //log Controller execute time end
-      	long t2 = System.currentTimeMillis();
-      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-      	
-        return mv;
-    }
-    
-   
+	
 }

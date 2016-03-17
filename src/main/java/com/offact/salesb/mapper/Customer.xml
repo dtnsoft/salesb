@@ -131,7 +131,9 @@ SELECT  T1.customerKey
 		   T1.socialId3,
 		   T1.socialId4,
 		   T1.socialId5,
-	       T1.usedYn
+	       T1.usedYn,
+	       T1.sbPw As customerPw ,
+	       password(#{inCustomerPw}) As inCustomerPw
   		FROM sbCustomer T1
   	WHERE 1=1
         <if test="searchType != null and searchType != ''" >
@@ -179,5 +181,29 @@ SELECT  T1.customerKey
 	  		, 'N'
 	  		) 
  </insert>
+
+<update id="socialId1UpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				 socialId1 = #{socialId1}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<update id="socialId2UpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				 socialId2 = #{socialId2}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<update id="socialId3UpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				 socialId3 = #{socialId3}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
 
 </mapper>

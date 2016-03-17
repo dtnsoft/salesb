@@ -37,7 +37,7 @@
 	              <div class="clm_acont ">
 	                <div class="order_acont">
 	                  <div class="display_store">
-	                    <span class="place"> <span class="date" style="color:blue">${TokenVO.token}</span> </span> 
+	                    <span class="place"> <span class="date" style="color:blue">${TokenVO.shortUrl}</span> </span> 
 	                    <span class="type">
 	                     	<c:choose>
 				                <c:when test="${TokenVO.activeYn=='Y'  }">

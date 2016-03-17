@@ -37,6 +37,31 @@ public interface CustomerService {
     public int customerUpdateProc(CustomerVO customer) throws BizException;
     
     /**
+     * 카카오 연동
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int socialId1UpdateProc(CustomerVO customer) throws BizException;
+    
+    /**
+     * 네이버 연동
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int socialId2UpdateProc(CustomerVO customer) throws BizException;
+    
+    /**
+     * 페이스북 연동
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int socialId3UpdateProc(CustomerVO customer) throws BizException;
+    
+    
+    /**
      * 고객 등록
      * 
      * @return

@@ -123,3 +123,15 @@
 </div>
 </body>
 </html>
+<script>
+
+
+var msg='${ordermessage}';
+
+if(msg!=''){
+	
+	alert('${ordermessage}');
+	
+}
+
+</script>

@@ -24,6 +24,7 @@
 <select id="getTokenPageList"  resultMap="tokenVO" parameterType="com.offact.salesb.vo.member.TokenVO" >
         SELECT T1.tokenkey
 			  ,T1.token
+			  ,T1.shortUrl
 			  ,T1.customerKey
 			  ,T1.image1
 			  ,T1.image2
@@ -63,6 +64,7 @@
 
 		SELECT  T1.tokenkey
 			  ,T1.token
+			  ,T1.shortUrl
 			  ,T1.customerKey
 			  ,T1.image1
 			  ,T1.image2
@@ -85,10 +87,31 @@
 		 Where T1.tokenkey = #{tokenkey} 
 </select>
 
+<select id="getTokenCheck" resultMap="tokenVO" parameterType="com.offact.salesb.vo.member.TokenVO" >
+
+		SELECT  T1.tokenkey
+			  ,T1.token
+			  ,T1.shortUrl
+			  ,T1.customerKey
+			  ,T1.productCode
+			  ,T1.activeYn
+			  ,T1.image1
+			  ,T1.image2
+			  ,T1.image3
+			  ,T1.image4
+			  ,T1.image5
+          FROM sbToken T1
+		 Where T1.token = #{token} 
+			   And T1.productCode = #{productCode} 
+		       And T1.customerKey = #{customerKey} 
+</select>
+
+
 
 <insert id="tokenInsertProc" parameterType="com.offact.salesb.vo.member.TokenVO">
         INSERT INTO sbToken( 
         	 token
+        	,shortUrl
             ,customerKey
             ,productCode
             ,groupId
@@ -97,6 +120,7 @@
             )
         VALUES (
 	  		  #{token}
+	  		, #{shortUrl}
 	  		, #{customerKey}
 	  		, #{productCode}
 	  		, #{groupId}
