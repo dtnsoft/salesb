@@ -47,6 +47,9 @@
 			   Left Join ofUser T3 On T1.updateUserId=T3.userId
 			   Left Join sbProductMaster T4 On T1.productCode=T4.idx
          WHERE T1.customerKey = #{customerKey} 
+          <if test="searchValue != null and searchValue != ''" >
+              AND DATE_FORMAT(T1.createDateTime,'%Y%m%d')=#{searchValue} 
+           </if>
          ORDER BY createDateTime desc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
@@ -57,7 +60,10 @@
           	   Left Join ofUser T2 On T1.createUserId=T2.userId
 			   Left Join ofUser T3 On T1.updateUserId=T3.userId
 			   Left Join sbProductMaster T4 On T1.productCode=T4.idx
-         WHERE T1.customerKey = #{customerKey} 
+         WHERE T1.customerKey = #{customerKey}
+           <if test="searchValue != null and searchValue != ''" >
+              AND DATE_FORMAT(T1.createDateTime,'%Y%m%d')=#{searchValue} 
+           </if> 
 </select>
 
 <select id="getTokenDetail" resultMap="tokenVO" parameterType="com.offact.salesb.vo.member.TokenVO" >

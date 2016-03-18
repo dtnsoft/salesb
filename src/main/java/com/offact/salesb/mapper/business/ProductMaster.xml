@@ -104,6 +104,7 @@
 <insert id="insertExcelProduct"  parameterType="com.offact.salesb.vo.business.ProductMasterVO" >
 		insert into sbProductMaster (
 				 productCode
+				,groupId
             	,productCategory
             	,productName 
             	,modelName
@@ -118,6 +119,7 @@
             	,deletedYn
 		)values(
 				 #{productCode}
+				, #{groupId}
 	  			, #{productCategory}
 	  			, #{productName}
 	  			, #{modelName}

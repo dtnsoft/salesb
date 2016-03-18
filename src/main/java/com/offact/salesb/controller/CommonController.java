@@ -1735,16 +1735,14 @@ public class CommonController {
 	        session.removeAttribute("access_token_facebook");
 	        session.removeAttribute("access_token_naver");
 	        
+	        session.removeAttribute("key");
+
 	        logger.info("logout ok!");
 	        
 	        ModelAndView mv = new ModelAndView();
-	        
-        	//조직정보 조회
-        	GroupVO group = new GroupVO();
-        	
-        	List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
-        	mv.addObject("group_comboList", group_comboList);
-	
+
+	        mv.setViewName("/common/intro");
+	        /*
         	String state = generateState();
 
         	session = request.getSession(true);
@@ -1763,7 +1761,7 @@ public class CommonController {
 			mv.addObject("pinterestclient_id", pinterestclient_id);
 
 		 	mv.setViewName("/common/customerLoginForm");
-	
+	*/
 			return mv;
 		}
 		
@@ -1804,24 +1802,28 @@ public class CommonController {
 	        session.removeAttribute("pwdChangeDateTime");
 	        session.removeAttribute("pwCycleDate");
 	        
-	        //로그인 상태처리		
+	        session.removeAttribute("key");
+	        
+	        //작업이력
+			/*		
 			UserVO userState =new UserVO();
 			userState.setUserId(strUserId);
 			userState.setLoginYn("N");
 			userState.setIp(strIp);
 			userState.setConnectIp(sClientIP);
 			userSvc.regiLoginYnUpdate(userState);
-	        
-	        //작업이력
+	
 			WorkVO work = new WorkVO();
 			work.setWorkUserId(strUserId);
 			work.setWorkIp(strIp);
 			work.setWorkCategory("CM");
 			work.setWorkCode("CM002");
 			commonSvc.regiHistoryInsert(work);
-		
+		*/
 	        ModelAndView mv = new ModelAndView();
-	        mv.setViewName("common/customerLoginForm");
+	       // mv.setViewName("common/customerLoginForm");
+
+	        mv.setViewName("/common/intro");
 
 			return mv;
 		}

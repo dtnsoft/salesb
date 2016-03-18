@@ -21,13 +21,12 @@ function fcProductMaster_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/business/productexcelimport?fileName="+gap+"&extension="+gap1;
     }else{
     	alert("Excel 통합문서(xlsx) 파일만 등록 부탁드립니다.");
         return;
     }
-    commonDim(true);
-    
+
     frm.action = url;
     frm.target="excel_import_result";
 
@@ -36,8 +35,6 @@ function fcProductMaster_excelimport(){
 
 function uploadClose(msg,obj){
 	
-	 commonDim(false);
-
 	 alert(msg);
 	 
 	 if(obj.length>0){
@@ -50,9 +47,7 @@ function uploadClose(msg,obj){
 			 alert(eMsg);
 		 }
 	 }
-	 
-	 $('#productExcelForm').dialog('close');
-	 fcProductMaster_listSearch();
+
 }
 
 </script>
@@ -84,7 +79,7 @@ function uploadClose(msg,obj){
          </div> 
          <div class="clm_detail_btn">
 	         <div class="clm_btn">
-	           <a href="javascript:fcGoods_regist();" class="btn_ty2">업로드</a>
+	           <a href="javascript:fcProductMaster_excelimport();" class="btn_ty2">업로드</a>
 	         </div>
          </div>
 	</form:form>

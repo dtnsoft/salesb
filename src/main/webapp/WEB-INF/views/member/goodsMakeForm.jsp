@@ -380,7 +380,7 @@
            	<h5> <strong><em class="num">1. </em></strong>상품 판매 토근값</h5>
            	    구매하러 가기=> <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue">${token.shortUrl}</span></a>
            	  <br>
-           	  <a href="javascript:copyUrl('${token.token}')">복사하기</a>
+           	  <a href="javascript:copyUrl('${token.shortUrl}')">복사하기</a>
          </div> 
 		 <form:form commandName="MultipartFileVO"  id="tokenFileForm" name="tokenFileForm" method="post" action="/member/goodsmake" target="file_result"  enctype="multipart/form-data" >
          <div class="well">
