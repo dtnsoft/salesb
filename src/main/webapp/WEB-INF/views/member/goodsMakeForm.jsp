@@ -304,7 +304,9 @@
 	
 	function fileResult(image1,image2,image3,image4,image5){
 		
-		alert('등록 되었습니다.');
+		var shortUrl='${token.shortUrl}';
+		
+		alert('상품 토큰이 활성화 되었습니다.\n지금부터 상품 토큰을 통한온라인 판매가 가능합니다.\n'+shortUrl+'\n(위의 URL 정보를 복사하여 각종 SNS 및 게시판에  붙혀 넣기 만으로\n나만의 온라인 쇼핑몰이 완성 됩니다.');
 		
 		var frm=tokenManageForm;
 		frm.image1.value=image1;

@@ -70,12 +70,35 @@ public interface CustomerService {
     public int customerRegist(CustomerVO customer) throws BizException;
     
     /**
+     * 고객 등록
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int customerRegistUpdate(CustomerVO customer) throws BizException;
+    
+    /**
      * 인증번호 업데이트
      * 
      * @return
      * @throws BizException
      */
     public int customerUpdateToken(CustomerVO customer) throws BizException;
+    /**
+     * 인증번호 업데이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int tokenInsert(CustomerVO customer) throws BizException;
+    
+    /**
+     * 인증번호 업데이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int tokenUpdate(CustomerVO customer) throws BizException;
     
     /**
 	 * Token 조회

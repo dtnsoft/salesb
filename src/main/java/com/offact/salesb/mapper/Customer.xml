@@ -94,18 +94,31 @@ SELECT  T1.customerKey
             	               ,updateDateTime = now()    
             	               ,usedYn = 'Y'  
  </insert>
+ 
+ <update id="customerRegistUpdate" parameterType="com.offact.salesb.vo.CustomerVO">
+        
+        Update sbCustomer
+       		Set
+  				 sbPw =  password(#{sbPw})
+            	,updateDateTime = now()
+            	,usedYn = 'Y'  
+ 		Where customerKey = #{customerKey} 
+
+ </update>
 
 
 <insert id="getToken"  parameterType="com.offact.salesb.vo.CustomerVO" >
 		 
-		 INSERT INTO sbCustomer( 
-        	 sbPhoneNumber
+		INSERT INTO sbCustomer( 
+        	 sbEmail
+        	,sbPhoneNumber
         	,createDateTime 
         	,token
             ,tokenDateTime
             )
         VALUES (
-	  		  #{sbPhoneNumber}
+	  		  #{sbEmail}
+	  		, #{sbPhoneNumber}
 	  		, now()
 	  		, #{token}
 	  		, now()
@@ -114,6 +127,35 @@ SELECT  T1.customerKey
             	               ,tokenDateTime = now()
 		                        
 </insert>
+
+<insert id="getTokenInsert"  parameterType="com.offact.salesb.vo.CustomerVO" >
+		 
+		INSERT INTO sbCustomer( 
+        	 sbEmail
+        	,sbPhoneNumber
+        	,createDateTime 
+        	,token
+            ,tokenDateTime
+            )
+        VALUES (
+	  		  #{sbEmail}
+	  		, #{sbPhoneNumber}
+	  		, now()
+	  		, #{token}
+	  		, now()
+	  		)      
+		                        
+</insert>
+
+<update id="getTokenUpdate"  parameterType="com.offact.salesb.vo.CustomerVO" >
+		
+	    Update sbCustomer
+       		Set
+  				 token = #{token}
+            	,tokenDateTime = now()
+ 		Where customerKey = #{customerKey} 
+
+</update>
 
 <select id="getTokenInfo" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
 	SELECT T1.token
@@ -132,6 +174,7 @@ SELECT  T1.customerKey
 		   T1.socialId4,
 		   T1.socialId5,
 	       T1.usedYn,
+	       T1.token,
 	       T1.sbPw As customerPw ,
 	       password(#{inCustomerPw}) As inCustomerPw
   		FROM sbCustomer T1

@@ -944,7 +944,7 @@
 				      </ul>
 				      <ul class="nav navbar-nav">
 				        <li >
-				          <a href="#">판매현황</a>
+				          <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/salesmanage')" >판매현황</a>
 				        </li>
 				      </ul>
 					<ul class="nav navbar-nav navbar-right">

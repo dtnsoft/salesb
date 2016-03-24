@@ -59,12 +59,14 @@ import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.business.ProductService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.CommonService;
+import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.service.common.UserService;
 import com.offact.salesb.service.member.TokenService;
 import com.offact.salesb.service.order.OrderService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.business.ProductMasterVO;
+import com.offact.salesb.vo.common.EmailVO;
 import com.offact.salesb.vo.common.GroupVO;
 import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.common.UserVO;
@@ -143,6 +145,12 @@ public class CommonController {
     @Value("#{config['offact.sms.sendno']}")
     private String sendno;
     
+	@Value("#{config['offact.mail.orderfromemail']}")
+    private String orderfromemail;
+    
+    @Value("#{config['offact.mail.ordersubject']}")
+    private String ordersubject;
+    
     @Autowired
     private CommonService commonSvc;
     
@@ -163,6 +171,9 @@ public class CommonController {
 
     @Autowired
     private ProductService productSvc;
+    
+    @Autowired
+    private MailService mailSvc;
     
     public String generateState()
     {
@@ -450,14 +461,15 @@ public class CommonController {
     			
 		int retVal=-1;
 		String token="";
-		
+
 		//등록여부 확인
-		
-		CustomerVO customerChk = customerSvc.getTokenInfo(customerVo);	
+		customerVo.setSearchType("01");
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
 				
 		if(customerChk != null) {
 			
 			token=customerChk.getToken();
+			customerVo.setCustomerKey(customerChk.getCustomerKey());
 			
 			if(!token.equals(customerVo.getToken())){ //인증실패-인증번호 다름
 				
@@ -480,17 +492,268 @@ public class CommonController {
 			
 		}
 
-		retVal = customerSvc.customerRegist(customerVo);	
+		String mc="";
+		String keyvalue="";
+	    String encryptValue = "";
+        String encrypt = "";
+        
+        encryptValue=token+"|"+customerVo.getSbPhoneNumber()+"|"+customerVo.getSbEmail()+"|"+customerVo.getSbPw();
+	        
+	    encrypt = CipherDecipherUtil.encrypt(encryptValue, "We are sales and livingsocials !");
+	        
+	    logger.info("["+logid+"] CipherDecipherUtil encrypt::"+encrypt);
+
+		//이메일 리스틑 조회 user
+		String emaillist=customerVo.getSbEmail();
+		String cclist="";
 		
-		if(retVal>0){
-			retVal=1;
+		String [] getToMails=emaillist.split(";");
+    	String [] getToMail_Ccs=cclist.split(";");
+		
+		//email 전송
+		EmailVO mail = new EmailVO();
+		
+		List<String> toEmails= new ArrayList();
+		List<String> toEmail_Ccs= new ArrayList();
+		List<String> attcheFileName= new ArrayList();
+		List<File> files = new ArrayList();
+
+		for(int m=0;m<getToMails.length;m++){	
+			toEmails.add(getToMails[m]);	
 		}
 		
+		for(int c=0;c<getToMail_Ccs.length;c++){	
+			toEmail_Ccs.add(getToMail_Ccs[c]);	
+		}
+
+		//attcheFileName.add(orderCode+".html");
+		//files.add(file);
+		//메일발송
+		mail.setToEmails(toEmails);
+		mail.setToEmail_Ccs(toEmail_Ccs);
+		mail.setAttcheFileName(attcheFileName);
+		mail.setFile(files);
+
+		mail.setFromEmail(orderfromemail);
+		
+		String szContent = "";
+		
+		szContent += "<html xmlns='http://www.w3.org/1999/xhtml'>";
+	    szContent += "<head>";
+        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />";
+        szContent += "<title>[sales baron]</title>";
+        szContent += "<link href='"+hostUrl+"/salesb/css/issue_style.css' rel='stylesheet' type='text/css' />";
+        szContent += "<style type='text/css'>";
+        szContent += "<!--";
+        szContent += "body {";
+        szContent += "background-color: #ffffff;";
+        szContent += "}";
+        szContent += "-->";
+        szContent += "</style></head>";
+		
+        szContent += "<body>";
+        szContent += "<table width='630' cellspacing='0' cellpadding='0' align='center' >";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+hostUrl+"/salesb/images/error/error_boxtop.gif' width='630' height='32' /></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td align='center' background='"+hostUrl+"/salesb/images/error/error_boxcen.gif'><table width='500' cellspacing='0' cellpadding='0'>";
+        szContent += "<tr>";
+        szContent += "<td height='30' class='tit_black_b'>[sales baron] 고객 등록 인증메일</td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td height='1' bgcolor='a9a9a9'></td>";
+        szContent += "</tr>";
+        szContent += "</table>";
+        szContent += "<table width='500' cellspacing='0' cellpadding='0' style='margin-top:18px'>";
+        szContent += "<tr>";
+        szContent += "<td valign='top' style='padding:10px 0 0 0'>고객번호("+customerVo.getSbPhoneNumber()+")에 대한 salseb 가입내용을 확인 부탁드립니다.<br><br>가입 내용이 맞을경우 아래 인증하기를 클릭하여 고객정보를 활성화 하시기 바랍니다.<br><br><a href='"+hostUrl+"/salesb/common/mailconfirm?mc="+encrypt+"'><font color='bule'>[ 인증하기 ]</font></a><br><br>salesb 바로가기 =><a href='"+domainUrl+"'>http://salesb.net</a><br></td>";
+        szContent += "</tr>";
+        szContent += "</table></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+hostUrl+"/salesb/images/error/error_boxbot.gif' width='630' height='32' /></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td height='300'>&nbsp;</td>";
+        szContent += "</tr>";
+        szContent += "</table>";
+        szContent += "</body>";
+        szContent += "</html>";
+        
+		mail.setMsg(szContent);
+		
+		mail.setSubject("[sales baron] 고객 등록 인증메일");
+		
+		boolean counselResult=false;
+
+		try{
+			
+			counselResult=mailSvc.sendMail(mail);
+			
+			logger.debug("mail result :"+counselResult);
+			
+			if(counselResult==false){
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "-1";
+				
+			}
+			
+			retVal=1;
+			
+		}catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	       	return "-1";
+	    	
+	    }
+
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
       return ""+retVal;
+	}
+    
+	 /**
+     * 고객 등록
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/common/mailconfirm"})
+    public @ResponseBody
+    ModelAndView mailConfirm(String mc,
+            HttpServletRequest request, 
+            HttpServletResponse response) throws BizException
+    {
+		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : mc" + mc);
+		
+		ModelAndView  mv = new ModelAndView();
+    			
+		int retVal=-1;
+		String token="";
+		String email="";
+		
+		String key_token="";
+		String key_phone="";
+		String key_email="";
+		String key_password="";
+		
+		String keyvalue = CipherDecipherUtil.decrypt(mc, "We are sales and livingsocials !");
+	        
+        logger.info("["+logid+"] CipherDecipherUtil keyvalue::"+keyvalue);
+
+        String[] keys=null;
+        
+        keys=keyvalue.split("\\|");
+        
+        logger.info("["+logid+"] CipherDecipherUtil token::"+keys[0]);
+        logger.info("["+logid+"] CipherDecipherUtil phone::"+keys[1]);
+        logger.info("["+logid+"] CipherDecipherUtil email::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil pw::"+keys[3]);
+	    
+        key_token=keys[0];
+        key_phone=keys[1];
+        key_email=keys[2];
+        key_password=keys[3];
+        
+        CustomerVO customerVo = new CustomerVO();
+
+		//등록여부 확인
+		customerVo.setSearchType("01");
+		customerVo.setSbPhoneNumber(key_phone);
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
+				
+		if(customerChk != null) {
+			
+			token=customerChk.getToken();
+		    email=customerChk.getSbEmail();
+			customerVo.setCustomerKey(customerChk.getCustomerKey());
+			customerVo.setSbPw(key_password);
+			
+			if(!token.equals(key_token)){ //인증실패-인증번호 다름
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	            
+		        //고객인증 오류 잘못된 접근 안내
+	    	    mv.addObject("message", "인증실패-인증번호 다름");
+	            mv.setViewName("/common/mailConfirm");
+	        	return mv;
+				
+			}
+			
+			if(!email.equals(key_email)){ //인증실패-이메일 다름
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	            
+		        //고객인증 오류 잘못된 접근 안내
+	    	    mv.addObject("message", "인증실패-이메일 다름");
+	    	    mv.setViewName("/common/mailConfirm");
+	        	return mv;
+				
+			}
+			
+			
+		}else{//인증실패-등록사용자 정보없음
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+            
+	        //고객인증 오류 잘못된 접근 안내
+    	    mv.addObject("message", "인증실패-등록사용자 정보없음");
+    	    mv.setViewName("/common/mailConfirm");
+        	return mv;
+			
+		}
+
+		retVal = customerSvc.customerRegistUpdate(customerVo);	
+		
+		if(retVal<=0){
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	       	
+			//고객인증 오류 잘못된 접근 안내
+    	    mv.addObject("message", "인증업데이트 오류");
+    	    mv.setViewName("/common/mailConfirm");
+        	return mv;
+		}
+
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+        //고객인증성공안내
+	    mv.addObject("message", "인증이 성공했습니다.salesb를 정상적으로 사용가능하십니다.");
+	    mv.setViewName("/common/mailConfirm");
+    	return mv;
 	}
     
     /**
@@ -517,10 +780,12 @@ public class CommonController {
     			
 		int retVal=-1;
 		String token="";
-		
-		//등록여부 확인
-		
-		CustomerVO customerChk = customerSvc.getTokenInfo(customerVo);	
+
+        //등록여부 확인
+		customerVo.setSearchType("01");
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
+	
+		//CustomerVO customerChk = customerSvc.getTokenInfo(customerVo);	
 				
 		if(customerChk != null) {
 			
@@ -576,20 +841,8 @@ public class CommonController {
 		logger.info("["+logid+"] Controller start : customerVO" + customerVo);
     			
 		int retVal=-1;
-		
-        //등록여부 확인
-		
-		CustomerVO customerChk = customerSvc.getCustomer(customerVo);	
-		
-		if(customerChk != null) {
-			
-			//log Controller execute time end
-	       	long t2 = System.currentTimeMillis();
-	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-            
-	       	return "1";
-			
-		}
+		String customerKey="";
+		String useYn="";
 		
 		String token="";
 		token=tokenCreate();
@@ -597,12 +850,39 @@ public class CommonController {
 		if(token.length()==3){
 			token=token+"0";
 		}
-
-		customerVo.setToken(token);
-
-		retVal = customerSvc.customerUpdateToken(customerVo);	
-		logger.debug("#########getToken retVal"+retVal);
+        //등록여부 확인
+		customerVo.setSearchType("01");
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
 		
+		if(customerChk != null) {
+			
+			useYn=customerChk.getUsedYn();
+			
+			if(useYn.equals("Y")){
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	            
+		       	return "1";
+			}else{
+				
+				customerVo.setCustomerKey(customerChk.getCustomerKey());
+				customerVo.setToken(token);
+
+				retVal = customerSvc.tokenUpdate(customerVo);	
+				logger.debug("#########getTokenUpdate retVal"+retVal);
+				
+			}
+			
+		}else{
+			
+			customerVo.setToken(token);
+
+			retVal = customerSvc.tokenInsert(customerVo);	
+			logger.debug("#########getTokenInsert retVal"+retVal);
+			
+		}
+	
 			try{
 				//SMS발송
 				SmsVO smsVO = new SmsVO();
@@ -614,7 +894,7 @@ public class CommonController {
 				smsVO.setSmsId(smsId);
 				smsVO.setSmsPw(smsPw);
 				smsVO.setSmsType(smsType);
-				smsVO.setSmsTo(customerVo.getCustomerKey());
+				smsVO.setSmsTo(customerVo.getSbPhoneNumber());
 				smsVO.setSmsFrom(sendno);
 				smsVO.setSmsMsg("["+token+"]salesb 에서 발송된 인증번호입니다");
 
@@ -679,8 +959,8 @@ public class CommonController {
 		int retVal=-1;
 		
         //등록여부 확인
-		
-		CustomerVO customerChk = customerSvc.getCustomer(customerVo);	
+		customerVo.setSearchType("01");
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
 		
 		if(customerChk == null) {
 			
@@ -696,8 +976,9 @@ public class CommonController {
 		token=tokenCreate();
 		
 		customerVo.setToken(token);
+		customerVo.setCustomerKey(customerChk.getCustomerKey());
 
-		retVal = customerSvc.customerUpdateToken(customerVo);	
+		retVal = customerSvc.tokenUpdate(customerVo);	
 		logger.debug("#########getToken retVal"+retVal);
 		
 			try{
@@ -711,7 +992,7 @@ public class CommonController {
 				smsVO.setSmsId(smsId);
 				smsVO.setSmsPw(smsPw);
 				smsVO.setSmsType(smsType);
-				smsVO.setSmsTo(customerVo.getCustomerKey());
+				smsVO.setSmsTo(customerVo.getSbPhoneNumber());
 				smsVO.setSmsFrom(sendno);
 				smsVO.setSmsMsg("["+token+"] salesb 에서 발송된 인증번호입니다");
 
@@ -778,12 +1059,10 @@ public class CommonController {
 		token=tokenCreate();
 		String temppassword="";
 		temppassword=tokenCreate();
-		
-		//@생성
-		
+
 		//등록여부 확인
-		
-		CustomerVO customerChk = customerSvc.getTokenInfo(customerVo);	
+		customerVo.setSearchType("01");
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
 				
 		if(customerChk != null) {
 			
@@ -811,6 +1090,7 @@ public class CommonController {
 		
 		customerVo.setPw_modifyYn("Y");
 		customerVo.setCustomerPw(temppassword);
+		customerVo.setCustomerKey(customerChk.getCustomerKey());
 
 		retVal = customerSvc.customerUpdateProc(customerVo);
 		
@@ -831,7 +1111,7 @@ public class CommonController {
 				smsVO.setSmsId(smsId);
 				smsVO.setSmsPw(smsPw);
 				smsVO.setSmsType(smsType);
-				smsVO.setSmsTo(customerVo.getCustomerKey());
+				smsVO.setSmsTo(customerVo.getSbPhoneNumber());
 				smsVO.setSmsFrom(sendno);
 				smsVO.setSmsMsg("애디스에서 발송된 임시 비밀번호 입니다 ["+temppassword+"]");
 
@@ -896,8 +1176,8 @@ public class CommonController {
 		String token="";
 		
 		//등록여부 확인
-		
-		CustomerVO customerChk = customerSvc.getTokenInfo(customerVo);	
+		customerVo.setSearchType("01");
+		CustomerVO customerChk = customerSvc.getCustKeyInfo(customerVo);
 				
 		if(customerChk != null) {
 			
@@ -925,7 +1205,8 @@ public class CommonController {
 		}
 
 		customerVo.setPw_modifyYn("Y");
-		
+		customerVo.setCustomerKey(customerChk.getCustomerKey());
+
 		retVal=this.customerSvc.customerUpdateProc(customerVo);
 		
 		if(retVal>0){
@@ -1856,6 +2137,7 @@ public class CommonController {
 	        customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
 	        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
 	        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+	        String sbPhoneNumber =  StringUtil.nvl((String) session.getAttribute("sbPhoneNumber"));
 	        
 	        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
 
@@ -1865,6 +2147,7 @@ public class CommonController {
 	        
 			CustomerVO customerVo = new CustomerVO();
 			customerVo.setCustomerKey(customerKey);
+			customerVo.setSbPhoneNumber(sbPhoneNumber);
 			
 			CustomerVO customer = customerSvc.getCustomer(customerVo);	
 	        

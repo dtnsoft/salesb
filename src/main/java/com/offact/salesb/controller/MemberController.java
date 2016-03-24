@@ -54,6 +54,7 @@ import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.service.business.ProductService;
 import com.offact.salesb.service.member.TokenService;
+import com.offact.salesb.service.member.MemberSalesService;
 import com.offact.salesb.vo.CustomerVO;
 import com.offact.salesb.vo.MultipartFileVO;
 import com.offact.salesb.vo.common.EmailVO;
@@ -61,6 +62,7 @@ import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.common.WorkVO;
 import com.offact.salesb.vo.business.ProductMasterVO;
 import com.offact.salesb.vo.member.TokenVO;
+import com.offact.salesb.vo.member.MemberSalesVO;
 import com.offact.salesb.vo.manage.UserManageVO;
 
 /**
@@ -127,6 +129,13 @@ public class MemberController {
     
     @Autowired
     private TokenService tokenSvc;
+    
+    @Autowired
+    private ProductService productSvc;
+    
+    @Autowired
+    private MemberSalesService memSalesSvc;
+    
 
     /**
      * 상품관리 화면 로딩
@@ -160,7 +169,7 @@ public class MemberController {
         
         if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
 
- 	       	mv.setViewName("/common/customerLoginForm");
+ 	       	mv.setViewName("/common/intro");
         	return mv;
 		}
         
@@ -207,7 +216,7 @@ public class MemberController {
         
         if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
 
- 	       	mv.setViewName("/common/customerLoginForm");
+ 	       	mv.setViewName("/common/intro");
         	return mv;
 		}
         
@@ -273,7 +282,7 @@ public class MemberController {
         
         if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
 
- 	       	mv.setViewName("/common/customerLoginForm");
+ 	       	mv.setViewName("/common/intro");
 
         	return mv;
 		}
@@ -458,5 +467,142 @@ public class MemberController {
 		return wantedDirectory.mkdirs();
 	}
 	
+	 /**
+     * 판매현황 화면 로딩
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/member/salesmanage")
+    public ModelAndView salesManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("groupId"));
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	mv.setViewName("/common/intro");
+
+        	return mv;
+		}
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=30;//(1:내일 ,-1:어제)
+        
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+
+        mv.addObject("strToday", strToday);
+        mv.addObject("strDeliveryDay", strDeliveryDay);
+        mv.setViewName("/member/salesManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 판매현황 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/member/salespagelist")
+    public ModelAndView salesPageList(@ModelAttribute("salesConVO") MemberSalesVO salesConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : salesConVO" + salesConVO);
+
+        ModelAndView mv = new ModelAndView();
+
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("groupId"));
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	mv.setViewName("/common/intro");
+
+        	return mv;
+		}
+        
+        List<MemberSalesVO> bestList = null;
+        
+        salesConVO.setCustomerKey(customerKey);
+        salesConVO.setGroupId(groupId);
+        
+        // 조회조건저장
+        mv.addObject("salesConVO", salesConVO);
+
+        // 페이징코드
+        salesConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(salesConVO.getCurPage(), salesConVO.getRowCount()));
+        salesConVO.setPage_limit_val2(StringUtil.nvl(salesConVO.getRowCount(), "10"));
+        
+       // 토큰발급현황
+        MemberSalesVO tokenStateVo = new MemberSalesVO();
+        tokenStateVo = memSalesSvc.getTokenState(salesConVO);
+        
+       // 주문현황
+        MemberSalesVO orderStateVo = new MemberSalesVO();
+        orderStateVo = memSalesSvc.getOrderState(salesConVO);
+        
+        // BEST목록조회
+        bestList = memSalesSvc.getMemberSalesPageList(salesConVO);
+        
+        mv.addObject("tokenStateVo", tokenStateVo);
+        mv.addObject("orderStateVo", orderStateVo);
+        mv.addObject("bestList", bestList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(memSalesSvc.getMemberSalesCnt(salesConVO));
+        mv.addObject("totalCount", totalCount);
+
+        mv.setViewName("/member/salesPageList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+
 	
 }

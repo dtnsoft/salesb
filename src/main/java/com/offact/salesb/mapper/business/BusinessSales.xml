@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BusinessSales">
+
+<resultMap id="businessSalesVO" type="com.offact.salesb.vo.business.BusinessSalesVO" >
+  <result column="customerKey"      property="customerKey"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="tokenCnt"      property="tokenCnt"  /> 
+  <result column="newOrerCnt"          property="newOrerCnt"  />
+  <result column="deliveryTagetCnt"      property="deliveryTagetCnt"  />
+  <result column="deliveryColseCnt"      property="deliveryColseCnt"  />
+  <result column="deliveryIngCnt"     property="deliveryIngCnt"  />
+  <result column="salesAmt"           property="salesAmt"  />
+  <result column="${salesVO.accrueSalesCnt}"       property="${salesVO.accrueSalesCnt}"  />
+  <result column="${salesVO.accrueSalesAmt}"     property="${salesVO.accrueSalesAmt}"  />
+  <result column="orderStartDate"     property="orderStartDate"  />
+  <result column="orderEndDate"   property="orderEndDate"  />
+</resultMap>
+<select id="getBusinessSalesPageList"  resultMap="businessSalesVO" parameterType="com.offact.salesb.vo.business.BusinessSalesVO" >
+        SELECT T1.customerKey
+			  ,T1.groupId
+			  ,T3.groupName
+			  ,T2.productName
+			  ,T2.suplycompany as suplyCompany
+			  ,count(T1.orderkey) as salesCnt
+              ,sum(IFNULL(T1.orderPrice,0))
+          FROM sbOrder T1
+          	   Left Join sbProductMaster T2 On T1.productCode=T2.idx
+          	   Left Join ofGroup T3 On T1.groupId=T3.groupId
+         WHERE T1.groupId = #{groupId} 
+               And DATE_FORMAT(T1.orderDateTime,'%Y%m%d') between #{orderStartDate} and #{orderEndDate}
+         Group By T1.customerKey , T1.groupId ,T3.groupName ,T2.productName  ,T2.suplycompany 
+         ORDER BY orderDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getBusinessSalesCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  		 FROM (
+  		   SELECT T1.customerKey
+			  ,T1.groupId
+			  ,T3.groupName
+			  ,T2.productName
+			  ,T2.suplycompany as suplyCompany
+			  ,count(T1.orderkey) as salesCnt
+              ,sum(IFNULL(T1.orderPrice,0))
+          FROM sbOrder T1
+          	   Left Join sbProductMaster T2 On T1.productCode=T2.idx
+          	   Left Join ofGroup T3 On T1.groupId=T3.groupId
+          WHERE T1.groupId = #{groupId} 
+               And DATE_FORMAT(T1.orderDateTime,'%Y%m%d') between #{orderStartDate} and #{orderEndDate}
+          Group By T1.customerKey , T1.groupId ,T3.groupName ,T2.productName  ,T2.suplycompany 
+  		 ) As T
+  		 
+</select>
+
+<select id="getTokenState" resultMap="businessSalesVO" parameterType="com.offact.salesb.vo.business.BusinessSalesVO" >
+
+		 SELECT count(*) as tokenCnt
+          FROM sbToken T1
+         WHERE T1.groupId = #{groupId} 
+               And DATE_FORMAT(T1.createDateTime,'%Y%m%d') between #{orderStartDate} and #{orderEndDate}
+</select>
+
+<select id="getOrderState" resultMap="businessSalesVO" parameterType="com.offact.salesb.vo.business.BusinessSalesVO" >
+
+		Select sum(T1.sCnt) as totalSalesCnt
+         	  ,sum(T1.dCnt) as deliveryColseCnt
+ 		 From (
+        		Select Case When T1.orderState = '01' Then 1 Else 0 End sCnt
+               		  ,Case  When T1.orderState ='02' Then 1 Else 0 End dCnt
+          		  From sbOrder T1
+          		  WHERE T1.groupId = #{groupId} 
+              		    And DATE_FORMAT(T1.orderDateTime,'%Y%m%d') between #{orderStartDate} and #{orderEndDate}
+          ) as T1
+		 
+</select>
+
+</mapper>

@@ -942,7 +942,7 @@
 				      </ul>
 				      <ul class="nav navbar-nav">
 				        <li >
-				          <a href="#">판매관리</a>
+				          <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/salesmanage')" >판매관리</a>
 				        </li>
 				      </ul>
 				      <ul class="nav navbar-nav">
