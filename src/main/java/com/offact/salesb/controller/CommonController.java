@@ -21,6 +21,10 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Random;
 
+import java.io.BufferedReader;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,6 +35,14 @@ import java.math.BigInteger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.*;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -181,6 +193,12 @@ public class CommonController {
         return new BigInteger(130, random).toString(32);
     }
     
+    private static final String DEFAULT_ENCODING = "UTF-8";
+    
+    private String url;
+    private MultipartEntityBuilder params;
+
+    
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 * @throws BizException
@@ -282,7 +300,7 @@ public class CommonController {
         
 		 if(StringUtil.nvl(key,"N").equals("N")){
 
-	        mv.setViewName("member/myTokenManage");
+	        mv.setViewName("salesb/top");
 
 		}else{
 
@@ -1391,7 +1409,7 @@ public class CommonController {
 					}else{
 						
 						//token list 조회
-						strMainUrl = "member/myTokenManage";
+						strMainUrl = "salesb/top";
 					}
 
 				}else{
@@ -1622,7 +1640,7 @@ public class CommonController {
 				 if(StringUtil.nvl(key,"N").equals("N")){
 					
 					//token list 조회
-					strMainUrl = "member/myTokenManage";
+					strMainUrl = "salesb/top";
 
 				}else{
 
@@ -3973,4 +3991,454 @@ public class CommonController {
 
 		        return linkResult;
 		    }
+		    
+		    /* RestFull 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/restnavercagegory"})
+		    public @ResponseBody
+		    JSONArray restNaverCagegory(String list_category_api_uri,
+		    		String access_token,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start list_category_api_uri "+list_category_api_uri);
+				logger.info("["+logid+"] Controller start access_token "+access_token);
+				 JSONArray array =null;
+				 JSONObject object =new JSONObject();
+				 JSONObject object2 =new JSONObject();
+				 String inputLine = null;
+				 String content = "";
+
+			    try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(list_category_api_uri);
+		            
+		            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		           
+		            connection.setRequestProperty("Authorization",access_token);
+
+			    	connection.setDoOutput(true);
+			    	
+			    	input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+		            while ((inputLine = input.readLine()) != null) {
+		            	
+		            	 content += inputLine;
+		            }
+		            
+		            input.close();
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+		            Object obj = JSONValue.parse(content);
+		            
+		            logger.info("["+logid+"] ####################################################################################");
+
+		            object = (JSONObject)obj;
+
+		            logger.info("["+logid+"] message::"+object.get("message"));
+
+		            Object obj2 = JSONValue.parse(object.get("message").toString()); 
+		            object2 = (JSONObject)obj2;
+		            logger.info("["+logid+"] object2::"+object2);
+		            logger.info("["+logid+"] result::"+object2.get("result"));
+
+		            Object obj3 = JSONValue.parse(object2.get("result").toString()); 
+
+		            array = (JSONArray)obj3;
+		            this.logger.debug("array ==>" + array);
+		            List jasonList = new ArrayList();
+
+		            Object arryObj = null;
+
+		            for (int i = 0; i < array.size(); i++)
+		            {
+		              arryObj = JSONValue.parse(array.get(i).toString());
+		              JSONObject arryObject = (JSONObject)arryObj;
+		              jasonList.add(arryObject);
+		            }
+
+
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
+				
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return array;
+		    }
+		    
+		    
+		    /* RestFull 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/restnaverpost2"})
+		    public @ResponseBody
+		    JSONObject restNaverPost2(String write_post_api_uri,
+		    		String access_token,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start write_post_api_uri "+write_post_api_uri);
+				logger.info("["+logid+"] Controller start access_token "+access_token);
+				
+				/*
+				 JSONArray array =null;
+				 JSONObject object =new JSONObject();
+				 JSONObject object2 =new JSONObject();
+				 String inputLine = null;
+				 String content = "";
+
+			    try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(write_post_api_uri);
+		            
+		            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		           
+		            connection.setRequestProperty("Authorization",access_token);
+
+			    	connection.setDoOutput(true);
+			    	
+			    	input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+		            while ((inputLine = input.readLine()) != null) {
+		            	
+		            	 content += inputLine;
+		            }
+		            
+		            input.close();
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+		           
+
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
+	*/
+
+				 JSONObject object =null;
+				 String inputLine = null;
+				 String resultcontent = "";
+				 
+				 String CRLF = "\r\n";
+			     String TWO_HYPHENS = "--";
+			     String BOUNDARY = "---------------------------012345678901234567890123456";
+			     HttpsURLConnection conn = null;
+			     DataOutputStream dos = null;
+			     FileInputStream fis = null;
+	     
+		         int bytesRead, bytesAvailable, bufferSize;
+		         byte[] buffer;
+		         int MAX_BUFFER_SIZE = 1 * 1024 * 1024;
+		         
+		         String image_url_list="";
+
+			    try{
+
+		            BufferedReader input = null;
+		           
+		            URL mUrl = new URL(write_post_api_uri);
+		            
+		            conn = (HttpsURLConnection)mUrl.openConnection();
+		            
+		            conn.setDoInput(true);
+		            conn.setDoOutput(true);
+		            conn.setUseCaches(false);
+		            conn.setRequestMethod("POST");
+
+		            conn.setRequestProperty("Connection", "Keep-Alive");
+		            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + 
+		                                      BOUNDARY);
+		            conn.setRequestProperty("Authorization", access_token);
+		            conn.setRequestProperty("Cache-Control", "no-cache");
+		       
+		            dos = new DataOutputStream(conn.getOutputStream());
+		            
+		            Map<String, String> paramMap;
+			        
+			        // 포스팅 공통 파라미터. 필요한 것만 선택하여 사용.
+			        paramMap = new HashMap<String, String>();
+			        paramMap.put("title", "SALESBTITLE"); // 
+			        paramMap.put("contents", "SALESBARONTEST2SALESBARONTEST3");
+			       
+		            KakaoRestApiHelper apiHelper = new KakaoRestApiHelper();
+		            String params=apiHelper.mapToParams(paramMap);
+		            logger.info("["+params+"]params" );
+		            //dos.writeBytes(params);
+		         
+		            ResourceBundle rb = ResourceBundle.getBundle("config");
+		            String uploadFilePath = rb.getString("offact.upload.path") + "goods";
+		            
+		            //File[] files={new File(uploadFilePath+"/salesbaron.jpg"), new File(uploadFilePath+"/salesbaron.jpg")};
+		            File[] files={new File(uploadFilePath+"/salesbaron.jpg")};
+
+
+		            for (File f : files) {
+		                dos.writeBytes(TWO_HYPHENS + BOUNDARY + CRLF);
+		                dos.writeBytes("Content-Disposition: form-data; name=\"image\";" +
+		                                " filename=\"" + f.getName() + "\"" + CRLF);
+		                dos.writeBytes(CRLF);
+		                fis = new FileInputStream(f);
+		                bytesAvailable = fis.available();
+		                bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+		                buffer = new byte[bufferSize];
+		                bytesRead = fis.read(buffer, 0, bufferSize);
+		                
+		                while (bytesRead > 0) {
+		                    dos.write(buffer, 0, bufferSize);
+		                    bytesAvailable = fis.available();
+		                    bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+		                    bytesRead = fis.read(buffer, 0, bufferSize);
+		                }
+		                
+		                logger.info("["+files.length+"]@" );
+		                logger.info("["+f.getName()+"]@" );
+		                
+		                dos.writeBytes(CRLF);
+		            }
+
+		            // finish delimiter
+		            dos.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+		            logger.info("["+logid+"] TWO_HYPHENS "+TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+
+		            fis.close();
+		            dos.flush();
+		            dos.close();
+	 	    
+			    } catch (MalformedURLException ex) {
+		            ex.printStackTrace();
+		        } catch (IOException ioe) {
+		            ioe.printStackTrace();
+		        } finally {
+		            if (fis != null) try { fis.close(); } catch (IOException ignore) { }
+		            if (dos != null) try { dos.close(); } catch (IOException ignore) { }
+		        }
+
+		        // Response
+		        InputStream inputStream = null;
+		        BufferedReader reader = null;
+		        try {
+		            inputStream = new BufferedInputStream(conn.getInputStream());
+		            reader = new BufferedReader(new InputStreamReader(inputStream));
+		            String line;
+		            StringBuilder builder = new StringBuilder();
+		            while ((line = reader.readLine()) != null) {
+		                builder.append(line).append("\n");
+		                logger.info("[line] "+line);
+		            }
+		            image_url_list=line;
+		            logger.info("[builder] "+builder);
+	 
+		            reader.close();
+		            
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } finally {
+		            if (reader != null) {
+		                try { reader.close(); } catch (IOException ignore) {}
+		            }
+		            if (inputStream != null) {
+		                try { inputStream.close(); } catch (IOException ignore) {}
+		            }
+		            conn.disconnect();
+		        }	 
+
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return object;
+		    }
+		    
+		    /* RestFull 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/restnaverpost"})
+		    public @ResponseBody
+		    JSONObject restNaverPost(String write_post_api_uri,
+		    		String access_token,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start write_post_api_uri "+write_post_api_uri);
+				logger.info("["+logid+"] Controller start access_token "+access_token);
+
+				 JSONObject object =null;
+				 String inputLine = null;
+				 String resultcontent = "";
+				 
+				 String CRLF = "\r\n";
+			     String TWO_HYPHENS = "--";
+			     String BOUNDARY = "---------------------------012345678901234567890123456";
+			     HttpsURLConnection conn = null;
+			     DataOutputStream dos = null;
+			     FileInputStream fis = null;
+	     
+		         int bytesRead, bytesAvailable, bufferSize;
+		         byte[] buffer;
+		         int MAX_BUFFER_SIZE = 1 * 1024 * 1024;
+		         
+		         String image_url_list="";
+
+			    try{
+
+		            BufferedReader input = null;
+		           
+		            URL mUrl = new URL(write_post_api_uri);
+		            
+		            conn = (HttpsURLConnection)mUrl.openConnection();
+		            
+		            conn.setDoInput(true);
+		            conn.setDoOutput(true);
+		            conn.setUseCaches(false);
+		            conn.setRequestMethod("POST");
+
+		            conn.setRequestProperty("Connection", "Keep-Alive");
+		            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + 
+		                                      BOUNDARY);
+		            conn.setRequestProperty("Authorization", access_token);
+		            conn.setRequestProperty("Cache-Control", "no-cache");
+		       
+		            dos = new DataOutputStream(conn.getOutputStream());
+		            
+		            Map<String, String> paramMap;
+			        
+			        // 포스팅 공통 파라미터. 필요한 것만 선택하여 사용.
+			        paramMap = new HashMap<String, String>();
+			        paramMap.put("title", "SALESBTITLE"); // 
+			        paramMap.put("contents", "SALESBARONTEST2SALESBARONTEST3");
+			       
+		            KakaoRestApiHelper apiHelper = new KakaoRestApiHelper();
+		            String params=apiHelper.mapToParams(paramMap);
+		            logger.info("["+params+"]params" );
+		            //dos.writeBytes(params);
+		         
+		            ResourceBundle rb = ResourceBundle.getBundle("config");
+		            String uploadFilePath = rb.getString("offact.upload.path") + "goods";
+		            
+		            //File[] files={new File(uploadFilePath+"/salesbaron.jpg"), new File(uploadFilePath+"/salesbaron.jpg")};
+		            File[] files={new File(uploadFilePath+"/salesbaron.jpg")};
+
+
+		            for (File f : files) {
+		                dos.writeBytes(TWO_HYPHENS + BOUNDARY + CRLF);
+		                dos.writeBytes("Content-Disposition: form-data; name=\"image\";" +
+		                                " filename=\"" + f.getName() + "\"" + CRLF);
+		                dos.writeBytes(CRLF);
+		                fis = new FileInputStream(f);
+		                bytesAvailable = fis.available();
+		                bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+		                buffer = new byte[bufferSize];
+		                bytesRead = fis.read(buffer, 0, bufferSize);
+		                
+		                while (bytesRead > 0) {
+		                    dos.write(buffer, 0, bufferSize);
+		                    bytesAvailable = fis.available();
+		                    bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+		                    bytesRead = fis.read(buffer, 0, bufferSize);
+		                }
+		                
+		                logger.info("["+files.length+"]@" );
+		                logger.info("["+f.getName()+"]@" );
+		                
+		                dos.writeBytes(CRLF);
+		            }
+
+		            // finish delimiter
+		            dos.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+		            logger.info("["+logid+"] TWO_HYPHENS "+TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+
+		            fis.close();
+		            dos.flush();
+		            dos.close();
+	 	    
+			    } catch (MalformedURLException ex) {
+		            ex.printStackTrace();
+		        } catch (IOException ioe) {
+		            ioe.printStackTrace();
+		        } finally {
+		            if (fis != null) try { fis.close(); } catch (IOException ignore) { }
+		            if (dos != null) try { dos.close(); } catch (IOException ignore) { }
+		        }
+
+		        // Response
+		        InputStream inputStream = null;
+		        BufferedReader reader = null;
+		        try {
+		            inputStream = new BufferedInputStream(conn.getInputStream());
+		            reader = new BufferedReader(new InputStreamReader(inputStream));
+		            String line;
+		            StringBuilder builder = new StringBuilder();
+		            while ((line = reader.readLine()) != null) {
+		                builder.append(line).append("\n");
+		                logger.info("[line] "+line);
+		            }
+		            image_url_list=line;
+		            logger.info("[builder] "+builder);
+	 
+		            reader.close();
+		            
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } finally {
+		            if (reader != null) {
+		                try { reader.close(); } catch (IOException ignore) {}
+		            }
+		            if (inputStream != null) {
+		                try { inputStream.close(); } catch (IOException ignore) {}
+		            }
+		            conn.disconnect();
+		        }	 
+
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return object;
+		    }
+		    
+
 }

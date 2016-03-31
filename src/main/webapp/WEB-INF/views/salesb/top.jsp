@@ -33,33 +33,28 @@
 	</style>
 
 	
-	<link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
+	<link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
 
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/blog-home.css">
+    <!-- Morris -->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
 
-	<!-- Latest compiled and minified CSS-->
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap-datetimepicker.min.css">
+    <!-- Toastr style -->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 
+    <!-- Gritter -->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+<!--  
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
-	
+-->	
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
 	
-	<!-- JQuery Mobile을 사용하기 위해 반드시 필요한 태그-->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
-    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
-	<!-- JQuery-UI-Map을 사용하기 위해 반드시 필요한 태그-->
 	
-    <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
-    <script src="<%= request.getContextPath() %>/web/jquery.fn.gmap.js" type="text/javascript"></script>
-    <script src="<%= request.getContextPath() %>/ui/jquery.ui.map.full.min.js" type="text/javascript"></script>   
-    <script src="<%= request.getContextPath() %>/ui/jquery.ui.map.extensions.js" type="text/javascript"></script>
     
     <!-- naver -->
     <script type="text/javascript" src="http://openapi.map.naver.com/openapi/v2/maps.js?clientId=4THYarC7qz77DVXElPNk"></script>
@@ -70,9 +65,24 @@
     //메뉴이동
 	function fcMenu(linkurl) {
         
-		top.location.href=linkurl;
+		//top.location.href=linkurl;
+		
+		$.ajax({
+	        type: "POST",
+	           url:  linkurl,
+	           success: function(result) {
+	              
+	               $("#view").html(result);
+	           },
+	           error:function() {
+	              
+	           }
+	    });
 
     };
+    
+    
+    
     
 	//logout 처리
 	var goLogout =  function() {
@@ -900,76 +910,96 @@
 	<form method="post" id="logoutForm" name="logoutForm"  role="form" >
 	  <input type="hidden" name="saleurlvalue" id="saleurlvalue" >
 	</form>
-	  <!-- Navigation -->
-	    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	        <div class="container">
-	            <!-- Brand and toggle get grouped for better mobile display -->
-	            <div class="navbar-header">
-	                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-	                    <span class="sr-only">Menu</span>
-	                    <span class="icon-bar"></span>
-	                    <span class="icon-bar"></span>
-	                    <span class="icon-bar"></span>
-	                </button>
-	                <c:choose>
-		               	<c:when test="${name!=''}">
-		               		  <table>
-								  <tr>
-								  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
-								    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;(${name})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
-								  </tr>
-							  </table>
-		               	</c:when>
-						<c:otherwise>
-							 <c:if test="${sbPhoneNumber!=''}">
-							  <table>
-								  <tr>
-								  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
-								    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;(${sbPhoneNumber})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
-								  </tr>
-							  </table>
-							</c:if>
-		               </c:otherwise>
-					</c:choose>
+	<div id="wrapper">
+	        <nav class="navbar-default navbar-static-side" role="navigation">
+	            <div class="sidebar-collapse">
+	                <ul class="nav metismenu" id="side-menu">
+	                    <li class="nav-header">
+	                        <div class="dropdown profile-element"> <span>
+	                            <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" />
+	                             </span>
+	                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	                            <span class="clear"> <span class="block m-t-xs"> 
+	                            <c:choose>
+					               	<c:when test="${name!=''}">
+					               	   <strong class="font-bold">${name}</strong>
+			                            	</c:when>
+									<c:otherwise>
+										 <c:if test="${sbPhoneNumber!=''}">
+										   <strong class="font-bold">${sbPhoneNumber}</strong>
+										 </c:if>
+					               </c:otherwise>
+								</c:choose>
+	                             </span> <span class="text-muted text-xs block">Welcome to salesb!<b class="caret"></b></span> </span> </a>
+	                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+	                                <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/common/customermodifyform')">Profile</a></li>
+	                                <li class="divider"></li>
+	                                <li><a href="javascript:goLogout()">Logout</a></li>
+	                            </ul>
+	                        </div>
+	                        <div class="logo-element">
+	                           <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" />
+	                        </div>
+	                    </li>
+	                    <li class="active">
+	                        <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">나의상품</span> <span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">
+	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')">상품 토큰 현황</a></li>
+	                        </ul>
+	                    </li>
+	                    <li>
+	                         <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/salesmanage')" ><i class="fa fa-diamond"></i> <span class="nav-label">판매현황</span></a>
+	                    </li>
+	                   
+	                </ul>
 	            </div>
-	            <!-- Collect the nav links, forms, and other content for toggling -->
-	            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	                 <ul class="nav navbar-nav">
-				        <li class="dropdown">
-				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">나의상품<span class="caret"></span></a>
-				           <ul class="dropdown-menu">
-				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')">상품 토큰 현황</a></li>
-				          </ul>
-				        </li>
-				      </ul>
-				      <ul class="nav navbar-nav">
-				        <li >
-				          <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/salesmanage')" >판매현황</a>
-				        </li>
-				      </ul>
-					<ul class="nav navbar-nav navbar-right">
-			        <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/common/customermodifyform')" class="b_cog"><strong class="ico_cog"><span>설정</span></strong></a></li>
-					<li><a href="javascript:goLogout()" class="b_logout"><strong>로그아웃</strong></a></li>
-			      </ul>
-	            </div>
-	            <!-- /.navbar-collapse -->
+	        </nav>
+	         
+	    <div id="page-wrapper" class="gray-bg dashbard-1">
+	        <div class="row border-bottom">
+	        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+	        <div class="navbar-header">
+	            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
 	        </div>
-	        <!-- /.container -->
-	    </nav>
+	            <ul class="nav navbar-top-links navbar-right">
+	                <li>
+	                    <span class="m-r-sm text-muted welcome-message">Welcome to Salesb PC version.</span>
+	                </li>
+	                <li>
+	                    <a href="javascript:goLogout()">
+	                        <i class="fa fa-sign-out"></i> Log out
+	                    </a>
+	                </li>
+	            </ul>
+
+        	</nav>
+        </div>
 
 	  	<div id="imageView"  onClick="imageClose()"></div>
+	  	
+	  	<div id="view" ></div>
 	
 	    <div id=map style="display:none">
 	     <div data-role="page" id="page" data-fullscreen="false" class="map_style">
  			<div id="map_canvas" class="map_style"></div>
 		 </div> 
 		</div> 
-		
-  </body>
+	</div>
+  </div>
+</body>
 </html>
+
+ <!-- Mainly scripts -->
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    
 <script>
 
 if('${customerKey}'==null || '${customerKey}'=='null' ){
 	goLogout();
 }
+
+fcMenu('<%= request.getContextPath() %>/member/mytokenmanage');
 </script>

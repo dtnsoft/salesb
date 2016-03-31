@@ -74,7 +74,7 @@
 				frm.id.value=data.id;
 				frm.name.value=data.name;
 				frm.photo.value='http://graph.facebook.com/'+data.id+'/picture?width=270&height=270';
-				frm.access_token.value=access_token;
+				frm.access_token.value=encodeURIComponent(access_token);
 				
 				cfrm.socialId3.value=data.id;
 	

@@ -1,6 +1,8 @@
-<%@ include file="/WEB-INF/views/salesb/top.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/base.jsp" %>
 <link href="<%= request.getContextPath() %>/css/login.css" rel="stylesheet">
 <script src="http://malsup.github.com/jquery.form.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.dynatree-1.2.4.js"></script>
+		<link href="<%= request.getContextPath() %>/css/skin/ui.dynatree.css" rel="stylesheet" type="text/css" />
 <script>
 
 	function keyTest(){
@@ -13,6 +15,62 @@
 		 
 	}
 
+	function naverblog(){
+		
+		var access_token='${access_token_naver}';
+
+		if(access_token==''){
+			
+			alert('naver login 후 포스팅 가능합니다.');
+			
+			var loginURL='https://nid.naver.com/oauth2.0/authorize';
+		  	var client_id='${naverclient_id}';
+			//alert('${state}');
+		    var redirectURL='${redirectUrl}/salesb/naverlogin';
+		  	
+		    top.location.href=loginURL + '?client_id=' + client_id + '&redirect_uri=' + redirectURL +'&response_type=code&state=${state}';
+			
+		}else{
+
+			var list_category_api_uri = 'https://openapi.naver.com/blog/listCategory.json';
+			var write_post_api_uri = 'https://openapi.naver.com/blog/writePost.json?title=test&contents=SALESBARONTEST2SALESBARONTEST';
+			
+	    	$.ajax({
+			    type: "POST",
+			    async:true,
+			     url:  '<%= request.getContextPath() %>/common/restnavercagegory?list_category_api_uri='+encodeURIComponent(list_category_api_uri)+'&access_token=Bearer '+encodeURIComponent(access_token),
+				      success: function(data) {
+				    	
+				    	makeTree(data);
+				    
+				    	$.ajax({
+						    type: "POST",
+						    async:true,
+						     url:  '<%= request.getContextPath() %>/common/restnaverpost?write_post_api_uri='+encodeURIComponent(write_post_api_uri)+'&access_token=Bearer '+encodeURIComponent(access_token),
+							      success: function(data) {
+		alert(data);
+						       },
+						       error:function(){
+						     	  
+						     	  alert('error');	          
+						
+						       }
+						 });
+				    	
+				    	
+				    	
+			       },
+			       error:function(){
+			     	  
+			     	  alert('error');	          
+			
+			       }
+			 });
+			
+		}
+		
+		
+	}
 	function kakaoStory(){
 		
 		//alert('${access_token_kakao}');
@@ -368,91 +426,287 @@
 
 	}
 	
+
+    //트리메뉴
+    function makeTree(jsonList){
+
+    	// var jsonList = eval('[{"isOpen":true,"name":"仁劍無想","categoryNo":1,"subCategories":[{"isOpen":true,"name":"검도 교본","categoryNo":5,"subCategories":[]},{"isOpen":true,"name":"검도 동영상","categoryNo":6,"subCategories":[]}]},{"isOpen":true,"name":"FireBalls","categoryNo":3,"subCategories":[{"isOpen":true,"name":"야구 교본","categoryNo":7,"subCategories":[]},{"isOpen":true,"name":"야구 동영상","categoryNo":8,"subCategories":[]}]},{"isOpen":true,"name":"Wow Camping","categoryNo":4,"subCategories":[]},{"isOpen":true,"name":"photolog","categoryNo":9,"subCategories":[{"isOpen":true,"name":"photo","categoryNo":10,"subCategories":[]},{"isOpen":true,"name":"camping","categoryNo":19,"subCategories":[]},{"isOpen":true,"name":"cathedrals","categoryNo":18,"subCategories":[]}]},{"isOpen":true,"name":"chameleon","categoryNo":21,"subCategories":[{"isOpen":true,"name":"아라니 핑크니","categoryNo":22,"subCategories":[]}]}]');
+        // alert(jsonList);
+ 
+        // alert(jsonList.length);
+        // alert(jsonList[0].subCategories);
+         
+         $("#tree").dynatree({
+			checkbox: true, //체크박스 주기
+			selectMode :3, //체크박스 모드
+			fx: { height: "toggle", duration: 100 },
+			autoCollapse: false,
+			clickFolderMode : 3, //폴더 클릭 옵션
+			minExpandLevel : 2, //최초 보일 레벨,
+			onClick : function(node){
+
+			}
+			
+		});
+
+		var rootNode = $("#tree").dynatree("getRoot");
+		
+		
+		var cateid = rootNode.addChild({
+			title: "NAVER 카테고리 리스트",
+			tooltip: "NAVER 카테고리 리스트",
+			isFolder: true,
+			key : "",
+			icon : '<%= request.getContextPath() %>/images/tree/base.gif'
+		});
+		
+
+		for (i=0;i<jsonList.length;i++){
+
+				
+			if(jsonList[i].subCategories.length>0){
+				
+				//alert('sub::'+jsonList[i].subCategories.length);
+
+				jsonList[i] = cateid.addChild({
+					title: jsonList[i].name,
+					tooltip: jsonList[i].name,
+					key : jsonList[i].categoryNo,
+					icon : '<%=request.getContextPath()%>/images/tree/people.gif'
+				});
+
+				jsonList[i].addChild({
+					title: "sub",
+					tooltip: "sub",
+					key : "",
+				});
+
+
+			}else{
+				
+				cateid.addChild({
+					title: jsonList[i].name,
+					tooltip: jsonList[i].name,
+					key : jsonList[i].categoryNo,
+					icon : '<%=request.getContextPath()%>/images/tree/people.gif'
+				});
+			} 
+
+
+		}
+
+    }
+
+
 </script>
 <iframe id="file_result" name="file_result" style="display: none" ></iframe>
-	<div class="container">
-	<!-- container -->
-		 <!--// 타이틀 --> 
-		 <p class="lead">
-		    <span class="glyphicon glyphicon-tags"></span>&nbsp;상품페이지 제작
-		 </p>
-		 <hr>
-		 <!--// 타이틀 --> 
-		 <div class="well">
-           	<h5> <strong><em class="num">1. </em></strong>상품 판매 토근값</h5>
-           	    구매하러 가기=> <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue">${token.shortUrl}</span></a>
-           	  <br>
-           	  <a href="javascript:copyUrl('${token.shortUrl}')">복사하기</a>
-         </div> 
-		 <form:form commandName="MultipartFileVO"  id="tokenFileForm" name="tokenFileForm" method="post" action="/member/goodsmake" target="file_result"  enctype="multipart/form-data" >
-         <div class="well">
-           	<h5> <strong><em class="num">2. </em></strong>상품 이미지</h5>
-           	    <c:choose>
-	                <c:when test="${token.image1!=null && token.image1!=''}">
-						 <br>
-						 <a href="javascript:AutoResize('${token.image1}')"><img id="image1Id" src="${token.image1}"  width="200" height="200" alt="이미지"></a>
-						 <br>
-					</c:when>
-					<c:otherwise>
-						 <br>
-						 <img id="image1Id" src=""  width="200" height="200" alt="이미지">
-						 <br>
-					</c:otherwise>
-				</c:choose>
-	            1.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
-                <c:choose>
-	                <c:when test="${token.image2!=null && token.image2!=''}">
-	                      <br>
-						 <a href="javascript:AutoResize('${token.image2}')"><img id="image2Id" src="${token.image2}"  width="200" height="200" alt="이미지"></a>
-						 <br>
-					</c:when>
-					<c:otherwise>
-						  <br>
-						  <img id="image2Id" src=""  width="200" height="200" alt="이미지">
-						  <br>
-					</c:otherwise>
-				</c:choose>
-	            2.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
-           	    <c:choose>
-	                <c:when test="${token.image3!=null && token.image3!=''}">
-						 <br>
-						 <a href="javascript:AutoResize('${token.image3}')"><img id="image3Id" src="${token.image3}"  width="200" height="200" alt="이미지"></a>
-						 <br>
-					</c:when>
-					<c:otherwise>
-						 <br>
-						 <img id="image3Id" src=""  width="200" height="200" alt="이미지">
-						 <br>
-					</c:otherwise>
-				</c:choose>
-				3.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
-	            <c:choose>
-	                <c:when test="${token.image4!=null && token.image4!=''}">
-						 <br>
-						 <a href="javascript:AutoResize('${token.image4}')"><img id="image1Id" src="${token.image4}"  width="200" height="200" alt="이미지"></a>
-						 <br>
-					</c:when>
-					<c:otherwise>
-						 <br>
-						 <img id="image4Id" src=""  width="200" height="200" alt="이미지">
-						 <br>
-					</c:otherwise>
-				</c:choose>
-			    4.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
-           	    <c:choose>
-	                <c:when test="${token.image5!=null && token.image5!=''}">
-						 <br>
-						 <a href="javascript:AutoResize('${token.image5}')"><img id="image5Id" src="${token.image5}"  width="200" height="200" alt="이미지"></a>
-						 <br>
-					</c:when>
-					<c:otherwise>
-						 <br>
-						 <img id="image5Id" src=""  width="200" height="200" alt="이미지">
-						 <br>
-					</c:otherwise>
-				</c:choose>
-	            5.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
-         </div> 
+
+     <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>상품페이지 제작</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a>나의상품</a>
+                    </li>
+                    <li class="active">
+                        <strong>상품토큰현황</strong>
+                    </li>
+                    <li class="active">
+                        <strong>상품페이지 제작</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+
+            </div>
+        	</div>
+
+	<div class="wrapper wrapper-content">
+                 <div class="row">
+                        <div class="col-lg-4">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>상품 판매 토근값</h5> <span class="label label-primary">token</span>
+                                </div>
+                                <div class="ibox-content">
+                                    <div>
+
+                                        <div class="pull-right text-right">
+
+                                            <a href="javascript:copyUrl('${token.shortUrl}')">${token.shortUrl}</a>
+                                            <br/>
+                                            <small class="font-bold"> <a href="javascript:copyUrl('${token.shortUrl}')">복사하기</a></small>
+                                        </div>
+                                        <h4> <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue">${token.shortUrl}</span></a>
+                                            <br/>
+                                            <small class="m-r"><a href="javascript:keyTest()"> 구매하러 가기 </a> </small>
+                                        </h4>
+                                        </div>
+                                    </div>
+               			 </div>
+              		</div>
+        		</div>
+               
+                <form:form commandName="MultipartFileVO"  id="tokenFileForm" name="tokenFileForm" method="post" action="/member/goodsmake" target="file_result"  enctype="multipart/form-data" >     
+                
+             <div class="row"> 
+	            <div class="col-md-3">
+	                 <div class="ibox">
+	                     <div class="ibox-content product-box">
+	
+	                         <div class="product-imitation">
+	                           <c:choose>
+	              				  <c:when test="${token.image1!=null && token.image1!=''}">
+	                             	 <a href="javascript:AutoResize('${token.image1}')"><img id="image1Id" src="${token.image1}"  width="200" height="200" alt="이미지"></a>
+	                              </c:when>
+								  <c:otherwise>
+								  	<img id="image1Id" src=""  width="200" height="200" alt="No Image">
+								  	</c:otherwise>
+							   </c:choose>
+	                         </div>
+	                         <div class="product-desc">
+	                             <span class="product-price">
+	                               	 이미지 1
+	                             </span>
+	                             <small class="text-muted"> </small>
+	                             <a href="#" class="product-name"> </a>
+	                             <div class="small m-t-xs">
+	                                1.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                             </div>
+	                             <div class="m-t text-righ">
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	             </div>
+	             <div class="col-md-3">
+	                 <div class="ibox">
+	                     <div class="ibox-content product-box">
+	
+	                         <div class="product-imitation">
+	                           <c:choose>
+	              				  <c:when test="${token.image2!=null && token.image2!=''}">
+	                             	 <a href="javascript:AutoResize('${token.image2}')"><img id="image1Id" src="${token.image2}"  width="200" height="200" alt="이미지"></a>
+	                              </c:when>
+								  <c:otherwise>
+								  	<img id="image2Id" src=""  width="200" height="200" alt="No Image">
+								  	</c:otherwise>
+							   </c:choose>
+	                         </div>
+	                         <div class="product-desc">
+	                             <span class="product-price">
+	                               	 이미지 2
+	                             </span>
+	                             <small class="text-muted"> </small>
+	                             <a href="#" class="product-name"> </a>
+	                             <div class="small m-t-xs">
+	                                2.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                             </div>
+	                             <div class="m-t text-righ">
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	             </div>
+	             <div class="col-md-3">
+	                 <div class="ibox">
+	                     <div class="ibox-content product-box">
+	
+	                         <div class="product-imitation">
+	                           <c:choose>
+	              				  <c:when test="${token.image3!=null && token.image3!=''}">
+	                             	 <a href="javascript:AutoResize('${token.image3}')"><img id="image1Id" src="${token.image3}"  width="200" height="200" alt="이미지"></a>
+	                              </c:when>
+								  <c:otherwise>
+								  	<img id="image3Id" src=""  width="200" height="200" alt="No Image">
+								  	</c:otherwise>
+							   </c:choose>
+	                         </div>
+	                         <div class="product-desc">
+	                             <span class="product-price">
+	                               	 이미지 3
+	                             </span>
+	                             <small class="text-muted"> </small>
+	                             <a href="#" class="product-name"> </a>
+	                             <div class="small m-t-xs">
+	                                3.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                             </div>
+	                             <div class="m-t text-righ">
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	             </div>
+	             <div class="col-md-3">
+	                 <div class="ibox">
+	                     <div class="ibox-content product-box">
+	
+	                         <div class="product-imitation">
+	                           <c:choose>
+	              				  <c:when test="${token.image4!=null && token.image4!=''}">
+	                             	 <a href="javascript:AutoResize('${token.image4}')"><img id="image1Id" src="${token.image4}"  width="200" height="200" alt="이미지"></a>
+	                              </c:when>
+								  <c:otherwise>
+								  	<img id="image4Id" src=""  width="200" height="200" alt="No Image">
+								  	</c:otherwise>
+							   </c:choose>
+	                         </div>
+	                         <div class="product-desc">
+	                             <span class="product-price">
+	                               	 이미지 4
+	                             </span>
+	                             <small class="text-muted"> </small>
+	                             <a href="#" class="product-name"> </a>
+	                             <div class="small m-t-xs">
+	                                4.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                             </div>
+	                             <div class="m-t text-righ">
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	             </div>
+	             <div class="col-md-3">
+	                 <div class="ibox">
+	                     <div class="ibox-content product-box">
+	
+	                         <div class="product-imitation">
+	                           <c:choose>
+	              				  <c:when test="${token.image5!=null && token.image5!=''}">
+	                             	 <a href="javascript:AutoResize('${token.image5}')"><img id="image1Id" src="${token.image5}"  width="200" height="200" alt="이미지"></a>
+	                              </c:when>
+								  <c:otherwise>
+								  	<img id="image5Id" src=""  width="200" height="200" alt="No Image">
+								  	</c:otherwise>
+							   </c:choose>
+	                         </div>
+	                         <div class="product-desc">
+	                             <span class="product-price">
+	                               	 이미지 5
+	                             </span>
+	                             <small class="text-muted"> </small>
+	                             <a href="#" class="product-name"> </a>
+	                             <div class="small m-t-xs">
+	                                1.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                             </div>
+	                             <div class="m-t text-righ">
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	             </div>    
+		
+         </div>
+         
+         
          </form:form>
          <form:form commandName="tokenVO" id="tokenManageForm"  name="tokenManageForm" method="post" action="" >
          <input type="hidden" name=tokenkey          id="tokenkey"         value="${token.tokenkey}"  />
@@ -475,7 +729,7 @@
               <button type="button" class="bn_facebook" onclick="facebookpost()">facebook post</button>
             </div>
             <div class="bnbox">
-              <button type="button" class="bn_naver" onclick="alert('서비스 준비중입니다.')">Never blog post</button>
+              <button type="button" class="bn_naver" onclick="naverblog()">Never blog post</button>
             </div>
          </div> 
      	 <div class="clm_detail_btn">
@@ -483,6 +737,9 @@
 	           <a href="javascript:fcGoods_regist();" class="btn_ty2">등록하기</a>
 	         </div>
          </div>
+         
+     <p class="dynatreeT">
+		<span id="treeError"></span>
+	</p>
+	<div id="tree"  style="width: 100%; height: 415px;" name="selNodes" >
   </div>
-
-

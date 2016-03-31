@@ -95,7 +95,7 @@
 								frm.id.value=data.id;
 								frm.name.value=data.nickname;
 								frm.photo.value=data.profile_image;
-								frm.access_token.value=access_token;
+								frm.access_token.value=encodeURIComponent(access_token);
 								
 								cfrm.socialId1.value=data.id;
 								

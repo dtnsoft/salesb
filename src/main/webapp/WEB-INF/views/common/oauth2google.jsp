@@ -76,7 +76,7 @@
 					frm.id.value=data.id;
 					frm.name.value=data.name;
 					frm.photo.value=data.picture;
-					frm.access_token.value=access_token;
+					frm.access_token.value=encodeURIComponent(access_token);
 				
 					try {
 						document.loginForm.submit();
