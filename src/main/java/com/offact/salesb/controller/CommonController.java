@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Random;
-
 import java.io.BufferedReader;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -43,7 +42,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.*;
-
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -74,6 +72,7 @@ import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.service.common.UserService;
+import com.offact.salesb.service.manage.UserManageService;
 import com.offact.salesb.service.member.TokenService;
 import com.offact.salesb.service.order.OrderService;
 import com.offact.salesb.vo.CustomerVO;
@@ -174,6 +173,9 @@ public class CommonController {
     
 	@Autowired
 	private UserService userSvc;
+	
+	@Autowired
+	private UserManageService userManageSvc;
 	
     @Autowired
     private TokenService tokenSvc;
@@ -1405,7 +1407,7 @@ public class CommonController {
 				 if(StringUtil.nvl(key,"N").equals("N")){
 					
 					if("01".equals(memberType)){
-						strMainUrl = "business/goodsManage";
+						strMainUrl = "salesb/topBusiness";
 					}else{
 						
 						//token list 조회
@@ -2164,11 +2166,11 @@ public class CommonController {
 			}
 	        
 			CustomerVO customerVo = new CustomerVO();
+			customerVo.setSearchType("00");
 			customerVo.setCustomerKey(customerKey);
-			customerVo.setSbPhoneNumber(sbPhoneNumber);
 			
-			CustomerVO customer = customerSvc.getCustomer(customerVo);	
-	        
+			CustomerVO customer = customerSvc.getCustKeyInfo(customerVo);	
+  
 			mv.addObject("customer", customer);
 	        mv.setViewName("/common/customerModifyForm");
 	        
@@ -2253,6 +2255,32 @@ public class CommonController {
 			return ""+customerVo.getEncPwd();
 
 		 }
+		
+		 /**
+		 * ajax test
+		 */
+		@RequestMapping("/common/userpwcheck")
+		public @ResponseBody
+		String userPwCheck(@RequestParam(value = "curPwd") String curPwd) 
+		{
+
+			logger.info("[pwd]" + curPwd);
+			
+			UserVO userVo =new UserVO();
+			userVo.setCurPwd(curPwd);
+
+			try{
+	        	
+				userVo = commonSvc.getEncPassword(userVo);
+
+		    }catch(BizException e){
+		       	
+		    	e.printStackTrace();
+		    }
+
+			return ""+userVo.getEncPwd();
+
+		 }
 		/**
 	     * 고객정보 수정처리
 	     *
@@ -2277,6 +2305,37 @@ public class CommonController {
 			
 			int retVal=this.customerSvc.customerUpdateProc(customerVO);
 
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	      return ""+retVal;
+	    }
+
+		/**
+	     * 사업자정보 수정처리
+	     *
+	     * @param UserManageVO
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/common/businessmodify", method = RequestMethod.POST)
+	    public @ResponseBody
+	    String businessModify(@ModelAttribute("userVO") UserManageVO userVO, 
+	    		          HttpServletRequest request, 
+	    		          HttpServletResponse response) throws BizException
+	    {
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : userVO" + userVO);
+			
+			int retVal=this.userManageSvc.userUpdateProc(userVO);
+			
 			//log Controller execute time end
 	       	long t2 = System.currentTimeMillis();
 	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -3389,7 +3448,7 @@ public class CommonController {
 			        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
 			        mv.addObject("group_comboList", group_comboList);
 			        
-			        strMainUrl = "business/goodsManage";
+			        strMainUrl = "salesb/topBusiness";
 
 						
 				} else {//app 상요자 정보가 없는경우

@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/salesb/topBusiness.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/base.jsp" %>
 <SCRIPT>
     // 리스트 조회
     function fcGoods_listSearch(curPage){
@@ -99,37 +99,57 @@
     }
 
 </SCRIPT>
-	<div class="container">
-	     <!--// 타이틀 --> 
-		 <p class="lead">
-		    <span class="glyphicon glyphicon-tags"></span>&nbsp;상품 등록목록 (수정)
-		 </p>
-		 <hr>
-	      <!--// 타이틀 --> 
-		  <!-- 조회조건 -->
-		  <form:form class="form-inline" role="form" commandName="productConVO" id="goodsManageConForm" name="goodsManageConForm" method="post" action="" >
-	        <input type="hidden" name="curPage"             id="curPage"            value="1" />
-	        <input type="hidden" name="rowCount"            id="rowCount"           value="5"/>
-	        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-	        <!-- Blog Search Well -->
-	         <div class="well">
-	             <div class="input-group">
-	                 <input type="text" class="form-control" id="searchValue" name="searchValue"  value="" placeholder="상품명으로 검색하세요">
-	                 <span class="input-group-btn">
-	                     <button class="btn btn-default" type="button" onClick="javascript:fcGoods_listSearch()">
-	                         <span class="glyphicon glyphicon-search" ></span>
-	                 </button>
-	                 </span>
-	             </div>
-	             <!-- /.input-group -->
-	         </div>
-		  </form:form>
-		  <!-- //조회 -->
-	
-		  <!-- 조회결과리스트 -->
-		<div id=goodsPageList></div>
-	</div>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>상품 등록목록 (수정)</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+            <li>
+                <a>상품 등록/변경</a>
+            </li>
+            <li class="active">
+                <strong>상품 등록목록(수정)</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+   	
+<div class="wrapper wrapper-content animated fadeInRight">
+      		
+  <form:form class="form-inline" role="form" commandName="productConVO" id="goodsManageConForm" name="goodsManageConForm" method="post" action="" >
+  <input type="hidden" name="curPage"             id="curPage"            value="1" />
+  <input type="hidden" name="rowCount"            id="rowCount"           value="5"/>
+  <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+  </form:form>
+            
+  <div class="row">
+    <div class="col-lg-12">
+       <div class="ibox float-e-margins">
+          <div class="ibox-content">
+             <form method="get" class="form-horizontal">
+          		<div class="form-group"><label class="col-sm-2 control-label">상품검색</label>
+                     <div class="col-sm-10">
+                         <div class="input-group"><input type="text" class="form-control" id="searchValue" name="searchValue"  value="" placeholder="상품명으로 검색하세요"> <span class="input-group-btn"> 
+                         <button type="button" class="btn btn-primary" onClick="javascript:fcGoods_listSearch()" >Go!
+                         </button> </span></div>
+                     </div>
+                 </div>
+             </form>
+          </div>
+       </div>
+    </div>
+  </div>         
+      
+ <!-- 조회결과리스트 -->
+ <div id=goodsPageList></div>
+
+</div>
 
 <script>
-fcGoods_listSearch();
+	fcGoods_listSearch();
 </script>

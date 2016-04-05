@@ -520,37 +520,34 @@
                 </ol>
             </div>
             <div class="col-lg-2">
-
             </div>
-        	</div>
+    </div>
 
 	<div class="wrapper wrapper-content">
-                 <div class="row">
-                        <div class="col-lg-4">
-                            <div class="ibox float-e-margins">
-                                <div class="ibox-title">
-                                    <h5>상품 판매 토근값</h5> <span class="label label-primary">token</span>
-                                </div>
-                                <div class="ibox-content">
-                                    <div>
-
-                                        <div class="pull-right text-right">
-
-                                            <a href="javascript:copyUrl('${token.shortUrl}')">${token.shortUrl}</a>
-                                            <br/>
-                                            <small class="font-bold"> <a href="javascript:copyUrl('${token.shortUrl}')">복사하기</a></small>
-                                        </div>
-                                        <h4> <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue">${token.shortUrl}</span></a>
-                                            <br/>
-                                            <small class="m-r"><a href="javascript:keyTest()"> 구매하러 가기 </a> </small>
-                                        </h4>
-                                        </div>
-                                    </div>
-               			 </div>
-              		</div>
-        		</div>
+             <div class="row">
+                <div class="col-lg-4">
+                     <div class="ibox float-e-margins">
+                         <div class="ibox-title">
+                             <h5>상품 판매 토근값</h5> <span class="label label-primary">token</span>
+                         </div>
+                         <div class="ibox-content">
+                             <div>
+                                 <div class="pull-right text-right">
+                                     <a href="javascript:copyUrl('${token.shortUrl}')">${token.shortUrl}</a>
+                                     <br/>
+                                     <small class="font-bold"> <a href="javascript:copyUrl('${token.shortUrl}')">복사하기</a></small>
+                                 </div>
+                                 <h4> <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue">${token.shortUrl}</span></a>
+                                     <br/>
+                                     <small class="m-r"><a href="javascript:keyTest()"> 구매하러 가기 </a> </small>
+                                 </h4>
+                                 </div>
+                         </div>
+        			 </div>
+           		</div>
+       		 </div>
                
-                <form:form commandName="MultipartFileVO"  id="tokenFileForm" name="tokenFileForm" method="post" action="/member/goodsmake" target="file_result"  enctype="multipart/form-data" >     
+             <form:form commandName="MultipartFileVO"  id="tokenFileForm" name="tokenFileForm" method="post" action="/member/goodsmake" target="file_result"  enctype="multipart/form-data" >     
                 
              <div class="row"> 
 	            <div class="col-md-3">
@@ -705,8 +702,6 @@
 	             </div>    
 		
          </div>
-         
-         
          </form:form>
          <form:form commandName="tokenVO" id="tokenManageForm"  name="tokenManageForm" method="post" action="" >
          <input type="hidden" name=tokenkey          id="tokenkey"         value="${token.tokenkey}"  />
@@ -715,31 +710,49 @@
 	     <input type="hidden" name=image3            id="image3"           value="${token.image3}"  />
 	     <input type="hidden" name=image4            id="image4"           value="${token.image4}"  />
 	     <input type="hidden" name=image5            id="image5"           value="${token.image5}"  />
-         <div class="well">
-           	<h5> <strong><em class="num">3. </em></strong>상품 설명</h5>
-				<textarea style='ime-mode:active;' row="10" class="form-control" id="productEtc" maxlength="200" name="productEtc"  value="" placeholder="상품설명" >${token.productEtc}</textarea>
-         </div> 
-         </form:form>
-         <div class="well">
-           	<h5> <strong><em class="num">4. </em></strong>포스팅하기</h5>
-           	 <div class="bnbox_kakao">
-              <button type="button" class="bn_kakao" onclick="kakaoStory()">kakao story post</button>
+        <div class="row">
+		   <div class="col-lg-12">
+		       <div class="ibox float-e-margins">
+		           <div class="ibox-content">
+           			 <h5><strong><em class="num">3. </em></strong>상품 설명</h5>
+						<textarea style='ime-mode:active;' row="10" class="form-control" id="productEtc" maxlength="200" name="productEtc"  value="" placeholder="상품설명" >${token.productEtc}</textarea>
+         		  </div>
+         	   </div>
             </div>
-            <div class="bnbox">
-              <button type="button" class="bn_facebook" onclick="facebookpost()">facebook post</button>
-            </div>
-            <div class="bnbox">
-              <button type="button" class="bn_naver" onclick="naverblog()">Never blog post</button>
-            </div>
-         </div> 
-     	 <div class="clm_detail_btn">
-	         <div class="clm_btn">
-	           <a href="javascript:fcGoods_regist();" class="btn_ty2">등록하기</a>
-	         </div>
          </div>
+         </form:form>
+         <div class="row">
+		   <div class="col-lg-12">
+		       <div class="ibox float-e-margins">
+		           <div class="ibox-content">
+			           	<h5> <strong><em class="num">4. </em></strong>포스팅하기</h5>
+			           	 <div class="bnbox_kakao">
+			              <button type="button" class="bn_kakao" onclick="kakaoStory()">kakao story post</button>
+			            </div>
+			            <div class="bnbox">
+			              <button type="button" class="bn_facebook" onclick="facebookpost()">facebook post</button>
+			            </div>
+			            <div class="bnbox">
+			              <button type="button" class="bn_naver" onclick="naverblog()">Never blog post</button>
+			            </div>
+         			</div>
+         	   </div>
+            </div>
+         </div> 
+         <div class="row">
+                  <div class="col-lg-12">
+                      <div class="ibox float-e-margins">
+	                <div class="ibox-content">
+                         <button type="button" class="btn btn-primary btn-lg" onClick="fcGoods_regist()">등록하기</button>
+                    </div>
+                   </div>
+               </div>
+         </div>              
+
          
-     <p class="dynatreeT">
-		<span id="treeError"></span>
-	</p>
-	<div id="tree"  style="width: 100%; height: 415px;" name="selNodes" >
-  </div>
+	     <p class="dynatreeT">
+			<span id="treeError"></span>
+		 </p>
+		 <div id="tree"  style="width: 100%; height: 415px;" name="selNodes" > </div>
+		 
+   </div>

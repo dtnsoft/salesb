@@ -26,7 +26,7 @@
     }
 
 </SCRIPT>
- <div class="wrapper wrapper-content animated fadeInRight">
+
 	   <div class="row">
 	         <c:if test="${!empty tokenList}">
 	          <c:forEach items="${tokenList}" var="TokenVO" varStatus="status">
@@ -96,9 +96,23 @@
 	             </div>
 	          <!--// List -->
 	          </c:if>
-	         <!-- 페이징 -->
-		     <taglib:paging cbFnc="goPageTokenPageList" totalCount="${totalCount}" curPage="${tokenConVO.curPage}" rowCount="${tokenConVO.rowCount}" />
-		    <!-- //페이징 -->   
+	          
     </div> 
- </div>          
+     <div class="row">
+         <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+		                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+		                    <button class="btn btn-white">1</button>
+		                    <button class="btn btn-white  active">2</button>
+		                    <button class="btn btn-white">3</button>
+		                    <button class="btn btn-white">4</button>
+		                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+		             <!-- 페이징 -->
+				     <!--<taglib:paging cbFnc="goPageTokenPageList" totalCount="${totalCount}" curPage="${tokenConVO.curPage}" rowCount="${tokenConVO.rowCount}" />-->
+				    <!-- //페이징 -->   
+		       </div>
+            </div>
+        </div>
+    </div>       
 

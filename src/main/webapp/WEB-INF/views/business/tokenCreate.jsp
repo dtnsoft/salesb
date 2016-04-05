@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/salesb/topBusiness.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/base.jsp" %>
 <script>
 
 	function keyTest(){
@@ -120,60 +120,103 @@
     }
 
 </script>
-<div class="container">
-	<!-- container -->
-	<form:form class="form-inline" role="form" commandName="productConVO" id="goodsTokenConForm" name="goodsTokenConForm" method="post" action="" >
-		 <!--// 타이틀 --> 
-		 <p class="lead">
-		    <span class="glyphicon glyphicon-tags"></span>&nbsp;토큰발급(온라인 판매를 위한 토큰발급)
-		 </p>
-		 <hr>
-		 <!--// 타이틀 --> 
-		 <div class="well">
-           	<h5> <strong><em class="num">1. </em></strong>상품정보</h5>
+		   <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>토큰발급</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a>토큰발급</a>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
 
-	        <input type="hidden" name="curPage"             id="curPage"            value="1" />
-	        <input type="hidden" name="rowCount"            id="rowCount"           value="5"/>
-	        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-			<div class="input-group">
-                 <input type="text" class="form-control" id="searchValue" name="searchValue"  value="" placeholder="상품명으로 검색하세요">
-                 <span class="input-group-btn">
-                     <button class="btn btn-default" type="button" onClick="fcGoods_listSearch()">
-                         <span class="glyphicon glyphicon-search" ></span>
-                 </button>
-                 </span>
-             </div>
-            <p></p>
-		    <div id=goodsTokenList></div>
-		    <script>
-				fcGoods_listSearch();
-			</script>
-			<div id=goodsTokenDetail></div>
-         </div> 
-          <div class="well">
-           	<h5> <strong><em class="num">2. </em></strong>상품토큰 발급대상</h5>
-			<table  class="table table-bordered">
-			  <thead></thead>
-			  <tbody>
-			    <tr>
-		          <td  class='text-center' style="background-color:#F5F5F5"><img src="<%= request.getContextPath() %>/images/sp_v2.png" ></td>
-		          <td><input type="text" class="form-control" id="tokenEmail" name="tokenEmail"  maxlength="50"  value="" placeholder="123@naver.com"></td>
-			    </tr>
-			    <tr>
-		          <td  class='text-center' style="background-color:#F5F5F5"><img src="<%= request.getContextPath() %>/images/sp_v3.png" ></td>
-		          <td><input type="text" class="form-control" id="tokenPhone" name="tokenPhone"  maxlength="50"  value="" placeholder="01012345678"></td>
-			    </tr>
-			  </tbody>
-		    </table>
-         </div> 
-         <div class="well">
-           	<h5> <strong><em class="num">3. </em></strong>토큰요청</h5>
-				<p class="tx2">토큰값 : <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue"></span></a></p>
-         </div> 
-		 <div class="clm_detail_btn">
-	        <div class="clm_btn">
-	          <a href="javascript:orderKeyCreate();" class="btn_ty2">상품토큰 발급</a>
-	        </div>
-	    </div>
-	</form:form>
-</div>
+            </div>
+        	</div>
+        	
+        	<div class="wrapper wrapper-content animated fadeInRight">
+           		
+	            <form:form class="form-horizontal" role="form" commandName="productConVO" id="goodsTokenConForm" name="goodsTokenConForm" method="post" action="" >
+		        <input type="hidden" name="curPage"             id="curPage"            value="1" />
+	            <input type="hidden" name="rowCount"            id="rowCount"           value="5"/>
+	            <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+
+	                
+	            <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+	                
+			                <div class="ibox-content">
+		                    		<div class="form-group"><label class="col-sm-2 control-label">상품검색</label>
+		                               <div class="col-sm-10">
+		                                   <div class="input-group"><input type="text" class="form-control" id="searchValue" name="searchValue"  value="" placeholder="상품명으로 검색하세요"> <span class="input-group-btn"> 
+		                                   <button type="button" class="btn btn-primary" onClick="javascript:fcGoods_listSearch()" >Go!
+		                                   </button> </span></div>
+		                               </div>
+		                    		 </div>
+		                    </div>
+	                    </div>
+	                </div>
+	            </div>         
+             
+	            <div id=goodsTokenList></div>
+			    <script>
+					fcGoods_listSearch();
+				</script>
+				<div id=goodsTokenDetail></div>
+				
+	
+	            <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+	                    <div class="ibox-title">
+                            <h5>상품 토큰발급 대상<small>2</small></h5>
+                        </div>
+			                <div class="ibox-content">
+
+                                <div class="form-group has-success"><label class="col-sm-2 control-label">이메일</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" id="tokenEmail" name="tokenEmail" maxlength="50"  value="" placeholder="123@naver.com"></div>
+                                </div>
+                                
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group has-success"><label class="col-sm-2 control-label">휴대폰</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" id="tokenPhone" name="tokenPhone"  maxlength="50"  value="" placeholder="01012345678"></div>
+                                </div>
+
+		                    </div>
+	                    </div>
+	                </div>
+	            </div> 
+	            
+	             <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+	                    <div class="ibox-title">
+                            <h5>토큰요청<small>3</small></h5>
+                        </div>
+			                <div class="ibox-content">
+
+                                <div class="form-group has-success"><label class="col-sm-2 control-label">토큰값</label>
+                                    <div class="col-sm-10"> <a href="javascript:keyTest()"><span class="nav_mnu" id="saleurl" style="color:blue"></span></a></div>
+                                </div>
+
+		                    </div>
+	                    </div>
+	                </div>
+	            </div> 
+	            
+	            <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+			                <div class="ibox-content">
+		                         <button type="button" class="btn btn-primary btn-lg" onClick="orderKeyCreate()">상품 토큰발급</button>
+		                    </div>
+	                    </div>
+	                </div>
+	            </div>       
+			   </form:form>
+	       </div>
+

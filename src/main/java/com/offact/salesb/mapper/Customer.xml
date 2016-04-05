@@ -181,6 +181,9 @@ SELECT  T1.customerKey
   	WHERE 1=1
         <if test="searchType != null and searchType != ''" >
           <choose>
+            <when test="searchType.equals('00')">
+       		  AND T1.customerKey = #{customerKey}
+            </when>
             <when test="searchType.equals('01')">
        		  AND T1.sbPhoneNumber = #{sbPhoneNumber}
             </when>

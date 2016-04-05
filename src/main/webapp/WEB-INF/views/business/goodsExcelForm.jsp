@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/salesb/topBusiness.jsp" %>
+<%@ include file="/WEB-INF/views/salesb/base.jsp" %>
 <html>
 <head>
 <script language="javascript">
@@ -52,37 +52,65 @@ function uploadClose(msg,obj){
 
 </script>
 </head>
-<iframe id="excel_import_result" name="excel_import_result" style="display: none" ></iframe>
-	<div class="container">
-	<!-- container -->
-	 <!-- form_area -->
-	 <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
-	 	 <!--// 타이틀 --> 
-		 <p class="lead">
-		    <span class="glyphicon glyphicon-tags"></span>&nbsp;일괄 상품 등록
-		 </p>
-		 <hr>
-		 <!--// 타이틀 --> 
-          <div class="well">
-           	<h5> <strong><em class="num">1. </em></strong>업로드 파일선택</h5>
-			<h6><strong><font style="color:#FF9900">업로드 할 <em class="bold"> excel파일</em></font></strong></h6>
-	            <input type="file"  id="files" name="files" /> 
-	        <br>
-	        <h5><strong><em class="num">2. </em><font style="color:#428bca">파일 양식 다운로드</font></strong></h5>
-	        <br>
-	        <h5><strong><em class="num">3. </em></strong>업로드 안내</h5>
-			  <h6><strong><font style="color:#FF9900">기존에 이미 사용하고 계신 </font></strong></h6>
-			  <h6><strong><font style="color:#FF9900">재고 관리 시스템이나 ERP가</font></strong></h6>
-			  <h6><strong><font style="color:#FF9900">있으시면 해당 양식을 다운로드</font></strong></h6>
-			  <h6><strong><font style="color:#FF9900">한 뒤 양식에 맞게 작성 후</font></strong></h6>
-			  <h6><strong><font style="color:#FF9900">업로드 하시면 일괄 등록 됩니다.</font></strong></h6>
-         </div> 
-         <div class="clm_detail_btn">
-	         <div class="clm_btn">
-	           <a href="javascript:fcProductMaster_excelimport();" class="btn_ty2">업로드</a>
-	         </div>
-         </div>
-	</form:form>
-	 <!-- //form_area --> 
-	</div>
-    <!-- //container -->
+			
+			<div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>일괄 상품 등록</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a>상품 등록/변경</a>
+                    </li>
+                    <li class="active">
+                        <strong>일괄 상품 등록</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+
+            </div>
+        	</div>
+			
+			<iframe id="excel_import_result" name="excel_import_result" style="display: none" ></iframe>
+
+			<div class="wrapper wrapper-content animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>업로드 파일선택</h5>
+                    </div>
+                    <div class="ibox-content">
+                     <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
+                        <h6><strong><font style="color:#FF9900">업로드 할 <em class="bold"> excel파일</em></font></strong></h6>
+				            <input type="file"  id="files" name="files" /> 
+				        <br>
+				        <h5><strong><em class="num">2. </em><font style="color:#428bca">파일 양식 다운로드</font></strong></h5>
+				        <br>
+				        <h5><strong><em class="num">3. </em></strong>업로드 안내</h5>
+						  <h6><strong><font style="color:#FF9900">기존에 이미 사용하고 계신 </font></strong></h6>
+						  <h6><strong><font style="color:#FF9900">재고 관리 시스템이나 ERP가</font></strong></h6>
+						  <h6><strong><font style="color:#FF9900">있으시면 해당 양식을 다운로드</font></strong></h6>
+						  <h6><strong><font style="color:#FF9900">한 뒤 양식에 맞게 작성 후</font></strong></h6>
+						  <h6><strong><font style="color:#FF9900">업로드 하시면 일괄 등록 됩니다.</font></strong></h6>
+					 </form:form>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+                            
+            <div class="row">
+                  <div class="col-lg-12">
+                      <div class="ibox float-e-margins">
+	                <div class="ibox-content">
+                         <button type="button" class="btn btn-primary btn-lg" onClick="fcProductMaster_excelimport()">업로드</button>
+                    </div>
+                   </div>
+               </div>
+           </div>   
+
+       </div>
+

@@ -64,7 +64,7 @@
 	<script>
     //메뉴이동
 	function fcMenu(linkurl) {
-        
+      
 		//top.location.href=linkurl;
 		
 		$.ajax({
@@ -916,7 +916,7 @@
 	                <ul class="nav metismenu" id="side-menu">
 	                    <li class="nav-header">
 	                        <div class="dropdown profile-element"> <span>
-	                            <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" />
+	                            <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/icon.png" />
 	                             </span>
 	                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 	                            <span class="clear"> <span class="block m-t-xs"> 
@@ -938,7 +938,7 @@
 	                            </ul>
 	                        </div>
 	                        <div class="logo-element">
-	                           <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" />
+	                           <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/icon.png" />
 	                        </div>
 	                    </li>
 	                    <li class="active">
@@ -975,26 +975,48 @@
         	</nav>
         </div>
 
-	  	<div id="imageView"  onClick="imageClose()"></div>
-	  	
 	  	<div id="view" ></div>
 	
 	    <div id=map style="display:none">
 	     <div data-role="page" id="page" data-fullscreen="false" class="map_style">
  			<div id="map_canvas" class="map_style"></div>
 		 </div> 
+		</div>
+		
+		<div class="footer">
+	           <div class="pull-right">
+	               welcome to <strong>Salesb</strong> !!
+	           </div>
+	           <div>
+	               <strong>Copyright</strong> Salesb Corp &copy; All rights reserved v1.0.0
+	           </div>
 		</div> 
 	</div>
   </div>
 </body>
 </html>
+<!-- Mainly scripts -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
- <!-- Mainly scripts -->
-    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
-    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
-    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-    
+<!-- Custom and plugin javascript -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- iCheck -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>
 <script>
 
 if('${customerKey}'==null || '${customerKey}'=='null' ){

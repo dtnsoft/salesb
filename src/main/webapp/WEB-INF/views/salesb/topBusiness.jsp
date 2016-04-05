@@ -38,34 +38,39 @@
 	}
 	</style>
 
-    <link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
+   	<link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
 
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/blog-home.css">
+    <!-- Morris -->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
 
-	<!-- Latest compiled and minified CSS-->
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap-datetimepicker.min.css">
+    <!-- Toastr style -->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 
+    <!-- Gritter -->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+<!--  
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
-	
+-->	
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
 	
-	<!-- JQuery Mobile을 사용하기 위해 반드시 필요한 태그-->
+	<!-- JQuery Mobile을 사용하기 위해 반드시 필요한 태그
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
     <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
-	<!-- JQuery-UI-Map을 사용하기 위해 반드시 필요한 태그-->
+
 	
     <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
     <script src="<%= request.getContextPath() %>/web/jquery.fn.gmap.js" type="text/javascript"></script>
     <script src="<%= request.getContextPath() %>/ui/jquery.ui.map.full.min.js" type="text/javascript"></script>   
     <script src="<%= request.getContextPath() %>/ui/jquery.ui.map.extensions.js" type="text/javascript"></script>
     
+    -->
     <!-- naver -->
     <script type="text/javascript" src="http://openapi.map.naver.com/openapi/v2/maps.js?clientId=4THYarC7qz77DVXElPNk"></script>
     <!-- daum -->
@@ -75,7 +80,19 @@
     //메뉴이동
 	function fcMenu(linkurl) {
         
-		top.location.href=linkurl;
+		//top.location.href=linkurl;
+		
+		$.ajax({
+	        type: "POST",
+	           url:  linkurl,
+	           success: function(result) {
+	              
+	               $("#view").html(result);
+	           },
+	           error:function() {
+	              
+	           }
+	    });
 
     };
     
@@ -901,78 +918,120 @@
 
   </script>
   </head>
-  <body>
+    <body>
 	<form method="post" id="logoutForm" name="logoutForm"  role="form" >
 	  <input type="hidden" name="saleurlvalue" id="saleurlvalue" >
 	</form>
-	  <!-- Navigation -->
-	    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	        <div class="container">
-	            <!-- Brand and toggle get grouped for better mobile display -->
-	            <div class="navbar-header">
-	                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-	                    <span class="sr-only">Menu</span>
-	                    <span class="icon-bar"></span>
-	                    <span class="icon-bar"></span>
-	                    <span class="icon-bar"></span>
-	                </button>
-              		<table>
-					  <tr>
-					  	<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/intro/salesbaron.jpg" width="30" height="30"></td>
-					    <td><h5><span style="color:#33b9ae">&nbsp;&nbsp;${strGroupName}(${strUserName})</span><span style="color:#FFFFFF">님<br>&nbsp;&nbsp;안녕하세요?</span></h5></td>
-					  </tr>
-				  	</table>
+	<div id="wrapper">
+	    <nav class="navbar-default navbar-static-side" role="navigation">
+	            <div class="sidebar-collapse">
+	                <ul class="nav metismenu" id="side-menu">
+	                    <li class="nav-header">
+	                        <div class="dropdown profile-element"> <span>
+	                            <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/icon.png" />
+	                             </span>
+	                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	                            <span class="clear"> <span class="block m-t-xs"> 
+	                              ${strGroupName}(${strUserName})
+	                             </span> <span class="text-muted text-xs block">Welcome to salesb!<b class="caret"></b></span> </span> </a>
+	                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+	                                <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/common/businessmodifyform')">Profile</a></li>
+	                                <li class="divider"></li>
+	                                <li><a href="javascript:goLogout()">Logout</a></li>
+	                            </ul>
+	                        </div>
+	                        <div class="logo-element">
+	                           <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/icon.png" />
+	                        </div>
+	                    </li>
+	                    <li class="active">
+	                        <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">상품 등록/변경</span> <span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">
+	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsregistform')">개별상품등록</a></li>
+	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsexcelform')">일괄상품등록</a></li>
+	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsmanage')">등록상품 목록 및 수정</a></li>
+	                        </ul>
+	                    </li>
+	                    <li>
+	                         <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/tokencreate')" ><i class="fa fa-ticket"></i> <span class="nav-label">토근발급</span></a>
+	                    </li>
+	                     <li>
+	                         <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/salesmanage')" ><i class="fa fa-diamond"></i> <span class="nav-label">판매관리</span></a>
+	                    </li>
+	                </ul>
 	            </div>
-	            <!-- Collect the nav links, forms, and other content for toggling -->
-	            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	                <ul class="nav navbar-nav">
-				        <li class="dropdown">
-				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">상품등록/변경<span class="caret"></span></a>
-				           <ul class="dropdown-menu">
-				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsregistform')">개별상품등록</a></li>
-				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsexcelform')">일괄상품등록</a></li>
-				            <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsmanage')">등록상품 목록 및 수정</a></li>
-				          </ul>
-				        </li>
-				      </ul>
-				      <ul class="nav navbar-nav">
-				        <li class="dropdown">
-				          <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/tokencreate')" >토근발급</a>
-				        </li>
-				      </ul>
-				      <ul class="nav navbar-nav">
-				        <li >
-				          <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/salesmanage')" >판매관리</a>
-				        </li>
-				      </ul>
-				      <ul class="nav navbar-nav">
-				        <li class="dropdown">
-				          <a href="#" >정산관리</a>
-				        </li>
-				      </ul>
-					<ul class="nav navbar-nav navbar-right">
-			        <li><a href="javascript:fcMenu('<%= request.getContextPath() %>/common/businessmodifyform')" class="b_cog"><strong class="ico_cog"><span>설정</span></strong></a></li>
-					<li><a href="javascript:goLogout()" class="b_logout"><strong>로그아웃</strong></a></li>
-			      </ul>
-	            </div>
-	            <!-- /.navbar-collapse -->
+	        </nav>
+	         
+	    <div id="page-wrapper" class="gray-bg">
+	        <div class="row border-bottom">
+	        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+	        <div class="navbar-header">
+	            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
 	        </div>
-	        <!-- /.container -->
-	    </nav>
+	            <ul class="nav navbar-top-links navbar-right">
+	                <li>
+	                    <span class="m-r-sm text-muted welcome-message">Welcome to Salesb PC version.</span>
+	                </li>
+	                <li>
+	                    <a href="javascript:goLogout()">
+	                        <i class="fa fa-sign-out"></i> Log out
+	                    </a>
+	                </li>
+	            </ul>
 
-	  	<div id="imageView"  onClick="imageClose()"></div>
+        	</nav>
+            </div>
+
+		  	<div id="view" ></div>
 	
-	    <div id=map style="display:none">
-	     <div data-role="page" id="page" data-fullscreen="false" class="map_style">
- 			<div id="map_canvas" class="map_style"></div>
-		 </div> 
-		</div> 
-		
-  </body>
+		    <div id=map style="display:none">
+			     <div data-role="page" id="page" data-fullscreen="false" class="map_style">
+		 			<div id="map_canvas" class="map_style"></div>
+				 </div> 
+			</div> 
+			
+			<div class="footer">
+	           <div class="pull-right">
+	               welcome to <strong>Salesb</strong> !!
+	           </div>
+	           <div>
+	               <strong>Copyright</strong> Salesb Corp &copy; All rights reserved v1.0.0
+	           </div>
+		    </div>
+		</div>
+    </div>
+   </body>
 </html>
+
+<!-- Mainly scripts -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- iCheck -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>
+
 <script>
 
 if('${strUserId}'==null || '${strUserId}'=='null' ){
 	goLogout();
 }
+
+fcMenu('<%= request.getContextPath() %>/business/goodsmanage');
+
 </script>

@@ -21,8 +21,7 @@
     }
    
 </SCRIPT>
-        <div class="wrapper wrapper-content">
-            <div class="container">
+
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="ibox float-e-margins">
@@ -137,7 +136,16 @@
                                     </table>
                                 </div>
 								<!-- 페이징 -->
-								<taglib:paging cbFnc="goPageSalesPageList" totalCount="${totalCount}" curPage="${salesConVO.curPage}" rowCount="${salesConVO.rowCount}" />
+								<div class="btn-group">
+	                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+	                                <button class="btn btn-white">1</button>
+	                                <button class="btn btn-white  active">2</button>
+	                                <button class="btn btn-white">3</button>
+	                                <button class="btn btn-white">4</button>
+	                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+	                            </div>
+	                            <!--
+								<taglib:paging cbFnc="goPageSalesPageList" totalCount="${totalCount}" curPage="${salesConVO.curPage}" rowCount="${salesConVO.rowCount}" /> -->
 								<!-- //페이징 --> 
                             </div>
                         </div>
@@ -145,7 +153,5 @@
 
                 </div>
 
-            </div>
-
-        </div>
+ 
 
