@@ -52,6 +52,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.business.BusinessSalesService;
 import com.offact.salesb.service.business.ProductService;
+import com.offact.salesb.service.business.OptionService;
 import com.offact.salesb.service.common.CommonService;
 import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.vo.CustomerVO;
@@ -63,6 +64,7 @@ import com.offact.salesb.vo.common.UserVO;
 import com.offact.salesb.vo.common.WorkVO;
 import com.offact.salesb.vo.business.BusinessSalesVO;
 import com.offact.salesb.vo.business.ProductMasterVO;
+import com.offact.salesb.vo.business.OptionVO;
 
 /**
  * Handles requests for the application home page.
@@ -119,6 +121,9 @@ public class BusinessController {
     
     @Autowired
     private ProductService productSvc;
+
+    @Autowired
+    private OptionService optionSvc;
     
     @Autowired
     private BusinessSalesService busSalesSvc;
@@ -1206,6 +1211,390 @@ public class BusinessController {
         mv.addObject("totalCount", totalCount);
 
         mv.setViewName("/business/salesPageList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/optionlist")
+    public ModelAndView optionList(String optionKey,
+    		                         String optionName,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionKey" + optionKey);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/intro");
+        	return mv;
+		}
+        
+        OptionVO optionConVO = new OptionVO();
+        OptionVO option = new OptionVO();
+ 
+        if(optionKey.equals("N")){
+        	
+        	option=optionSvc.getOptionKey();
+        	optionKey=option.getOptionKey();
+        }
+ 
+        List<OptionVO> optionList = null;
+
+        optionConVO.setOptionKey(optionKey);
+        optionConVO.setOptionName(optionName);
+        optionConVO.setCreateUserId(strUserId);
+        
+        //option insert
+    	int retVal=this.optionSvc.optionInsert(optionConVO);
+
+        //option list 조회
+        optionList = optionSvc.getOptionList(optionConVO);
+        
+        mv.addObject("optionList", optionList);
+
+        mv.addObject("optionKey", optionKey);
+
+        mv.setViewName("/business/optionList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/optioninitlist")
+    public ModelAndView optionInitList(String optionKey,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionKey" + optionKey);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/intro");
+        	return mv;
+		}
+        
+        OptionVO optionConVO = new OptionVO();
+        OptionVO option = new OptionVO();
+
+        List<OptionVO> optionList = null;
+
+        optionConVO.setOptionKey(optionKey);
+
+        //option list 조회
+        optionList = optionSvc.getOptionList(optionConVO);
+        
+        mv.addObject("optionList", optionList);
+
+        mv.addObject("optionKey", optionKey);
+
+        mv.setViewName("/business/optionList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/optiondetaillist")
+    public ModelAndView optionDetailList(String optionId,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionId" + optionId);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/intro");
+        	return mv;
+		}
+        
+        OptionVO optionConVO = new OptionVO();
+ 
+        List<OptionVO> optionDetailList = null;
+
+        optionConVO.setOptionId(optionId);
+
+        //option list 조회
+        optionDetailList = optionSvc.getOptionDetailList(optionConVO);
+        
+        mv.addObject("optionDetailList", optionDetailList);
+
+        mv.setViewName("/business/optionDetailList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/optioninsertlist")
+    public ModelAndView optionInsertList(String optionKey,
+    									 String optionId,
+    									 String optionValue,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionId" + optionKey);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/intro");
+        	return mv;
+		}
+        
+        OptionVO optionConVO = new OptionVO();
+ 
+        List<OptionVO> optionDetailList = null;
+
+        optionConVO.setOptionId(optionId);
+        optionConVO.setOptionKey(optionKey);
+        optionConVO.setOptionValue(optionValue);
+        optionConVO.setCreateUserId(strUserId);
+
+        //option insert
+    	int retVal=this.optionSvc.optionDetailInsert(optionConVO);
+
+    	
+        //option list 조회
+        optionDetailList = optionSvc.getOptionDetailList(optionConVO);
+        
+        mv.addObject("optionDetailList", optionDetailList);
+
+        mv.setViewName("/business/optionDetailList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/optiondel")
+    public ModelAndView optionDel(String optionId,
+    								 String optionKey,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionId" + optionId);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/intro");
+        	return mv;
+		}
+        
+        OptionVO optionConVO = new OptionVO();
+        OptionVO option = new OptionVO();
+ 
+        List<OptionVO> optionList = null;
+
+        optionConVO.setOptionKey(optionKey);
+        optionConVO.setOptionId(optionId);
+        optionConVO.setUpdateUserId(strUserId);
+        
+        //option delete(update)
+    	int retVal=this.optionSvc.optionDelete(optionConVO);
+
+        //option list 조회
+        optionList = optionSvc.getOptionList(optionConVO);
+        
+        mv.addObject("optionList", optionList);
+
+        mv.addObject("optionKey", optionKey);
+
+        mv.setViewName("/business/optionList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/business/optiondetaildel")
+    public ModelAndView optionDetailDel(String optionValueKey,
+    								 String optionId,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionValueKey" + optionValueKey);
+
+        ModelAndView mv = new ModelAndView();
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+
+        	mv.setViewName("/common/intro");
+        	return mv;
+		}
+        
+        OptionVO optionConVO = new OptionVO();
+        OptionVO option = new OptionVO();
+ 
+        List<OptionVO> optionDetailList = null;
+
+        optionConVO.setOptionValueKey(optionValueKey);
+        optionConVO.setOptionId(optionId);
+        optionConVO.setUpdateUserId(strUserId);
+        
+        //option delete(update)
+    	int retVal=this.optionSvc.optionDetailDelete(optionConVO);
+
+        //option list 조회
+        optionDetailList = optionSvc.getOptionDetailList(optionConVO);
+        
+        mv.addObject("optionDetailList", optionDetailList);
+
+        mv.setViewName("/business/optionDetailList");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();

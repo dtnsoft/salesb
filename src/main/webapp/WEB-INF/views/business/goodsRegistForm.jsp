@@ -46,7 +46,153 @@
 		    });
 		}
 	}
+	
+	function addSet(){
+		
+		var ofrm=document.optionForm;
+		ofrm.addName.value='';
+		
+	}
 
+	function addOption(){
+		var ofrm=document.optionForm;
+		var frm=document.productRegistForm;
+		
+		if(ofrm.addName.value==''){
+			alert('추가 옵션명을 입력하세요');
+			return;
+		}
+		
+		var rowCnt = contentId.rows.length;
+		var newRow = contentId.insertRow( rowCnt++ );
+		newRow.onmouseover=function(){contentId.clickedRowIndex=this.rowIndex};
+		var newCell = newRow.insertCell();
+		newCell.innerHTML ='<tr><input type="hidden" id="selectOption" name="selectOption" value="'+ofrm.addName.value+'"><td>'+ofrm.addName.value+'  &nbsp;  &nbsp;<button type="button" class="btn btn-xs btn-info" onClick="delFile(this)" >삭제</button></td> </tr>';
+		
+	}
+	
+	function delFile(obj){ 
+	    var tr = obj // A 
+	             .parentNode // TD 
+	             .parentNode; // TR 
+	    var table = tr.parentNode; 
+	    var index = tr.rowIndex; 
+	    table.deleteRow(index-1); 
+
+	}
+	
+	function addOptionList(){
+		
+		var ofrm=document.optionForm;
+		var frm=document.productRegistForm;
+		
+		if(ofrm.addName.value==''){
+			alert('추가 옵션명을 입력하세요');
+			return;
+		}
+		
+		 $.ajax({
+	            type: "POST",
+	               url:  "<%= request.getContextPath() %>/business/optionlist?optionKey="+frm.optionKey.value+"&optionName="+encodeURIComponent(ofrm.addName.value),
+	               success: function(result) {
+	                   //commonDim(false);
+	                   $("#addOptionList").html(result);
+	                  
+	                   $("#modalColse").click();
+            
+	               },
+	               error:function() {
+	                 
+	               }
+	        });		
+		 
+	}
+	
+	function addOptionDetailList(){
+		
+		var ofrm=document.optionForm;
+		var frm=document.productRegistForm;
+		
+		if(ofrm.addValue.value==''){
+			alert('추가 상세 옵션명을 입력하세요');
+			return;
+		}
+		
+		 $.ajax({
+	            type: "POST",
+	               url:  "<%= request.getContextPath() %>/business/optioninsertlist?optionKey="+frm.optionKey.value+"&optionId="+ofrm.optionId.value+"&optionValue="+encodeURIComponent(ofrm.addValue.value),
+	               success: function(result) {
+	                   //commonDim(false);
+	                   $("#addOptionDetailList").html(result);
+	    
+	               },
+	               error:function() {
+	                 
+	               }
+	        });		
+		 
+	}
+	function optionDetail(optionId){
+	
+		var ofrm=document.optionForm;
+		ofrm.optionId.value=optionId;
+		
+		ofrm.addValue.value='';
+		
+		 $.ajax({
+	            type: "POST",
+	               url:  "<%= request.getContextPath() %>/business/optiondetaillist?optionId="+optionId,
+	               success: function(result) {
+	                   //commonDim(false);
+	                   $("#addOptionDetailList").html(result);
+	 
+	               },
+	               error:function() {
+	                 
+	               }
+	        });		
+		
+	}
+	
+	function optionDel(optionId){
+		
+		var ofrm=document.optionForm;
+		var frm=document.productRegistForm;
+		
+		 $.ajax({
+	            type: "POST",
+	               url:  "<%= request.getContextPath() %>/business/optiondel?optionKey="+frm.optionKey.value+"&optionId="+optionId,
+	               success: function(result) {
+	                   //commonDim(false);
+	                   $("#addOptionList").html(result);
+	 
+	               },
+	               error:function() {
+	                 
+	               }
+	     });		
+	
+	}
+	
+	function optionDetailDel(optionValueKey){
+		
+		var ofrm=document.optionForm;
+		var frm=document.productRegistForm;
+		
+		 $.ajax({
+	            type: "POST",
+	               url:  "<%= request.getContextPath() %>/business/optiondetaildel?optionId="+ofrm.optionId.value+"&optionValueKey="+optionValueKey,
+	               success: function(result) {
+	                   //commonDim(false);
+	                   $("#addOptionDetailList").html(result);
+	 
+	               },
+	               error:function() {
+	                 
+	               }
+	     });		
+	
+	}
 </script>
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -68,15 +214,16 @@
 </div>
         	
 <div class="wrapper wrapper-content animated fadeInRight">
+  <form:form class="form-horizontal" role="form" commandName="productMasterVO" id="productRegistForm" name="productRegistForm" method="post" action="">  
+    <input type="hidden" id="optionKey" name="optionKey" value="N" >             
 	<div class="row">
         <div class="col-lg-12">
            <div class="ibox float-e-margins">
               <div class="ibox-title">
-                 <h5>상품 기본정보<small>1</small></h5>
+                 <h5><em class="num">1. </em></strong>상품 기본정보</h5>
               </div>
               <div class="ibox-content">
-                 <form:form class="form-horizontal" role="form" commandName="productMasterVO" id="productRegistForm" name="productRegistForm" method="post" action="">
-                 <div class="form-group"><label class="col-sm-2 control-label">상품분류</label>
+                <div class="form-group"><label class="col-sm-2 control-label">상품분류</label>
 		            <div class="col-sm-10"><select class="form-control m-b" id="productCategory" name="productCategory" >
                        <option value="01" >카테고리1</option>
                            <option value="02" >카테고리2</option>
@@ -131,8 +278,7 @@
                  <div class="form-group has-success"><label class="col-sm-2 control-label" >재고수량</label>
                      <div class="col-sm-10"><input type="text" class="form-control" id="stockCnt" name="stockCnt"  maxlength="5"  value="0" placeholder="재고수량"></div>
                  </div> 
-                                                                                                            
-                 </form:form>
+
               </div>
            </div>
          </div>
@@ -142,7 +288,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
              <div class="ibox-title">
-                    <h5>배송정보 설정<small>2</small></h5>
+                    <h5><em class="num">2. </em></strong>배송정보 설정</h5>
                 </div>
            <div class="ibox-content"  class="form-horizontal">
                  <form method="get" class="form-horizontal">
@@ -160,44 +306,64 @@
              </div>
          </div>
      </div>
-
+</form:form>
+<form name="optionForm" >
 	 <div class="row">
          <div class="col-lg-12">
              <div class="ibox float-e-margins">
              <div class="ibox-title">
-                 <h5>옵션정보 설정<small>3</small></h5>
+                 <h5><strong><em class="num">3. </em></strong>옵션정보 설정 <button type="button" class="btn btn-primary btn-xs"  onClick="addSet()" data-toggle="modal" data-target="#myModal2">옵션추가</button></h5>
+                 <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content animated flipInY">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">상품 옵션추가</h4>
+                                <small class="font-bold">* 상품별 옵션을 등록하실 수 있습니다.</small>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group has-success"><label class="col-sm-2 control-label" >옵션명</label>
+				                     <div class="col-sm-10"><input type="text" class="form-control" id="addName" name="addName"  maxlength="50"  value="" placeholder="옵션명"></div>
+				                 </div>  
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" id="modalColse" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onClick="addOptionList()">add Option</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content animated flipInY">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">옵션 상세관리</h4>
+                                <small class="font-bold">* 선택된 옵션의 상세내용을 관리합니다..</small>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group has-success"><label class="col-sm-2 control-label" >상세옵션</label>
+				                     <div class="col-sm-10"><input type="text" class="form-control" id="addValue" name="addValue"  maxlength="50"  value="" placeholder="상세옵션"></div>
+				                 </div> 
+				                 <input type="hidden" id="optionId" name="optionId" value="">
+				                   <div id=addOptionDetailList></div>
+				                  
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" id="modalColse1" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onClick="addOptionDetailList()">상세옵션 추가</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
              </div>
-                 <div class="ibox-content">
-                     <div class="table-responsive">
-                         <table class="table table-striped">
-                             <thead>
-                             <tr>
-                                 <th>구분</th>
-                                 <th>옵션명 </th>
-                                 <th>옵션값</th>
-                                 <th>추가/삭제</th>
-                             </tr>
-                             </thead>
-                             <tbody>
-                             <tr>
-                                 <td>1</td>
-                                 <td>색상</td>
-                                 <td>1.1빨강/1.2노랑/1.3파랑</td>
-                                 <td><a href="#" ><i class="fa fa-plus-square"></i></a><a href="#" ><i class="fa fa-minus-square"></i></a></td>
-                             </tr>
-                             <tr>
-                                 <td>2</td>
-                                 <td>사이즈</td>
-                                 <td>2.90/1.2노랑/1.3파랑</td>
-                                 <td><a href="#" ><i class="fa fa-plus-square"></i></a><a href="#" ><i class="fa fa-minus-square"></i></a></td>
-                             </tr>
-                             </tbody>
-                         </table>
-                     </div>
-                 </div>
+             
+              <div id=addOptionList></div>
+
              </div>
          </div>
      </div> 
+     </form>
      <div class="row">
         <div class="col-lg-12">
            <div class="ibox float-e-margins">

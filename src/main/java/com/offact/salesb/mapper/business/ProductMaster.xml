@@ -36,6 +36,7 @@
 			  ,T1.setteleRate
 			  ,T1.stockCnt
 		      ,T1.deliveryOption
+		      ,ifnull(T1.optionKey,'N') as optionKey
 			  ,T1.createUserId
 			  ,T2.userName As createUserName
 			  ,T1.updateUserId
@@ -79,6 +80,7 @@
 			  ,T1.setteleRate
 			  ,T1.stockCnt
 		      ,T1.deliveryOption
+		      ,ifnull(T1.optionKey,'N') as optionKey
 			  ,T1.createUserId
 			  ,T2.userName As createUserName
 			  ,T1.updateUserId
@@ -163,6 +165,7 @@
             	,setteleRate
             	,stockCnt
             	,deliveryOption
+            	,optionKey
             	,createUserId
             	,createDateTime
             	,deletedYn
@@ -179,6 +182,7 @@
 	  		    , #{setteleRate}
 	  		    , #{stockCnt}
 	  		    , #{deliveryOption}
+	  		    , #{optionKey}
 	  			, #{createUserId}
 	  			, now()
 	  			, 'N'
@@ -195,9 +199,11 @@
 		                        setteleRate = #{setteleRate},
 		                        stockCnt = #{stockCnt},
 		                        deliveryOption = #{deliveryOption},
+		                        optionKey = #{optionKey},
 		                        updateUserId = #{updateUserId},
 		                        updateDateTime =now(),
 		                        deletedYn = #{deletedYn}
 </insert>
+
 
 </mapper>

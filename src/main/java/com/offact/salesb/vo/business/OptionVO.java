@@ -5,22 +5,14 @@ import com.offact.salesb.vo.AbstractVO;
  * @author 4530
  *
  */
-public class ProductMasterVO extends AbstractVO {
+public class OptionVO extends AbstractVO {
 	
-	private String idx;
-	private String groupId;
-	private String productCode;
-	private String productCategory;
-	private String productName;
-	private String modelName;
-	private String makeCompany;
-	private String suplycompany;
-	private String productPrice;
-	private String salesPrice;
-	private String setteleRate;
-	private String stockCnt;
-	private String deliveryOption;
+	private String optionId;
+	private String optionValueKey;
+	private String optionName;
+	private String optionValue;
 	private String optionKey;
+	private String description;
 	
 	private String createUserId;
 	private String createUserName;
@@ -42,100 +34,52 @@ public class ProductMasterVO extends AbstractVO {
 
     private String errMsg;
 
-	public String getIdx() {
-		return idx;
+	public String getOptionId() {
+		return optionId;
 	}
 
-	public void setIdx(String idx) {
-		this.idx = idx;
+	public void setOptionId(String optionId) {
+		this.optionId = optionId;
 	}
 
-	public String getProductCode() {
-		return productCode;
+	public String getOptionValueKey() {
+		return optionValueKey;
 	}
 
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
+	public void setOptionValueKey(String optionValueKey) {
+		this.optionValueKey = optionValueKey;
 	}
 
-	public String getProductCategory() {
-		return productCategory;
+	public String getOptionName() {
+		return optionName;
 	}
 
-	public void setProductCategory(String productCategory) {
-		this.productCategory = productCategory;
+	public void setOptionName(String optionName) {
+		this.optionName = optionName;
 	}
 
-	public String getProductName() {
-		return productName;
+	public String getOptionValue() {
+		return optionValue;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setOptionValue(String optionValue) {
+		this.optionValue = optionValue;
 	}
 
-	public String getModelName() {
-		return modelName;
+	public String getOptionKey() {
+		return optionKey;
 	}
 
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
+	public void setOptionKey(String optionKey) {
+		this.optionKey = optionKey;
 	}
 
-	public String getMakeCompany() {
-		return makeCompany;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setMakeCompany(String makeCompany) {
-		this.makeCompany = makeCompany;
-	}
-
-	public String getSuplycompany() {
-		return suplycompany;
-	}
-
-	public void setSuplycompany(String suplycompany) {
-		this.suplycompany = suplycompany;
-	}
-
-	public String getProductPrice() {
-		return productPrice;
-	}
-
-	public void setProductPrice(String productPrice) {
-		this.productPrice = productPrice;
-	}
-
-	public String getSalesPrice() {
-		return salesPrice;
-	}
-
-	public void setSalesPrice(String salesPrice) {
-		this.salesPrice = salesPrice;
-	}
-
-	public String getSetteleRate() {
-		return setteleRate;
-	}
-
-	public void setSetteleRate(String setteleRate) {
-		this.setteleRate = setteleRate;
-	}
-
-	public String getStockCnt() {
-		return stockCnt;
-	}
-
-	public void setStockCnt(String stockCnt) {
-		this.stockCnt = stockCnt;
-	}
-
-	public String getDeliveryOption() {
-		return deliveryOption;
-	}
-
-	public void setDeliveryOption(String deliveryOption) {
-		this.deliveryOption = deliveryOption;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getCreateUserId() {
@@ -256,22 +200,6 @@ public class ProductMasterVO extends AbstractVO {
 
 	public void setErrMsg(String errMsg) {
 		this.errMsg = errMsg;
-	}
-
-	public String getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
-
-	public String getOptionKey() {
-		return optionKey;
-	}
-
-	public void setOptionKey(String optionKey) {
-		this.optionKey = optionKey;
 	}
 
 }
