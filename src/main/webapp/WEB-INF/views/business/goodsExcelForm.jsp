@@ -6,7 +6,7 @@
 
 function fcProductMaster_excelimport(){
 
-    if($("#files").val() == ''){
+    if($("#inputImage").val() == ''){
     	
         alert('등록 할 파일이 없습니다.');
         return;
@@ -50,6 +50,35 @@ function uploadClose(msg,obj){
 
 }
 
+function getC_FileExtension( filePath ){ 
+	   
+	var lastIndex = -1; 
+    lastIndex = filePath.lastIndexOf('.'); 
+    var extension = ""; 
+
+	if ( lastIndex != -1 ){ 
+	    extension = filePath.substring( lastIndex+1, filePath.len ); 
+	} else { 
+	    extension = ""; 
+	} 
+	
+	return extension; 
+} 
+
+function c_uploadImg_Change( value ){ 
+	
+    var src = getC_FileExtension(value); 
+    if (src == "") { 
+       // alert('올바른 파일을 입력하세요'); 
+       // return; 
+    } else if ( !((src.toLowerCase() == "xlsx"))) { 
+        alert('xlsx 파일만 지원합니다.'); 
+        return; 
+    } 
+  
+	document.all('excel').innerText='첨부완료';
+
+} 
 </script>
 </head>
 			
@@ -84,10 +113,19 @@ function uploadClose(msg,obj){
                     </div>
                     <div class="ibox-content">
                      <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
-                        <h6><strong><font style="color:#FF9900">업로드 할 <em class="bold"> excel파일</em></font></strong></h6>
-				            <input type="file"  id="files" name="files" /> 
+                        <h5><strong><em class="num">1. </em>업로드 파일 선택</strong></h5>
+				         <div class="btn-group">
+                             <label title="Upload image file" for="inputImage" class="btn btn-primary">
+                                 <input type="file" accept="xlsx/*" name="files" id="inputImage" class="hide" onChange="c_uploadImg_Change( this.value )">
+                                 Upload File 선택
+                             </label>
+                             <label title="엑셀첨부" id="excel" class="btn btn-primary">excel첨부</label>
+                         </div>
 				        <br>
-				        <h5><strong><em class="num">2. </em><font style="color:#428bca">파일 양식 다운로드</font></strong></h5>
+				        <h5><strong><em class="num">2. </em>파일 양식 다운로드</strong></h5>
+				        <div class="btn-group">
+                             <label title="Donload image" id="download" class="btn btn-primary">파일양식 Download</label>
+                        </div> 
 				        <br>
 				        <h5><strong><em class="num">3. </em></strong>업로드 안내</h5>
 						  <h6><strong><font style="color:#FF9900">기존에 이미 사용하고 계신 </font></strong></h6>
@@ -113,4 +151,3 @@ function uploadClose(msg,obj){
            </div>   
 
        </div>
-

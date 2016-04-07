@@ -295,7 +295,7 @@
 	    var paramString = $("#tokenManageForm").serialize();
         //var paramString = $("#tokenManageForm").serialize()+'&'+$("#tokenFileForm").serialize();
      
-	    fileName = '목공.jpg';
+	    fileName = '세일즈비.jpg';
 		   
         pos = fileName.lastIndexOf("\\");
         ln = fileName.lastIndexOf("\.");
@@ -398,7 +398,7 @@
 
 	
 	function c_uploadImg_Change( value ){ 
-	
+		
 	    var src = getC_FileExtension(value); 
 	    if (src == "") { 
 	       // alert('올바른 파일을 입력하세요'); 
@@ -407,9 +407,8 @@
 	        alert('gif 와 jpg 파일만 지원합니다.'); 
 	        return; 
 	    } 
-	
-		//$('#fid').attr("class","");
-		//document.all('cfid').innerText='첨부완료';
+	  
+		//document.all('afid')[0].innerText='첨부완료';
 	
 	} 
 	
@@ -557,7 +556,7 @@
 	                         <div class="product-imitation">
 	                           <c:choose>
 	              				  <c:when test="${token.image1!=null && token.image1!=''}">
-	                             	 <a href="javascript:AutoResize('${token.image1}')"><img id="image1Id" src="${token.image1}"  width="200" height="200" alt="이미지"></a>
+	                             	 <img id="image1Id" src="${token.image1}"  width="200" height="200" alt="이미지">
 	                              </c:when>
 								  <c:otherwise>
 								  	<img id="image1Id" src=""  width="200" height="200" alt="No Image">
@@ -570,11 +569,19 @@
 	                             </span>
 	                             <small class="text-muted"> </small>
 	                             <a href="#" class="product-name"> </a>
-	                             <div class="small m-t-xs">
-	                                1.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                             <div class="small m-t-xs">                                
+	                                 <!--
+	                                 <div class="btn-group">
+			                             <label title="Upload image files" for="files" class="btn btn-primary">
+			                                 <input type="file" accept="image/*" name="files" id="files" class="hide" onChange="c_uploadImg_Change( this.value )" >
+			                                                            이미지1 파일선택
+			                             </label>
+			                         </div>
+			                          -->
+			                         1.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
 	                             </div>
-	                             <div class="m-t text-righ">
-	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             <div class="m-t text-righ" >
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary" id="afid">아미지첨부 <i class="fa fa-long-arrow-right"></i> </a>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -587,7 +594,7 @@
 	                         <div class="product-imitation">
 	                           <c:choose>
 	              				  <c:when test="${token.image2!=null && token.image2!=''}">
-	                             	 <a href="javascript:AutoResize('${token.image2}')"><img id="image1Id" src="${token.image2}"  width="200" height="200" alt="이미지"></a>
+	                             	 <img id="image1Id" src="${token.image2}"  width="200" height="200" alt="이미지">
 	                              </c:when>
 								  <c:otherwise>
 								  	<img id="image2Id" src=""  width="200" height="200" alt="No Image">
@@ -601,10 +608,18 @@
 	                             <small class="text-muted"> </small>
 	                             <a href="#" class="product-name"> </a>
 	                             <div class="small m-t-xs">
-	                                2.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                                  <!--
+	                                 <div class="btn-group">
+			                             <label title="Upload image files" for="files" class="btn btn-primary">
+			                                 <input type="file" accept="image/*" name="files" id="files" class="hide" onChange="c_uploadImg_Change( this.value )" >
+			                                                            이미지2 파일선택
+			                             </label>
+			                         </div>
+			                          -->
+			                         2.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
 	                             </div>
-	                             <div class="m-t text-righ">
-	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             <div class="m-t text-righ" >
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary" id="afid">아미지첨부 <i class="fa fa-long-arrow-right"></i> </a>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -617,7 +632,7 @@
 	                         <div class="product-imitation">
 	                           <c:choose>
 	              				  <c:when test="${token.image3!=null && token.image3!=''}">
-	                             	 <a href="javascript:AutoResize('${token.image3}')"><img id="image1Id" src="${token.image3}"  width="200" height="200" alt="이미지"></a>
+	                             	 <img id="image1Id" src="${token.image3}"  width="200" height="200" alt="이미지">
 	                              </c:when>
 								  <c:otherwise>
 								  	<img id="image3Id" src=""  width="200" height="200" alt="No Image">
@@ -631,10 +646,18 @@
 	                             <small class="text-muted"> </small>
 	                             <a href="#" class="product-name"> </a>
 	                             <div class="small m-t-xs">
-	                                3.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                                 <!--
+	                                 <div class="btn-group">
+			                             <label title="Upload image files" for="files" class="btn btn-primary">
+			                                 <input type="file" accept="image/*" name="files" id="files" class="hide" onChange="c_uploadImg_Change( this.value )" >
+			                                                            이미지3 파일선택
+			                             </label>
+			                         </div>
+			                          -->
+			                         3.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
 	                             </div>
-	                             <div class="m-t text-righ">
-	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             <div class="m-t text-righ" >
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary" id="afid">아미지첨부 <i class="fa fa-long-arrow-right"></i> </a>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -647,7 +670,7 @@
 	                         <div class="product-imitation">
 	                           <c:choose>
 	              				  <c:when test="${token.image4!=null && token.image4!=''}">
-	                             	 <a href="javascript:AutoResize('${token.image4}')"><img id="image1Id" src="${token.image4}"  width="200" height="200" alt="이미지"></a>
+	                             	 <img id="image1Id" src="${token.image4}"  width="200" height="200" alt="이미지">
 	                              </c:when>
 								  <c:otherwise>
 								  	<img id="image4Id" src=""  width="200" height="200" alt="No Image">
@@ -661,10 +684,18 @@
 	                             <small class="text-muted"> </small>
 	                             <a href="#" class="product-name"> </a>
 	                             <div class="small m-t-xs">
-	                                4.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+									 <!--
+	                                 <div class="btn-group">
+			                             <label title="Upload image files" for="files" class="btn btn-primary">
+			                                 <input type="file" accept="image/*" name="files" id="files" class="hide" onChange="c_uploadImg_Change( this.value )" >
+			                                                            이미지1 파일선택
+			                             </label>
+			                         </div>
+			                          -->
+			                         4.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
 	                             </div>
-	                             <div class="m-t text-righ">
-	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             <div class="m-t text-righ" >
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary" id="afid">아미지첨부 <i class="fa fa-long-arrow-right"></i> </a>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -677,7 +708,7 @@
 	                         <div class="product-imitation">
 	                           <c:choose>
 	              				  <c:when test="${token.image5!=null && token.image5!=''}">
-	                             	 <a href="javascript:AutoResize('${token.image5}')"><img id="image1Id" src="${token.image5}"  width="200" height="200" alt="이미지"></a>
+	                             	 <img id="image1Id" src="${token.image5}"  width="200" height="200" alt="이미지">
 	                              </c:when>
 								  <c:otherwise>
 								  	<img id="image5Id" src=""  width="200" height="200" alt="No Image">
@@ -691,10 +722,18 @@
 	                             <small class="text-muted"> </small>
 	                             <a href="#" class="product-name"> </a>
 	                             <div class="small m-t-xs">
-	                                1.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
+	                                  <!--
+	                                 <div class="btn-group">
+			                             <label title="Upload image files" for="files" class="btn btn-primary">
+			                                 <input type="file" accept="image/*" name="files" id="files" class="hide" onChange="c_uploadImg_Change( this.value )" >
+			                                                            이미지5 파일선택
+			                             </label>
+			                         </div>
+			                          -->
+			                         5.<input type="file"  id="files" name="files" value="" onChange="c_uploadImg_Change( this.value )" >
 	                             </div>
-	                             <div class="m-t text-righ">
-	                                 <a href="#" class="btn btn-xs btn-outline btn-primary">file <i class="fa fa-long-arrow-right"></i> </a>
+	                             <div class="m-t text-righ" >
+	                                 <a href="#" class="btn btn-xs btn-outline btn-primary" id="afid" >아미지첨부 <i class="fa fa-long-arrow-right"></i> </a>
 	                             </div>
 	                         </div>
 	                     </div>

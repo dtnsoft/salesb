@@ -47,6 +47,9 @@
 
     <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
     <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 <!--  
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
@@ -696,214 +699,6 @@
 
     }
 
-    function AutoResize(img){
-
-    	   foto1= new Image();
-    	   foto1.src=(img);
-    	   Controlla(img);
-    }
-    
-  	 function Controlla(img){
-
-  	   if((foto1.width!=0)&&(foto1.height!=0)){
-  	     viewFoto(img);
-  	   }
-  	   else{
-  	     funzione="Controlla('"+img+"')";
-  	     intervallo=setTimeout(funzione,20);
-  	   }
-  	   
-  	 }
-  	 
-   	 function viewFoto(img){
-   		 
-   	   largh=foto1.width-20;
-   	   altez=foto1.height-20;
-   	   stringa="width="+largh+",height="+altez;
-   	  // finestra=window.open(img,"",stringa);
-   	  
-	   	var h=screen.height-(screen.height*(8.5/100));
-		var s=screen.width;
-		
-		if(h<s){
-			s=h;
-		}
-		
-		if(s<largh){
-			largh=s;
-		}
-
-   	  	var url='<%= request.getContextPath() %>/comunity/imageview';
-   
-	   	$('#imageView').dialog({
-	        resizable : false, //사이즈 변경 불가능
-	        draggable : true, //드래그 불가능
-	        closeOnEscape : false, //ESC 버튼 눌렀을때 종료
-	        ////position : 'center',
-	        width : largh,
-	        modal : true, //주위를 어둡게
-	        istitle : false,
-	
-	        open:function(){
-	            //팝업 가져올 url
-	        	 $(this).load(url+'?imageurl='+img);
-	
-	        }
-	        ,close:function(){
-	            $('#imageView').empty();
-	        }
-	    });
-   	   
-   	 }
-   	 
-     function imageView(imageurl) {
-
-     	var url='<%= request.getContextPath() %>/common/imageview';
-     	
-     	$('#imageView').dialog({
-             resizable : false, //사이즈 변경 불가능
-             draggable : true, //드래그 불가능
-             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
-
-            // width : 100,
-            // height : 100,
-             modal : true, //주위를 어둡게
-
-             open:function(){
-                 //팝업 가져올 url
-             	 $(this).load(url+'?imageurl='+imageurl);
-
-             }
-             ,close:function(){
-                 $('#imageView').empty();
-             }
-         });
-     };
-     
-     function imageClose(){
-    	 
-    	 $("#imageView").dialog('close');
-    	 $('#imageView').empty();
-     }
-     
-     function fcComunity_multiRegist(){
-    
-   	    var url;
-   	    var frm = document.comunityForm;
-   	    var fileName = '';
-   	    var pos = '';
-   	    var ln = '';
-   	    var gap = '';
-   	    var gap1 = '';
-   	    
-   		var comment=frm.comment.value;
-   		
-   	    url="<%= request.getContextPath() %>/comunity/comunityregist?comment="+comment;
-   		
-   	    if($("#files").val() != ''){
-   	    	
-   	        fileName = document.all.files.value;
-   	        pos = fileName.lastIndexOf("\\");
-   	        ln = fileName.lastIndexOf("\.");
-   	        gap = fileName.substring(pos + 1, ln);
-   	        gap1 = fileName.substring(ln+1);
-   	        
-   	        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
-   	            url="<%= request.getContextPath() %>/comunity/comunityregist?fileName="+gap+"&extension="+gap1+"&comment="+comment;
-   	        }else {
-   	        	alert("이미지 파일만 등록 부탁드립니다.");
-   	            return;
-   	        }
-   	        
-   	    }else{
-   	    
-   			if(frm.comment.value==''){
-   				alert('남길 톡 내용이 없습니다.');
-   				return;
-   			}
-   	    }
-
-   	    commonDim(true);
-   	    frm.action = url;
-   	    frm.target="file_result";
-
-   	    frm.submit();        
-    }
-     
-    function fcComunity_close(){
-    		
-   		commonDim(false);
-   		
-   		var frm = document.comunityForm;
-   		frm.comment.value='';
-   		frm.files.value='';
-   		document.all('fid').innerText='파일첨부'; 
-   		//	$("#commentRegistForm").dialog('close');
-    }
-     
-    function getFileExtension( filePath ){ 
-   	   
-    	var lastIndex = -1; 
-   	    lastIndex = filePath.lastIndexOf('.'); 
-   	    var extension = ""; 
-
-	   	if ( lastIndex != -1 ){ 
-	   	    extension = filePath.substring( lastIndex+1, filePath.len ); 
-	   	} else { 
-	   	    extension = ""; 
-	   	} 
-	   	
-   	    return extension; 
-   	} 
-
-   	function uploadImg_Change( value ){ 
-
-   	    var src = getFileExtension(value); 
-   	    if (src == "") { 
-   	       // alert('올바른 파일을 입력하세요'); 
-   	       // return; 
-   	    } else if ( !((src.toLowerCase() == "gif") || (src.toLowerCase() == "jpg") || (src.toLowerCase() == "jpeg")) ) { 
-   	        alert('gif 와 jpg 파일만 지원합니다.'); 
-   	        return; 
-   	    } 
-
-   	    //LoadImg( value); 
-   	    
-   		//$('#fid').attr("class","");
-   		document.all('fid').innerText='첨부완료';
-
-   	} 
-
-   	function LoadImg(value){ 
-   	    var imgInfo = new Image(); 
-   	    imgInfo.onload = img_Load; 
-   	    imgInfo.src = value; 
-   	} 
-
-   	function img_Load() { 
-   	    var imgSrc, imgWidth, imgHeight, imgFileSize; 
-   	    var maxFileSize; 
-   	    maxFileSize = 10240;  //byte 
-   	    imgSrc = this.src; 
-   	    imgWidth = this.width; 
-   	    imgHeight = this.height; 
-   	    imgFileSize = this.fileSize; 
-
-   	    if (imgSrc == "" || imgWidth <= 0 || imgHeight <= 0) { 
-   	        alert('그림파일을 가져올 수 없습니다.'); 
-   	        return; 
-   	    } 
-
-   	    if (imgFileSize > maxFileSize) { 
-   	        alert('선택하신 그림 파일은 허용 최대크기인 ' + maxFileSize/1024 + ' KB 를 초과하였습니다.'); 
-   	        return; 
-   	    } 
-
-   	    document.all.imgWidth.value = imgWidth; 
-   	    document.all.imgHeight.value = imgHeight; 
-
-   	} 
-
   </script>
   </head>
   <body>
@@ -1009,14 +804,7 @@
 
 <!-- iCheck -->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green',
-        });
-    });
-</script>
+
 <script>
 
 if('${customerKey}'==null || '${customerKey}'=='null' ){

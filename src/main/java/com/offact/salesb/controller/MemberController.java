@@ -237,7 +237,7 @@ public class MemberController {
         mv.addObject("tokenList", tokenList);
 
         // totalCount 조회
-        String totalCount ="0";// String.valueOf(asSvc.getAsCnt(asConVO));
+        String totalCount = String.valueOf(tokenSvc.getTokenCnt(tokenConVO));
         mv.addObject("totalCount", totalCount);
 
         mv.setViewName("member/myTokenList");

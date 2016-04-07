@@ -100,6 +100,7 @@
 			  ,T1.shortUrl
 			  ,T1.customerKey
 			  ,T1.productCode
+			  ,T1.productEtc
 			  ,T1.activeYn
 			  ,T1.image1
 			  ,T1.image2

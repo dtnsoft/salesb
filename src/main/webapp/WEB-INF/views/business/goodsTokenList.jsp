@@ -58,7 +58,14 @@
                                 <c:forEach items="${productList}" var="ProductVO" varStatus="status">
                                  <tr id="select_tr_${ProductVO.idx}" onClick="fcGoods_View('${status.count-1}');">
     								<input type="hidden" id="prodId" name="prodId" value="${ProductVO.idx}">
-                                     <td style="width:30px"><input type="radio" name="prodIdRadio" id="prodIdRadio"></td>
+                                     <td style="width:30px">
+                                     
+                                        <div class="radio radio-success">
+                                            <input type="radio" value="" name="prodIdRadio" id="prodIdRadio" checked="" aria-label="Single radio Two">
+                                            <label></label>
+                                        </div>
+                                     
+                                     </td>
                                      <td><c:out value="${ProductVO.productName}"></c:out></td>
                                  </tr>
                                  </c:forEach>
@@ -72,15 +79,6 @@
                             </table>
                         </div>
 						<!-- 페이징 -->
-						<div class="btn-group">
-	                         <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-	                         <button class="btn btn-white">1</button>
-	                         <button class="btn btn-white  active">2</button>
-	                         <button class="btn btn-white">3</button>
-	                         <button class="btn btn-white">4</button>
-	                         <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
-	                     </div>
-	                     <!-- 
 						<taglib:paging cbFnc="goPageGoodsPageList" totalCount="${totalCount}" curPage="${productConVO.curPage}" rowCount="${productConVO.rowCount}" />
 						<!-- //페이징 --> 
                     </div>
@@ -89,3 +87,13 @@
         </div> 
 	 
 
+	<!-- iCheck
+       <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+  -->

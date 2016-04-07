@@ -73,20 +73,20 @@ public class PagingTag extends TagSupport {
             lPageCount = lTotalCount / lRowCount + 1L;
         }
 
-        html.append("<div class=\"m_paginate_wrap\"><div class=\"m_paginate\">\n");
+        html.append("<div class=\"btn-group\">\n");
 
         if (lTotalCount > 0L)
         {
           if (lCurPage != 1L)
           {
-            html.append("<a href=\"javascript:" + 
+            html.append("<button type=\"button\" onClick=\"" + 
               this.cbFnc + 
-              "('1');\" class=\"prev\"><span class=\"blind\"></span></a>");
-            html.append("<a href=\"javascript:" + 
+              "('1');\" class=\"btn btn-white\"><i class=\"fa fa-angle-double-left\"></i></button>");
+            html.append("<button type=\"button\" onClick=\"" + 
               this.cbFnc + 
               "('" + (
               lCurPage - 1L) + 
-              "');\" class=\"prev\"><span class=\"blind\"></span></a>");
+              "');\" class=\"btn btn-white\"><i class=\"fa fa-angle-left\"></i></button>");
           }
           long startPage = lCurPage / 10L * 10L + 1L;
           if ((0L == lCurPage % 10L) && (lCurPage > 9L)) {
@@ -100,29 +100,29 @@ public class PagingTag extends TagSupport {
           for (long page = startPage; page <= endPage; page += 1L)
           {
             if (lCurPage == page)
-              html.append("<strong>" + page + "</strong>");
+              html.append("<button class=\"btn btn-white  active\">" + page + "</button>");
             else {
-              html.append("<a href=\"javascript:" + this.cbFnc + "('" + page + 
-                "');\">" + page + "</a>");
+              html.append("<button type=\"button\" onClick=\"" + this.cbFnc + "('" + page + 
+                "');\" class=\"btn btn-white\">" + page + "</button>");
             }
           }
 
           if (lCurPage != lPageCount)
           {
-            html.append("<a href=\"javascript:" + 
+            html.append("<button type=\"button\" onClick=\"" + 
               this.cbFnc + 
               "('" + (
               lCurPage + 1L) + 
-              "');\" class=\"next\"><span class=\"blind\"></span></a>");
-            html.append("<a href=\"javascript:" + 
+              "');\" class=\"btn btn-white\"><i class=\"fa fa-angle-right\"></i></button>");
+            html.append("<button type=\"button\" onClick=\"" + 
               this.cbFnc + 
               "('" + 
               lPageCount + 
-              "');\" class=\"next\"><span class=\"blind\"></span></a>");
+              "');\" class=\"btn btn-white\"><i class=\"fa fa-angle-double-right\"></i></button>");
           }
         }
 
-        html.append("</div></div>\n");
+        html.append("</div>\n");
 
         try {
 

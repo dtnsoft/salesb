@@ -62,6 +62,7 @@ encoding//src/main/webapp/WEB-INF/views/order/custMobileSale.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/custSale.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/intro.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/kcpOrderResult.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/order/optionDetailList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/payAppOrderResult.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/paypalOrderResult.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/salesb/index_ROOT_addys.jsp=UTF-8

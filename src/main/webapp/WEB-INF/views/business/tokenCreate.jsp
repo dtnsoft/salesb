@@ -100,6 +100,7 @@
       	   if(goodsTokenConForm.prodId.length>1){ 
       		   goodsTokenConForm.prodIdRadio[index].checked=true;
       		   idx=goodsTokenConForm.prodId[index].value;
+
              }else{
           	   goodsTokenConForm.prodIdRadio.checked=true;
           	   idx=goodsTokenConForm.prodId.value;

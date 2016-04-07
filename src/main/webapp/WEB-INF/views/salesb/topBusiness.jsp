@@ -52,6 +52,9 @@
 
     <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
     <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+    
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 <!--  
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
@@ -1015,16 +1018,7 @@
 
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- iCheck -->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green',
-        });
-    });
-</script>
 
 <script>
 

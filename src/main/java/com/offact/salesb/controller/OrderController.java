@@ -50,6 +50,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.salesb.service.CustomerService;
 import com.offact.salesb.service.UserMenuService;
 import com.offact.salesb.service.business.ProductService;
+import com.offact.salesb.service.business.OptionService;
 import com.offact.salesb.service.common.MailService;
 import com.offact.salesb.service.common.SmsService;
 import com.offact.salesb.service.member.TokenService;
@@ -61,6 +62,7 @@ import com.offact.salesb.vo.common.SmsVO;
 import com.offact.salesb.vo.member.TokenVO;
 import com.offact.salesb.vo.order.OrderVO;
 import com.offact.salesb.vo.business.ProductMasterVO;
+import com.offact.salesb.vo.business.OptionVO;
 import com.offact.common.JSONDataParser;
 
 /**
@@ -128,6 +130,9 @@ public class OrderController {
     
     @Autowired
     private ProductService productSvc;
+    
+    @Autowired
+    private OptionService optionSvc;
     
     @Autowired
     private OrderService orderSvc;
@@ -939,6 +944,16 @@ public class OrderController {
         goodsVo.setIdx(keys[1]);
         
         goodsVo=productSvc.getProductDetail(goodsVo);
+        
+        List<OptionVO> optionList = null;
+        OptionVO optionConVO = new OptionVO();
+        
+        if(goodsVo.getOptionKey().equals("N")){
+        	
+        	optionConVO.setOptionKey(goodsVo.getOptionKey());
+            optionList = optionSvc.getOptionList(optionConVO);
+	
+        }
 
         mv.addObject("token", tokenVo);
         mv.addObject("goods", goodsVo);
@@ -946,6 +961,8 @@ public class OrderController {
         mv.addObject("productCode", keys[1]);
         mv.addObject("tokenemail", keys[2]);
         mv.addObject("tokenphone", keys[3]);
+        mv.addObject("optionList", optionList);
+        
         mv.addObject("key", key);
         
         logger.info("["+logid+"] CipherDecipherUtil tokenemail::"+keys[2]);
@@ -1104,6 +1121,20 @@ public class OrderController {
         goodsVo.setIdx(keys[1]);
         
         goodsVo=productSvc.getProductDetail(goodsVo);
+        
+        List<OptionVO> optionList = null;
+        OptionVO optionConVO = new OptionVO();
+
+        
+        logger.info("["+logid+"] Controller goodsVo.getOptionKey()="+goodsVo.getOptionKey());
+
+        
+        if(!goodsVo.getOptionKey().equals("N")){
+        	
+        	optionConVO.setOptionKey(goodsVo.getOptionKey());
+            optionList = optionSvc.getOptionList(optionConVO);
+	
+        }
 
         mv.addObject("token", tokenVo);
         mv.addObject("goods", goodsVo);
@@ -1112,6 +1143,8 @@ public class OrderController {
         mv.addObject("tokenemail", keys[2]);
         mv.addObject("tokenphone", keys[3]);
         mv.addObject("key", key);
+        
+        mv.addObject("optionList", optionList);
 
         mv.setViewName("/order/custSale");
         
@@ -1314,6 +1347,50 @@ public class OrderController {
       	long t2 = System.currentTimeMillis();
       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
       	
+        return mv;
+    }
+    
+    /**
+     * 옵션 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/optiondetaillist")
+    public ModelAndView optionDetailList(String optionId,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : optionId" + optionId);
+
+        ModelAndView mv = new ModelAndView();
+
+        OptionVO optionConVO = new OptionVO();
+ 
+        List<OptionVO> optionDetailList = null;
+
+        optionConVO.setOptionId(optionId);
+
+        //option list 조회
+        optionDetailList = optionSvc.getOptionDetailList(optionConVO);
+        
+        mv.addObject("optionDetailList", optionDetailList);
+
+        mv.setViewName("/order/optionDetailList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
         return mv;
     }
     

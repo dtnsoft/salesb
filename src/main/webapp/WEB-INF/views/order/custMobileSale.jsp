@@ -1,3 +1,4 @@
+<%@ include file="/WEB-INF/views/salesb/base.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -78,10 +79,11 @@
 %>    
 <!DOCTYPE html>
 <html>
-  <head> 
-    <title>모바일 결제</title>
+
+<head>
+
+    <title>Salesb | E-commerce product detail</title>
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/images/favicon.ico" type='image/ico'>
-    <!--  <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <meta name="viewport" content="width=device-width, user-scalable=<%=tablet_size%>, initial-scale=<%=tablet_size%>, maximum-scale=<%=tablet_size%>, minimum-scale=<%=tablet_size%>">
     <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
     <meta http-equiv="Cache-Control" content="No-Cache">
@@ -92,32 +94,18 @@
     <meta property="og:description" content="나도 판매왕 되기">
     <meta property="og:image" content="<%= request.getContextPath() %>/images/salesbaron.jpg">
 
-    <!-- Latest compiled and minified CSS-->
-	<link href="<%= request.getContextPath() %>/css/reset.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
-	<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
-	
-	<link href="<%= request.getContextPath() %>/kcp/mobile_sample/css/style.css" rel="stylesheet" type="text/css" id="cssLink"/>
-  	
-	<script>
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
 
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/slick/slick.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/slick/slick-theme.css" rel="stylesheet">
 
-
-		  ga('create', 'UA-73697440-1', 'auto');
-
-		  ga('set', 'userId', '116577077'); // 로그인한 User-ID를 사용하여 User-ID를 설정합니다.
-
-		  ga('send', 'pageview');
-
-	</script>
-
-
-	<!-- 거래등록 하는 kcp 서버와 통신을 위한 스크립트-->
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+    
+    <link href="<%= request.getContextPath() %>/kcp/mobile_sample/css/style.css" rel="stylesheet" type="text/css" id="cssLink"/>
+    
+    <!-- 거래등록 하는 kcp 서버와 통신을 위한 스크립트-->
 	<script type="text/javascript" src="<%= request.getContextPath() %>/kcp/mobile_sample/js/approval_key.js"></script>
 	
 <!--	<script src="http://lite.payapp.kr/public/api/payapp-lite.js"></script> -->
@@ -138,19 +126,7 @@
     /* ============================================================================== */
 %>
   <script type="text/javascript">
-  /* 
-  PayApp.setDefault('userid',     'payapptest');
-  PayApp.setDefault('shopname',   '좋은상점');
 
-  function myPay() {
-	  PayApp.setParam('userid', 'jeonpro');
-	  PayApp.setParam('recvphone', '01067471995');
-      PayApp.setParam('goodname', '착한상품');
-      PayApp.setParam('price',    '1000');
-      PayApp.setParam('vccode', 'krw');
-      PayApp.call();
-  }
-  */
   var controlCss = "<%= request.getContextPath() %>/kcp/mobile_sample/css/style.css";
   var isMobile = {
     Android: function() {
@@ -173,16 +149,6 @@
     }
   };
 
-  //alert( isMobile.any() )
-  
-  var key='${key}';
-
-  if( isMobile.any()==null){
-	location.href='<%= request.getContextPath() %>/custsale?key='+key;  
-	//location.href='<%= request.getContextPath() %>/kcp/mobile_sample/order_mobile.jsp';    
-  }else{
-	// location.href='<%= request.getContextPath() %>/kcp/mobile_sample/order_mobile.jsp';  
-  }
   
   /* 주문번호 생성 예제 */
   function init_orderid()
@@ -299,283 +265,463 @@
     }
   }
   
-  function orderKey(){
-	  
-  	//주문정보 입력 (주문키생성)
-     	$.ajax({
- 		        type: "POST",
- 		        async:false,
- 		           url:  "<%= request.getContextPath() %>/order/orderkey",
- 		           data:$("#OrderProcessForm").serialize(),
- 		           success: function(result) {
 
- 						if(result!='N'){
- 						    var form = document.order_info;
- 							form.ordr_idxx.value=result;
- 							kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');
-                             
- 						} else{
-					    	
- 							 alert('주문키 생성을 실패했습니다.');
- 							 return;
- 							 
- 						}
+  </script>
+  
+   <script>
+    
+  //alert( isMobile.any() )
+    
+    var key='${key}';
 
- 		           },
- 		           error:function(){
- 		        	   
- 		        	   alert('[error]주문키 생성을 실패했습니다.');
- 		        	   return;
- 		           }
- 		    });
+    if( isMobile.any()==null){
+  	location.href='<%= request.getContextPath() %>/custsale?key='+key;  
+  	//location.href='<%= request.getContextPath() %>/kcp/mobile_sample/order_mobile.jsp';    
+    }else{
+  	// location.href='<%= request.getContextPath() %>/kcp/mobile_sample/order_mobile.jsp';  
+    }
+
+   //google anlaystic적용
+   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+
+	  ga('create', 'UA-73697440-1', 'auto');
+
+	  ga('set', 'userId', '116577077'); // 로그인한 User-ID를 사용하여 User-ID를 설정합니다.
+
+	  ga('send', 'pageview');
 	  
-  }
+  	function orderKey(){
+  	  
+    	//주문정보 입력 (주문키생성)
+       	$.ajax({
+   		        type: "POST",
+   		        async:false,
+   		           url:  "<%= request.getContextPath() %>/order/orderkey",
+   		           data:$("#OrderProcessForm").serialize(),
+   		           success: function(result) {
+
+   						if(result!='N'){
+   						    var form = document.order_info;
+   							form.ordr_idxx.value=result;
+   							kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');
+                               
+   						} else{
+  					    	
+   							 alert('주문키 생성을 실패했습니다.');
+   							 return;
+   							 
+   						}
+
+   		           },
+   		           error:function(){
+   		        	   
+   		        	   alert('[error]주문키 생성을 실패했습니다.');
+   		        	   return;
+   		           }
+   		    });
+  	  
+    }	  
+    
+	function optionDetail(optionId){
+		
+		 $.ajax({
+	            type: "POST",
+	               url:  "<%= request.getContextPath() %>/order/optiondetaillist?optionId="+optionId,
+	               success: function(result) {
+	                   //commonDim(false);
+	                   $("#addOptionDetailList").html(result);
+	 
+	               },
+	               error:function() {
+	                 
+	               }
+	        });		
+		
+	}
+	function optionDetailSelect(optionId,optionValueKey,optionValue){
+
+		document.all('select_tr_'+optionId).innerText=optionValue;
+
+		$("#modalColse1").click();
+	}
+    
     </script>
 
-	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+</head>
 
 <body onload="jsf__chk_type();init_orderid();chk_pay();">
-		<!-- 헤더 -->
-		  <header>
-		   <div class="mb_top">
-				<h1 class="head_logo"></h1>
-			</div>
-		  </header>
-		<!--//헤더 -->  
-		<!-- container -->
-		<div id="container" class="clm_order_detail" >
-	    <div id="m_content form" >
-	      <div class="clm_order_detail">
-		    <!-- 타이틀 -->
-	        <div class="clm_acdo_tit">
-	          <h1>상품(모바일) 판매페이지</h1>   
+
+<div id="wrapper">
+
+		<nav class="navbar-default navbar-static-side" role="navigation">
+	            <div class="sidebar-collapse">
+	                <ul class="nav metismenu" id="side-menu">
+	                    <li class="nav-header">
+	                        <div class="dropdown profile-element"> <span>
+	                            <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/icon.png" />
+	                             </span>
+	                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	                            <span class="clear"> <span class="block m-t-xs"> 
+	                             <strong class="font-bold">SALESB</strong>
+	                             </span> <span class="text-muted text-xs block">Welcome to salesb!<b class="caret"></b></span> </span> </a>
+	                        </div>
+	                        <div class="logo-element">
+	                           <img alt="image" class="img-circle" src="<%= request.getContextPath() %>/images/intro/icon.png" />
+	                        </div>
+	                    </li>
+	                </ul>
+	            </div>
+	        </nav>
+	         
+	    <div id="page-wrapper" class="gray-bg dashbard-1">
+	        <div class="row border-bottom">
+	        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+	        <div class="navbar-header">
+	            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
 	        </div>
-	        <!--// 타이틀 --> 
-			<form:form class="form-inline" role="form"  id="orderResultForm" name="orderResultForm" method="post" action="" >   
-	        <!-- 1.판매자정보 -->
-	        <div class="clm_acdo_tit2">
-	          <h2 class="h2_txo"> <strong><em class="num">1. </em></strong>판매자정보</h2>
-	        </div>
-	        <div class="clm_acdo_sec">
-	          <dl class="clm_ip2">
-	            <dt><span class="tit">핸드폰</span></dt>
-	            <dd>
-	              <p class="tx1" id="sbPhoneNumber">${customer.sbPhoneNumber}</p>
-	            </dd>
-	          </dl>
-	        </div>
-	        <hr class="odr_line_ty1">
-	        <div class="clm_acdo_sec">
-	          <dl class="clm_ip2">
-	            <dt><span class="tit">이메일</span></dt>
-	            <dd>
-	              <p class="tx1" id="sbEmail">${customer.sbEmail}</p>
-	            </dd>
-	          </dl>
-	        </div>
-	        <!--// 1. 판매자정보 --> 
-	        <!-- 2.상품정보 -->
-	        <div class="clm_acdo_tit2">
-	          <h2 class="h2_txo"> <strong><em class="date">2.</em></strong>&nbsp;상품정보</h2>
-	        </div>
-	        <div class="clm_acdo_sec">
-	          <dl class="clm_ip2">
-	            <dt><span class="tit">상품명</span></dt>
-	            <dd>
-	              <p class="tx1" id="productName">${goods.productName}</p>
-	            </dd>
-	          </dl>
-	          <hr class="odr_line_ty1">
-	          <dl class="clm_ip2">
-	            <dt><span class="tit">상품가격</span></dt>
-	            <dd>
-	              <p class="tx1" id="salesPrice">${goods.salesPrice}</p>
-	            </dd>
-	          </dl>
-	         <hr class="odr_line_ty1">
-	          <dl class="clm_ip2">
-	            <dt><span class="tit">상품이미지</span></dt>
-	             <div id="slides">
-	              <c:if test="${token.image1!=null && token.image1!=''}">
-			      <img id="image1" src="${token.image1}"  width="200" height="200" alt="이미지">
-			      </c:if>
-			      <c:if test="${token.image2!=null && token.image2!=''}">
-			      <img id="image2" src="${token.image2}"  width="200" height="200" alt="이미지">
-			      </c:if>
-			      <c:if test="${token.image3!=null && token.image3!=''}">
-			      <img id="image3" src="${token.image3}"  width="200" height="200" alt="이미지">
-			      </c:if>
-			      <c:if test="${token.image4!=null && token.image4!=''}">
-			      <img id="image4" src="${token.image4}"  width="200" height="200" alt="이미지">
-			      </c:if>
-			      <c:if test="${token.image5!=null && token.image5!=''}">
-			      <img id="image5" src="${token.image5}"  width="200" height="200" alt="이미지">
-			      </c:if>
-			    </div>
-	          </dl>
-	        </div>
-	        </form:form>
-	        <!--// 2. 상품정보 --> 
-	        <!-- 3.결재 -->
-	        <form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
-	           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
-	           <input type="hidden" name="customerKey" value="${customer.customerKey}" />
-	           <input type="hidden" name="productCode" value="${goods.idx}" />
-	           <input type="hidden" name="salesPrice" value="${goods.salesPrice}" />
-	           <input type="hidden" name="groupId" value="${token.groupId}" />
-	           <input type="hidden" name="orderState" value="01" />
-	        </form>
-	        <form name="order_info" method="post">
-	        <div class="clm_acdo_tit2">
-	          <h2 class="h2_txo"> <strong><em class="date">3.</em></strong>&nbsp;결재</h2>
-	        </div>
-			<div class="clm_acdo_sec">
-	          <dl class="clm_ip2">
-	          <div align="center" id="cert_info">
-				<!-- 주문정보 입력 form : order_info -->
+	            <ul class="nav navbar-top-links navbar-right">
+	                <li>
+	                    <span class="m-r-sm text-muted welcome-message">Welcome to Salesb PC version.</span>
+	                </li>
+	                <li>
+	                </li>
+	            </ul>
 
-		
-				   <!-- 신용카드 -->
-		
-				   <!-- 주문번호(ordr_idxx) -->
-				   <input type="hidden" name="ordr_idxx" value="" />
-				   <!-- 상품명(good_name) -->
-				   <input type="hidden" name="good_name" value="${goods.productName}" />
-				    <!-- 결제금액(good_mny) - ※ 필수 : 값 설정시 ,(콤마)를 제외한 숫자만 입력하여 주십시오. -->
-				   <input type="hidden" name="good_mny" value=">${goods.salesPrice}" />
-				    <!-- 주문자명(buyr_name) -->
-				   <input type="hidden" name="buyr_name" value="${customer.customerKey}" />
-				   <!-- 주문자 E-mail(buyr_mail) -->
-				   <input type="hidden" name="buyr_mail" value="${customer.sbEmail}" />
-				   <!-- 주문자 연락처1(buyr_tel1) -->
-				   <input type="hidden" name="buyr_tel1" value="${customer.sbPhoneNumber}" />
-				   <!-- 휴대폰번호(buyr_tel2) -->
-				   <input type="hidden" name="buyr_tel2" value="010-0000-0000" />
+        	</nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>E-commerce product detail</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a>E-commerce</a>
+                    </li>
+                    <li class="active">
+                        <strong>Product detail</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
 
-				   <!-- 결제 요청/처음으로 이미지 -->
-		             
-		           <div class="clm_acdo_sec" id="display_pay_button" style="display:block">
-		                      <th>KCP 모바일지불 방법</th>
-		                      <td>
-			                    <select name="ActionResult" onchange="jsf__chk_type();">
-					                <option value="" selected>선택하십시오</option>
-					                <option value="card">신용카드</option>
-					                <option value="acnt">계좌이체</option>
-					                <option value="vcnt">가상계좌</option>
-					                <!--  <option value="mobx">휴대폰</option>-->
-					                <option value="ocb">OK캐쉬백</option>
-					                <option value="tpnt">복지포인트</option>
-					                <option value="scbl">도서상품권</option>
-					                <option value="sccl">문화상품권</option>
-					                <option value="schm">해피머니</option>
-					            </select>
-		                      </td>
-		                 <input name="" type="button" class="submit" value="결제요청" onclick="orderKey();">
-		           </div>
-	        </div>
-			</dl>
-			 <hr class="odr_line_ty1">
-			 <dl class="clm_ip2">
-	            <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
-								    data-name="offact" 
-								    data-button="buynow" 
-								    data-quantity="1" 
-								    data-callback="http://dev.addys.co.kr" 
-								    data-env="sandbox"
-								    data-charset="UTF-8"
-								></script>
-	          </dl>
+            </div>
+        </div>
 
-      	</div>
+        <div class="wrapper wrapper-content animated fadeInRight">
 
-  <!-- 공통정보 -->
-  <input type="hidden" name="req_tx"          value="pay">                           <!-- 요청 구분 -->
-  <input type="hidden" name="shop_name"       value="<%= g_conf_site_name %>">       <!-- 사이트 이름 --> 
-  <input type="hidden" name="site_cd"         value="<%= g_conf_site_cd   %>">       <!-- 사이트 키 -->
-  <input type="hidden" name="currency"        value="410"/>                          <!-- 통화 코드 -->
-  <input type="hidden" name="eng_flag"        value="N"/>                            <!-- 한 / 영 -->
-  <!-- 결제등록 키 -->
-  <input type="hidden" name="approval_key"    id="approval">
-  <!-- 인증시 필요한 파라미터(변경불가)-->
-  <input type="hidden" name="escw_used"       value="N">
-  <input type="hidden" name="pay_method"      value="">
-  <input type="hidden" name="van_code"        value="<%=van_code%>">
-  <!-- 신용카드 설정 -->
-  <input type="hidden" name="quotaopt"        value="12"/>                           <!-- 최대 할부개월수 -->
-  <!-- 가상계좌 설정 -->
-  <input type="hidden" name="ipgm_date"       value=""/>
-  <!-- 가맹점에서 관리하는 고객 아이디 설정을 해야 합니다.(필수 설정) -->
-  <input type="hidden" name="shop_user_id"    value=""/>
-  <!-- 복지포인트 결제시 가맹점에 할당되어진 코드 값을 입력해야합니다.(필수 설정) -->
-  <input type="hidden" name="pt_memcorp_cd"   value=""/>
-  <!-- 현금영수증 설정 -->
-  <input type="hidden" name="disp_tax_yn"     value="Y"/>
-  <!-- 리턴 URL (kcp와 통신후 결제를 요청할 수 있는 암호화 데이터를 전송 받을 가맹점의 주문페이지 URL) -->
-  <input type="hidden" name="Ret_URL"         value="<%=s_host_url%>/salesb/kcp/mobile_sample/order_mobile.jsp">
-  <!--<input type="hidden" name="Ret_URL"         value="<%=url%>">-->
-  <!-- 화면 크기조정 -->
-  <input type="hidden" name="tablet_size"     value="<%=tablet_size%>">
+            <div class="row">
+                <div class="col-lg-12">
 
-  <!-- 추가 파라미터 ( 가맹점에서 별도의 값전달시 param_opt 를 사용하여 값 전달 ) -->
-  <input type="hidden" name="param_opt_1"     value="">
-  <input type="hidden" name="param_opt_2"     value="">
-  <input type="hidden" name="param_opt_3"     value="">
+                    <div class="ibox product-detail">
+                        <div class="ibox-content">
 
-  <!-- 결제 정보 등록시 응답 타입 ( 필드가 없거나 값이 '' 일경우 TEXT, 값이 XML 또는 JSON 지원 -->
-  <input type="hidden" name="response_type"  value="TEXT"/>
-  <input type="hidden" name="PayUrl"   id="PayUrl"   value=""/>
-  <input type="hidden" name="traceNo"  id="traceNo"  value=""/>
-
-<%
-    /* ============================================================================== */
-    /* =   옵션 정보                                                                = */
-    /* = -------------------------------------------------------------------------- = */
-    /* =   ※ 옵션 - 결제에 필요한 추가 옵션 정보를 입력 및 설정합니다.             = */
-    /* = -------------------------------------------------------------------------- = */
-    /* 카드사 리스트 설정
-    예) 비씨카드와 신한카드 사용 설정시
-    <input type="hidden" name='used_card'    value="CCBC:CCLG">
-
-    /*  무이자 옵션
-            ※ 설정할부    (가맹점 관리자 페이지에 설정 된 무이자 설정을 따른다)                             - "" 로 설정
-            ※ 일반할부    (KCP 이벤트 이외에 설정 된 모든 무이자 설정을 무시한다)                           - "N" 로 설정
-            ※ 무이자 할부 (가맹점 관리자 페이지에 설정 된 무이자 이벤트 중 원하는 무이자 설정을 세팅한다)   - "Y" 로 설정
-    <input type="hidden" name="kcp_noint"       value=""/> */
-
-    /*  무이자 설정
-            ※ 주의 1 : 할부는 결제금액이 50,000 원 이상일 경우에만 가능
-            ※ 주의 2 : 무이자 설정값은 무이자 옵션이 Y일 경우에만 결제 창에 적용
-            예) 전 카드 2,3,6개월 무이자(국민,비씨,엘지,삼성,신한,현대,롯데,외환) : ALL-02:03:04
-            BC 2,3,6개월, 국민 3,6개월, 삼성 6,9개월 무이자 : CCBC-02:03:06,CCKM-03:06,CCSS-03:06:04
-    <input type="hidden" name="kcp_noint_quota" value="CCBC-02:03:06,CCKM-03:06,CCSS-03:06:09"/> */
-
-    /* KCP는 과세상품과 비과세상품을 동시에 판매하는 업체들의 결제관리에 대한 편의성을 제공해드리고자, 
-       복합과세 전용 사이트코드를 지원해 드리며 총 금액에 대해 복합과세 처리가 가능하도록 제공하고 있습니다
-       복합과세 전용 사이트 코드로 계약하신 가맹점에만 해당이 됩니다
-       상품별이 아니라 금액으로 구분하여 요청하셔야 합니다
-       총결제 금액은 과세금액 + 부과세 + 비과세금액의 합과 같아야 합니다. 
-       (good_mny = comm_tax_mny + comm_vat_mny + comm_free_mny)
-
-        <input type="hidden" name="tax_flag"       value="TG03">  <!-- 변경불가	   -->
-        <input type="hidden" name="comm_tax_mny"   value=""    >  <!-- 과세금액	   --> 
-        <input type="hidden" name="comm_vat_mny"   value=""    >  <!-- 부가세	   -->
-        <input type="hidden" name="comm_free_mny"  value=""    >  <!-- 비과세 금액 --> */
-    /* = -------------------------------------------------------------------------- = */
-    /* =   옵션 정보 END                                                            = */
-    /* ============================================================================== */
-%>
-		</form>
-	  </div> 
-	</div>
-   </div>
-   <div id="footer" class="footer">
-    <span class="Copyright">Copyright 2015 ⓒ salesb Corp. All rights reserved. v1.0.0</span>
-  </div>
+                            <div class="row">
+                                <div class="col-md-5">
 
 
- <!-- 스마트폰에서 KCP 결제창을 레이어 형태로 구현-->
+                                    <div class="product-images">
+                                    
+                                      <c:if test="${token.image1!=null  && token.image1!=''}">
+                                        <div>
+                                            <div class="image-imitation">
+                                                 <img id="image1" src="${token.image1}"  width="200" height="200" alt="이미지">
+                                            </div>
+                                        </div>
+								      </c:if>
+								      <c:if test="${token.image2!=null && token.image2!=''}">
+                                        <div>
+                                            <div class="image-imitation">
+                                                 <img id="image2" src="${token.image2}"  width="200" height="200" alt="이미지">
+                                            </div>
+                                        </div>
+								      </c:if>
+								      <c:if test="${token.image3!=null && token.image3!=''}">
+                                        <div>
+                                            <div class="image-imitation">
+                                                 <img id="image3" src="${token.image3}"  width="200" height="200" alt="이미지">
+                                            </div>
+                                        </div>
+								      </c:if>
+								      <c:if test="${token.image4!=null && token.image4!=''}">
+                                        <div>
+                                            <div class="image-imitation">
+                                                 <img id="image4" src="${token.image4}"  width="200" height="200" alt="이미지">
+                                            </div>
+                                        </div>
+								      </c:if>
+								      <c:if test="${token.image5!=null && token.image5!=''}">
+                                        <div>
+                                            <div class="image-imitation">
+                                                 <img id="image5" src="${token.image5}"  width="200" height="200" alt="이미지">
+                                            </div>
+                                        </div>
+								      </c:if>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-7">
+
+                                    <h2 class="font-bold m-b-xs">
+                                        ${goods.productName}
+                                    </h2>
+                                    <small>Product</small>
+                                    <div class="m-t-md">
+                                        <h2 class="product-main-price">${goods.salesPrice} 원 <small class="text-muted">Price</small> </h2>
+                                    </div>
+                                    <hr>
+
+                                    <h4>Product description</h4>
+
+                                    <div class="small text-muted">
+                                        ${token.productEtc}
+                                    </div>
+                                    <dl class="small m-t-md">
+                                        <dt>Product Option</dt>
+                                        <dd>
+											<div class="ibox-content">
+									          <div class="table-responsive">
+									              <table class="table table-striped" id="contentId">
+									             	  <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+										                    <div class="modal-dialog">
+										                        <div class="modal-content animated flipInY">
+										                            <div class="modal-header">
+										                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+										                                <h4 class="modal-title">옵션 상세선택</h4>
+										                                <small class="font-bold">* 선택된 옵션으로 주문합니다.</small>
+										                            </div>
+										                            <div class="modal-body">
+														              <div id=addOptionDetailList></div>
+										                            </div>
+										                            <div class="modal-footer">
+										                                <button type="button" class="btn btn-white" id="modalColse1" data-dismiss="modal">Close</button>
+										                            </div>
+										                        </div>
+										                    </div>
+										                </div>
+									                  <thead>
+										             	 <tr>
+									                      <th>구분</th>
+									                      <th>선택된옵션</th>
+									                      <th>선택하기</th>
+									                  	</tr>
+									                  </thead>
+									                   	<tbody>
+									                      <c:if test="${!empty optionList}">
+										                       <c:forEach items="${optionList}" var="OptionVO" varStatus="status">
+										                        	<tr>
+												                        <td>${OptionVO.optionName}</td>
+												                        <td id="select_tr_${OptionVO.optionId}"></td>
+												                        <td><button type="button" class="btn btn-primary btn-xs"  onClick="optionDetail('${OptionVO.optionId}')" data-toggle="modal" data-target="#myModal1">상세옵션선택</button></td>
+										                            </tr>
+										                       </c:forEach>
+												          </c:if>
+											              <c:if test="${empty optionList}">
+										                      <tr>
+										                         <td colspan='3' class='text-center'>추가 옵션 정보가 없습니다.</td>
+													          </tr>
+													      </c:if>
+									                 </tbody>
+									              </table>
+									          </div>
+								   			</div>
+										</dd>
+                                        <dt>판매자 핸드폰</dt>
+                                        <dd>${customer.sbPhoneNumber}</dd>
+                                        <dt>판매자 이메일</dt>
+                                        <dd>${customer.sbEmail}</dd>
+                                    </dl>
+                                    <hr>
+									<form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
+							           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
+							           <input type="hidden" name="customerKey" value="${customer.customerKey}" />
+							           <input type="hidden" name="productCode" value="${goods.idx}" />
+							           <input type="hidden" name="salesPrice" value="${goods.salesPrice}" />
+							           <input type="hidden" name="groupId" value="${token.groupId}" />
+							           <input type="hidden" name="orderState" value="01" />
+							        </form>
+							        <form name="order_info" method="post">
+							           <!-- 주문정보 입력 form : order_info -->
+
+									   <!-- 신용카드 -->
+							
+									   <!-- 주문번호(ordr_idxx) -->
+									   <input type="hidden" name="ordr_idxx" value="" />
+									   <!-- 상품명(good_name) -->
+									   <input type="hidden" name="good_name" value="${goods.productName}" />
+									    <!-- 결제금액(good_mny) - ※ 필수 : 값 설정시 ,(콤마)를 제외한 숫자만 입력하여 주십시오. -->
+									   <input type="hidden" name="good_mny" value="${goods.salesPrice}" />
+									    <!-- 주문자명(buyr_name) -->
+									   <input type="hidden" name="buyr_name" value="${customer.customerKey}" />
+									   <!-- 주문자 E-mail(buyr_mail) -->
+									   <input type="hidden" name="buyr_mail" value="${customer.sbEmail}" />
+									   <!-- 주문자 연락처1(buyr_tel1) -->
+									   <input type="hidden" name="buyr_tel1" value="${customer.sbPhoneNumber}" />
+									   <!-- 휴대폰번호(buyr_tel2) -->
+									   <input type="hidden" name="buyr_tel2" value="010-0000-0000" />
+					
+									   <!-- 결제 요청/처음으로 이미지 -->
+									   
+                                    <div>
+		                               <div class="form-group"><label class="col-sm-2 control-label">KCP 모바일지불 방법</label>
+		                                    <div class="col-sm-10">
+		                                    <select class="form-control m-b" name="ActionResult" onchange="jsf__chk_type();">
+		                                        <option value="" selected>선택하십시오</option>
+								                <option value="card">신용카드</option>
+								                <option value="acnt">계좌이체</option>
+								                <option value="vcnt">가상계좌</option>
+								                <!--  <option value="mobx">휴대폰</option>-->
+								                <option value="ocb">OK캐쉬백</option>
+								                <option value="tpnt">복지포인트</option>
+								                <option value="scbl">도서상품권</option>
+								                <option value="sccl">문화상품권</option>
+								                <option value="schm">해피머니</option>
+		                                    </select>
+                                            <button class="btn btn-primary btn-sm" onclick="orderKey();"><i class="fa fa-cart-plus"></i> 결제요청</button>
+                                        	</div>
+		                                </div>
+   
+                                    </div>
+                                    
+                                    <!-- 공통정보 -->
+									  <input type="hidden" name="req_tx"          value="pay">                           <!-- 요청 구분 -->
+									  <input type="hidden" name="shop_name"       value="<%= g_conf_site_name %>">       <!-- 사이트 이름 --> 
+									  <input type="hidden" name="site_cd"         value="<%= g_conf_site_cd   %>">       <!-- 사이트 키 -->
+									  <input type="hidden" name="currency"        value="410"/>                          <!-- 통화 코드 -->
+									  <input type="hidden" name="eng_flag"        value="N"/>                            <!-- 한 / 영 -->
+									  <!-- 결제등록 키 -->
+									  <input type="hidden" name="approval_key"    id="approval">
+									  <!-- 인증시 필요한 파라미터(변경불가)-->
+									  <input type="hidden" name="escw_used"       value="N">
+									  <input type="hidden" name="pay_method"      value="">
+									  <input type="hidden" name="van_code"        value="<%=van_code%>">
+									  <!-- 신용카드 설정 -->
+									  <input type="hidden" name="quotaopt"        value="12"/>                           <!-- 최대 할부개월수 -->
+									  <!-- 가상계좌 설정 -->
+									  <input type="hidden" name="ipgm_date"       value=""/>
+									  <!-- 가맹점에서 관리하는 고객 아이디 설정을 해야 합니다.(필수 설정) -->
+									  <input type="hidden" name="shop_user_id"    value=""/>
+									  <!-- 복지포인트 결제시 가맹점에 할당되어진 코드 값을 입력해야합니다.(필수 설정) -->
+									  <input type="hidden" name="pt_memcorp_cd"   value=""/>
+									  <!-- 현금영수증 설정 -->
+									  <input type="hidden" name="disp_tax_yn"     value="Y"/>
+									  <!-- 리턴 URL (kcp와 통신후 결제를 요청할 수 있는 암호화 데이터를 전송 받을 가맹점의 주문페이지 URL) -->
+									  <input type="hidden" name="Ret_URL"         value="<%=s_host_url%>/salesb/kcp/mobile_sample/order_mobile.jsp">
+									  <!--<input type="hidden" name="Ret_URL"         value="<%=url%>">-->
+									  <!-- 화면 크기조정 -->
+									  <input type="hidden" name="tablet_size"     value="<%=tablet_size%>">
+									
+									  <!-- 추가 파라미터 ( 가맹점에서 별도의 값전달시 param_opt 를 사용하여 값 전달 ) -->
+									  <input type="hidden" name="param_opt_1"     value="">
+									  <input type="hidden" name="param_opt_2"     value="">
+									  <input type="hidden" name="param_opt_3"     value="">
+									
+									  <!-- 결제 정보 등록시 응답 타입 ( 필드가 없거나 값이 '' 일경우 TEXT, 값이 XML 또는 JSON 지원 -->
+									  <input type="hidden" name="response_type"  value="TEXT"/>
+									  <input type="hidden" name="PayUrl"   id="PayUrl"   value=""/>
+									  <input type="hidden" name="traceNo"  id="traceNo"  value=""/>
+									
+									<%
+									    /* ============================================================================== */
+									    /* =   옵션 정보                                                                = */
+									    /* = -------------------------------------------------------------------------- = */
+									    /* =   ※ 옵션 - 결제에 필요한 추가 옵션 정보를 입력 및 설정합니다.             = */
+									    /* = -------------------------------------------------------------------------- = */
+									    /* 카드사 리스트 설정
+									    예) 비씨카드와 신한카드 사용 설정시
+									    <input type="hidden" name='used_card'    value="CCBC:CCLG">
+									
+									    /*  무이자 옵션
+									            ※ 설정할부    (가맹점 관리자 페이지에 설정 된 무이자 설정을 따른다)                             - "" 로 설정
+									            ※ 일반할부    (KCP 이벤트 이외에 설정 된 모든 무이자 설정을 무시한다)                           - "N" 로 설정
+									            ※ 무이자 할부 (가맹점 관리자 페이지에 설정 된 무이자 이벤트 중 원하는 무이자 설정을 세팅한다)   - "Y" 로 설정
+									    <input type="hidden" name="kcp_noint"       value=""/> */
+									
+									    /*  무이자 설정
+									            ※ 주의 1 : 할부는 결제금액이 50,000 원 이상일 경우에만 가능
+									            ※ 주의 2 : 무이자 설정값은 무이자 옵션이 Y일 경우에만 결제 창에 적용
+									            예) 전 카드 2,3,6개월 무이자(국민,비씨,엘지,삼성,신한,현대,롯데,외환) : ALL-02:03:04
+									            BC 2,3,6개월, 국민 3,6개월, 삼성 6,9개월 무이자 : CCBC-02:03:06,CCKM-03:06,CCSS-03:06:04
+									    <input type="hidden" name="kcp_noint_quota" value="CCBC-02:03:06,CCKM-03:06,CCSS-03:06:09"/> */
+									
+									    /* KCP는 과세상품과 비과세상품을 동시에 판매하는 업체들의 결제관리에 대한 편의성을 제공해드리고자, 
+									       복합과세 전용 사이트코드를 지원해 드리며 총 금액에 대해 복합과세 처리가 가능하도록 제공하고 있습니다
+									       복합과세 전용 사이트 코드로 계약하신 가맹점에만 해당이 됩니다
+									       상품별이 아니라 금액으로 구분하여 요청하셔야 합니다
+									       총결제 금액은 과세금액 + 부과세 + 비과세금액의 합과 같아야 합니다. 
+									       (good_mny = comm_tax_mny + comm_vat_mny + comm_free_mny)
+									
+									        <input type="hidden" name="tax_flag"       value="TG03">  <!-- 변경불가	   -->
+									        <input type="hidden" name="comm_tax_mny"   value=""    >  <!-- 과세금액	   --> 
+									        <input type="hidden" name="comm_vat_mny"   value=""    >  <!-- 부가세	   -->
+									        <input type="hidden" name="comm_free_mny"  value=""    >  <!-- 비과세 금액 --> */
+									    /* = -------------------------------------------------------------------------- = */
+									    /* =   옵션 정보 END                                                            = */
+									    /* ============================================================================== */
+									%>
+								    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="ibox-footer">
+                            <span class="pull-right">
+                                Full stock - <i class="fa fa-clock-o"></i> 14.04.2016 10:04 pm
+                            </span>
+                            The generated Lorem Ipsum is therefore always free
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        
+
+        </div>
+        <div class="footer">
+	           <div class="pull-right">
+	               welcome to <strong>Salesb</strong> !!
+	           </div>
+	           <div>
+	               <strong>Copyright</strong> Salesb Corp &copy; All rights reserved v1.0.0
+	           </div>
+		</div> 
+
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+
+<!-- slick carousel-->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slick/slick.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+
+        $('.product-images').slick({
+            dots: true
+        });
+
+    });
+
+</script>
+
+
+<!-- 스마트폰에서 KCP 결제창을 레이어 형태로 구현-->
 <div id="layer_all" style="position:absolute; left:0px; top:0px; width:100%;height:100%; z-index:1; display:none;">
     <table height="100%" width="100%" border="-" cellspacing="0" cellpadding="0" style="text-align:center">
         <tr height="100%" width="100%">
@@ -607,4 +753,5 @@
     <input type="hidden" name="param_opt_3"	   value="<%=param_opt_3%>">
 </form>       
 </body>
+
 </html>
