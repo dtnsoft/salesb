@@ -430,35 +430,35 @@
                                       <c:if test="${token.image1!=null  && token.image1!=''}">
                                         <div>
                                             <div class="image-imitation">
-                                                 <img id="image1" src="${token.image1}"  width="200" height="200" alt="이미지">
+                                                 <img id="image1" src="${token.image1}"  alt="이미지">
                                             </div>
                                         </div>
 								      </c:if>
 								      <c:if test="${token.image2!=null && token.image2!=''}">
                                         <div>
                                             <div class="image-imitation">
-                                                 <img id="image2" src="${token.image2}"  width="200" height="200" alt="이미지">
+                                                 <img id="image2" src="${token.image2}"  alt="이미지">
                                             </div>
                                         </div>
 								      </c:if>
 								      <c:if test="${token.image3!=null && token.image3!=''}">
                                         <div>
                                             <div class="image-imitation">
-                                                 <img id="image3" src="${token.image3}"  width="200" height="200" alt="이미지">
+                                                 <img id="image3" src="${token.image3}"   alt="이미지">
                                             </div>
                                         </div>
 								      </c:if>
 								      <c:if test="${token.image4!=null && token.image4!=''}">
                                         <div>
                                             <div class="image-imitation">
-                                                 <img id="image4" src="${token.image4}"  width="200" height="200" alt="이미지">
+                                                 <img id="image4" src="${token.image4}"   alt="이미지">
                                             </div>
                                         </div>
 								      </c:if>
 								      <c:if test="${token.image5!=null && token.image5!=''}">
                                         <div>
                                             <div class="image-imitation">
-                                                 <img id="image5" src="${token.image5}"  width="200" height="200" alt="이미지">
+                                                 <img id="image5" src="${token.image5}"   alt="이미지">
                                             </div>
                                         </div>
 								      </c:if>
@@ -582,7 +582,9 @@
 								                <option value="sccl">문화상품권</option>
 								                <option value="schm">해피머니</option>
 		                                    </select>
-                                            <button class="btn btn-primary btn-sm" onclick="orderKey();"><i class="fa fa-cart-plus"></i> 결제요청</button>
+                                            <button type="submit" class="btn btn-primary btn-sm" onclick="orderKey();"><i class="fa fa-cart-plus"></i> 결제요청</button>
+                                        	<!-- <button type="submit" class="btn btn-primary btn-sm" onclick="kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp')"><i class="fa fa-cart-plus"></i> 결제요청</button>-->
+                                        	
                                         	</div>
 		                                </div>
    

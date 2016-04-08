@@ -51,11 +51,11 @@
         <div class="item active">
             <div class="container">
                 <div class="carousel-caption">
-                    <h1>환영합니다.<br/>
+                    <h2>환영합니다.<br/>
                                           복잡한 쇼핑몰 구축이나 <br/>
                                           오픈 마켓 입점 없이<br/>
                                           누구나 무료로 온라인 쇼핑몰의<br/>
-                                          사장님이 되실 수 있습니다.</h1>
+                                          사장님이 되실 수 있습니다.</h2>
                     <p>http://salesb.net</p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goLoginBuy()" role="button">회원구매</a>
@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onClick="next()">Save changes</button>
+                                            <button type="button" class="btn btn-primary" onClick="next()">비회원 구매하기</button>
                                         </div>
                                     </div>
                                 </div>
@@ -98,11 +98,11 @@
         <div class="item">
             <div class="container">
                 <div class="carousel-caption blank">
-                    <h1>환영합니다.<br/>
+                    <h2>환영합니다.<br/>
                                           복잡한 쇼핑몰 구축이나 <br/>
                                           오픈 마켓 입점 없이<br/>
                                           누구나 무료로 온라인 쇼핑몰의<br/>
-                                          사장님이 되실 수 있습니다.</h1>
+                                          사장님이 되실 수 있습니다.</h2>
                     <p>http://salesb.net</p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goLoginBuy()" role="button">회원구매</a>
@@ -124,7 +124,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onClick="next()">Save changes</button>
+                                            <button type="button" class="btn btn-primary" onClick="next()">비회원 구매하기</button>
                                         </div>
                                     </div>
                                 </div>
@@ -283,7 +283,7 @@
 
 var msg='${ordermessage}';
 
-if(msg!=''){
+if(msg!='S'){
 	
 	alert('${ordermessage}');
 	

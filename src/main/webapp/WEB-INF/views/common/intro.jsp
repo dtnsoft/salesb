@@ -47,11 +47,11 @@
         <div class="item active">
             <div class="container">
                 <div class="carousel-caption">
-                    <h1>환영합니다.<br/>
+                    <h2>환영합니다.<br/>
                                           복잡한 쇼핑몰 구축이나 <br/>
                                           오픈 마켓 입점 없이<br/>
                                           누구나 무료로 온라인 쇼핑몰의<br/>
-                                          사장님이 되실 수 있습니다.</h1>
+                                          사장님이 되실 수 있습니다.</h2>
                     <p>http://salesb.net</p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goLogin()" role="button">로그인</a>
@@ -72,11 +72,11 @@
         <div class="item">
             <div class="container">
                 <div class="carousel-caption blank">
-                    <h1>환영합니다.<br/>
+                    <h2>환영합니다.<br/>
                                           복잡한 쇼핑몰 구축이나 <br/>
                                           오픈 마켓 입점 없이<br/>
                                           누구나 무료로 온라인 쇼핑몰의<br/>
-                                          사장님이 되실 수 있습니다.</h1>
+                                          사장님이 되실 수 있습니다.</h2>
                     <p>http://salesb.net</p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goLogin()" role="button">로그인</a>
