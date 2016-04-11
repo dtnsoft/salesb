@@ -1147,7 +1147,7 @@ button.dim:active:before {
   color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-  content: "OFF";
+  content: "OFFȸ;
   padding-right: 10px;
   background-color: #FFFFFF;
   color: #999999;

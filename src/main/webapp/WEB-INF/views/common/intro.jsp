@@ -139,7 +139,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 text-center">
-                <a href="mailto:test@email.com" class="btn btn-primary">Send us mail</a>
+                <a href="mailto:salesb@salesb.net" class="btn btn-primary">Send us mail</a>
                 <p class="m-t-sm">
                     Or follow us on social platform
                 </p>
