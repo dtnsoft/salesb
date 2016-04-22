@@ -24,10 +24,14 @@
 	function goPrivateForm(){
 
 		location.href="<%= request.getContextPath() %>/customerregistform";
-		//location.href="<%= request.getContextPath() %>/customerprivateinfo";
 		
 	}
+	
+	function goCompanyForm(){
 
+		location.href="<%= request.getContextPath() %>/companyregistform";
+		
+	}
 	
 	function goLogin(){
 		
@@ -59,6 +63,7 @@
                     </p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goPrivateForm()" role="button">일반회원가입</a>
+                        <a class="btn btn-lg btn-primary" href="javascript:goCompanyForm()" role="button">사업자회원가입</a>
                     </p>
                 </div>
                 <div class="carousel-image wow zoomIn">
@@ -84,6 +89,7 @@
                     </p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goPrivateForm()" role="button">일반회원가입</a>
+                        <a class="btn btn-lg btn-primary" href="javascript:goCompanyForm()" role="button">사업자회원가입</a>
                     </p>
                 </div>
             </div>

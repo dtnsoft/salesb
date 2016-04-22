@@ -5,27 +5,27 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="/WEB-INF/tlds/taglib.tld" prefix="taglib"%>
 <%@ page language="java" contentType="text/html;charset=utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
-		<meta http-equiv="Cache-Control" content="no-cache">
-		<meta http-equiv="Pragma" content="no-cache">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-		      
-		<link href="<%= request.getContextPath() %>/css/reset.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/login.css" rel="stylesheet">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Salesb | Register</title>
+
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
 	
-		<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
-		<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-		<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
-		
-        <script type="text/javascript">
+	<link href="<%= request.getContextPath() %>/css/login.css" rel="stylesheet">
+
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
+
+ 	<script type="text/javascript">
 
             // 결제창 종료후 인증데이터 리턴 함수
             function auth_data( frm )
@@ -437,196 +437,214 @@
 	     	  
 	       }
             
-            
-        </script>
-    </head>
-    <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
-     <div id="wrap" class="wrap" >
-		 <!-- 헤더 -->
-		  <header>
-		   <div class="mb_top">
-				<h1 class="head_logo"></h1>
-			</div>
-		  </header>
-		  <!--//헤더 -->  
-		  <!-- container -->
-		  <form commandName="customerVo"   id="RegistForm" name="RegistForm"  method="post" role="form" action="<%= request.getContextPath() %>/customer/regist">
-	        <input type="hidden" name="tokenstate"          id="tokenstate"         value="-1"  />
-		    <div id="container">
-		      <div class="m_content form" >
-		      <!-- 타이틀 -->
-        <div class="clm_acdo_tit">
-          <h1>계정생성</h1>
-          <div class="clm_acdo_tit_left">
-          <c:choose>
-               <c:when test="${key=='N'}">
-				 <a href="<%= request.getContextPath() %>/intro" class="btn b_prev"><span class="sp_prev">취소</span></a>
-			</c:when>
-			<c:otherwise>
-				 <a href="<%= request.getContextPath() %>/orderintro?key=${key}" class="btn b_prev"><span class="sp_prev">취소</span></a>
-			</c:otherwise>
-		  </c:choose>
-          </div>
+        </script>		
+</head>
+
+<body class="gray-bg">
+  <form commandName="customerVo"   id="RegistForm" name="RegistForm"  method="post" role="form" action="<%= request.getContextPath() %>/customer/regist">
+	<input type="hidden" name="tokenstate"          id="tokenstate"         value="-1"  />
+    <div class="middle-box text-center loginscreen   animated fadeInDown">
+        <div>
+            <div>
+<!-- 
+                <h1 class="logo-name">IN+</h1>
+ -->
+            </div>
+            <h3>Register to Customer</h3>
+            <p>Create account to see it in action.</p>
+            <form class="m-t" role="form" action="login.html">
+                <div class="form-group">
+                    <input type="text" class="form-control" id=sbEmailView name="sbEmailView" placeholder="name@example.com" required="">
+                    <input type="hidden" id=sbEmail name="sbEmail"  value=""/> 
+                </div>
+    
+                <div class="form-group">
+                    <input type="text" class="form-control" id=sbPhoneNumberView name="sbPhoneNumberView" placeholder="핸드폰번호 등록" required="">
+                    <input type="hidden" id=sbPhoneNumber name="sbPhoneNumber"  value=""/> 
+                </div>
+                
+                <button type="button" class="btn btn-primary block full-width m-b" id="reqbtn" onClick="getToken()">인증요청</button>
+                 
+                <div class="form-group">
+                    <input type="password" class="form-control" id="tokenView" name="tokenView" disabled placeholder="인증번호 입력" required="">
+                    <input type="hidden" id=token name="token"  value=""/> 
+                </div>
+                
+                <button type="button" class="btn btn-primary block full-width m-b" id="completebtn" onClick="getTokenConfirm()">인증확인</button>
+                
+                <div id="pwform" name="pwform" style="display:none">
+               	    <p>
+                                          비밀번호를 설정해주세요.
+                    </p>
+                    
+                     <div class="row">
+                        <div class="col-lg-12">
+                            <form class="m-t" role="form" action="index.html">
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id=sbPw name="sbPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)" required="">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="customerRePw" name="customerRePw" placeholder="비밀번호 재입력" required="">
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                
+                </div>
+                
+                    <p>
+                                          고객님의 이메일과 휴대폰 번호로 상품 판매를 위한 e-브로슈어 보안 토큰을 보내 드립니다.
+                    </p>
+                    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+                       <div class="modal-dialog">
+                           <div class="modal-content animated flipInY">
+                               <div class="modal-header">
+                                   <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                   <h4 class="modal-title"></h4>
+                                   <small class="font-bold">이용약관 및 위치기반 서비스</small>
+                               </div>
+                               <div class="modal-body">
+                                   <p>
+                                    
+									제1장 총칙
+			                        <br>
+			                        <br>
+									제1조 (목적)
+						            <br>
+									본 약관은 '(주)오펙트'(이하 '회사'라 함)가 운영하는 인터넷 사이트 및 모바일 애플리케이션(이하 'salesb'이라 함)에서 제공하는 전자상거래 관련 서비스 및 기타 서비스(이하 '서비스'라 함)를 이용하는 자 간의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
+					                <br> 
+									제2조 (정의)
+									<br>
+									① 'salesb'이란 '회사'가 컴퓨터 등 정보통신설비를 이용하여 '서비스'를 제공할 수 있도록 설정한 가상의 영업장을 말합니다.
+									<br>
+									② '회원'이라 함은 '회사'에 개인정보를 제공하여 회원등록을 한 자로서, 'salesb'의 정보를 지속적으로 제공받으며, '회사'가 제공하는 '서비스'를 계속적으로 이용할 수 있는 자를 말합니다.
+									<br>
+									③ '비회원'이라 함은 '회원'에 가입하지 않고 '회사'가 제공하는 '서비스'를 이용하는 자를 말합니다.
+									<br>
+									④ '이용자'란 'salesb'에 접속하여 본 약관에 따라 '회사'가 제공하는 '서비스'를 이용하는 '회원' 및 '비회원'을 말합니다.
+									<br>
+									⑤ '판매자'라 함은 'salesb'에 본인의 재화 및 용역(이하 '아이템'이라 함)을 등록하여 판매하거나 또는 제공할 의사로 '서비스'를 이용하는 자를 말합니다. 
+									<br>
+									⑥ '구매자'라 함은 'salesb'에 등록된 '판매자'의 '아이템'을 구매하거나 또는 제공받을 의사로 '서비스'를 이용하는 자를 말합니다. 
+									<br>
+									제3조 (약관 등의 명시와 설명 및 개정)
+									<br>
+									① '회사'는 본 약관의 내용을 '이용자'가 쉽게 알 수 있도록 인터넷 사이트 및 모바일 어플리케이션에 공지합니다. 다만, 약관의 내용은 '이용자'가 연결화면을 통하여 볼 수 있도록 할 수 있습니다.
+									<br>
+									② '회사'는 전자상거래등에서의소비자보호에관한법률, 약관의규제에관한법률, 전자거래기본법, 전자서명법, 정보통신망이용촉진등에관한법률, 방문판매등에관한법률, 소비자보호법 등 관련법을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다.
+									<br>
+									③ '회사'가 약관을 개정할 경우에는 적용일자 및 개정사유를 명시하여 '이용자'가 알기 쉽도록 표시하여 공지합니다.
+									<br>
+									④ '회사'가 약관을 개정할 경우에는 변경된 약관은 공지된 시점부터 그 효력이 발생하며, '이용자'는 약관이 변경된 후에도 본 '서비스'를 계속 이용함으로써 변경 후의 약관에 대해 동의를 한 것으로 간주됩니다.
+									<br>
+									⑤ 본 약관에서 정하지 아니한 사항과 본 약관의 해석에 관하여는 전자상거래등에서의소비자보호에관한법률, 약관의규제등에관한법률, 공정거래위원회가 정하는 전자상거래등에서의소비자보호지침 및 관계법령 또는 상관례에 따릅니다.
+
+                                   </p>
+                               </div>
+                               <div class="modal-footer">
+                                   <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+                       <div class="modal-dialog">
+                           <div class="modal-content animated flipInY">
+                               <div class="modal-header">
+                                   <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                   <h4 class="modal-title"></h4>
+                                   <small class="font-bold">개인정보의 수집 이용 목적 및 수집하는 개인정보 항목</small>
+                               </div>
+                               <div class="modal-body">
+                                   <p>
+                                    
+									회사는 Salesb 서비스 제공을 위해 마스터 아이디(Master ID), 비밀번호 등 인증정보를 수집하고 Salesb 서비스 이용 기간 동안 옥션 및 G마켓 사이에 아이디(ID), 닉네임, 성명, 주민번호, 대표자명, 사업자등록번호, 사업자연락처, 주소, 연락처, 이메일(e-mail), 등록 상품 정보, 판매 상품 정산 정보, 제3자 제공 동의 정보 등을 공유하거나 연동하여 활용할 수 있습니다. 동 사항에 동의할 경우 해당 이용자의 사업자등록번호에 연동된 모든 아이디(ID)에 상기의 정보 공유 및 연동 활용 효력이 적용됩니다.
+						            <br>
+						            <br>
+									개인정보의 보유 이용 기간
+									<br>
+									<br>
+									회사는 이용자의 개인정보를 원칙적으로 고지 및 약정한 기간 동안 보유 및 이용하며 개인정보의 수집 및 이용목적이 달성되면 지체 없이 파기합니다. 또한, 다음의 정보에 대해서는 아래의 이유로 명시한 기간 동안 보존합니다.
+									<br>
+									<br>
+									관련법령 및 회사 방침에 의한 정보보유 사유
+									<br>
+									<br>
+									상법 등 관계법령의 규정에 의하여 보존할 필요가 있는 경우 법령에서 규정한 일정한 기간 동안 이용자 개인정보를 보관합니다. 이 경우 회사는 보관하는 정보를 그 보관의 목적으로만 이용하며 보존기간은 아래와 같습니다.
+									1.① 계약 또는 청약철회 등에 관한 기록◦보존 이유 : 전자상거래 등에서의 소비자보호에 관한 법률 제6조 및 시행령 제6조
+									<br>◦보존 기간 : 5년
+									<br>
+									2.② 대금결제 및 재화 등의 공급에 관한 기록◦보존 이유 : 전자상거래 등에서의 소비자보호에 관한 법률 제6조 및 시행령 제6조
+									<br>◦보존 기간 : 5년
+									<br>
+									3.③ 소비자의 불만 또는 분쟁처리에 관한 기록◦보존 이유 : 전자상거래 등에서의 소비자보호에 관한 법률 제6조 및 시행령 제6조
+									<br>◦보존 기간 : 3년
+									<br>
+									4.④ 접속에 관한 기록◦보존 이유 : 통신비밀보호법 제15조의2 및 시행령 제41조
+									<br>◦보존기간 : 3개월
+									<br>
+									5.⑤ 부정거래기록◦부정거래의 배제 등 회사 방침에 의한 보존
+									<br>◦보존 기간 : 1년
+                                   </p>
+                               </div>
+                               <div class="modal-footer">
+                                   <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                <div class="form-group">
+                        <div class="checkbox i-checks"><label> <input type="checkbox"  id="useCheck" name="useCheck" checked value=""><i></i> 이용약관 및 위치기반 서비스 <a class="btn btn-info btn-rounded" data-toggle="modal" data-target="#myModal1">보기</a></label></div>
+                </div>
+                <div class="form-group">
+                        <div class="checkbox i-checks"><label> <input type="checkbox"  id="privateCheck" name="privateCheck" checked value=""><i></i> 개인 정보 취급 방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-info btn-rounded" data-toggle="modal" data-target="#myModal2">보기</a></label></div>
+                </div>
+                
+                <button type="button" class="btn btn-primary block full-width m-b" id="btn_change" onClick="goRigist()">등록하기</button>
+
+            </form>
+            <p class="m-t"> <small>Copyright 2015 ⓒ salesb Corp.All rights reserved. v1.0.0</small> </p>
         </div>
-        <!--// 타이틀 --> 
-		        <div class="m_resbx">
-		          <!-- 핸드폰번호 등록 -->
-		            <div class="m_result id">
-		              <h6  class="m_sch_tp"></h6>
-		              <ul class="schinp_list">
-		                <li>
-		                  <label for="" class="blind">이메일</label>
-		                  <span class="inpbx certi">
-		                  <input type="text" id=sbEmailView name="sbEmailView" placeholder="name@example.com">
-		                  <input type="hidden" id=sbEmail name="sbEmail"  value=""/> 
-		                  </span><a href="#"  class="bn_certi" >메일인증</a></li>
-		                   <li>
-		                  <label for="" class="blind">핸드폰번호</label>
-		                  <span class="inpbx certi">
-		                  <input type="text" id=sbPhoneNumberView name="sbPhoneNumberView" placeholder="핸드폰번호 등록">
-		                  <input type="hidden" id=sbPhoneNumber name="sbPhoneNumber"  value=""/> 
-		                  </span><a href="javascript:getToken()" id="reqbtn" class="bn_certi" >인증요청</a></li>
-		                <li>
-		                  <label for="" class="blind">인증번호</label>
-		                  <span class="inpbx certi">
-		                  <input type="password" id="tokenView" name="tokenView" disabled placeholder="인증번호 입력">
-		                  <input type="hidden" id=token name="token"  value=""/> 
-		                  </span><a href="javascript:getTokenConfirm()" id="completebtn" disabled class="bn_certi" >인증확인</a></li>
-		              </ul>
-		            </div>
-		          <!--//핸드폰번호 등록 --> 
-		          <div id="agreeform" name="agreeform" >
-		          <!-- 비밀번호 등록 -->
-		          <div  id="pwform" name="pwform" style="display:none" >
-		            <div class="m_result pw" >
-		              <h4 class="m_sch_tp"> 비밀번호를 설정해주세요.</h4>
-		              <ul class="schinp_list">
-		                <li>
-		                  <label for="inp_pw" class="blind">비밀번호</label>
-		                  <span class="inpbx">
-		                  <input type="password" name="sbPw" id="sbPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)">
-		                  </span></li>
-		                <li>
-		                  <label for="inp_pw2" class="blind">비밀번호 재입력</label>
-		                  <span class="inpbx">
-		                  <input type="password" name="customerRePw" id="customerRePw" placeholder="비밀번호 재확인">
-		                  </span></li>
-		              </ul>
-		            </div>
-
-		          </div>
-		          <!--//비밀번호 등록 --> 
-		          <!-- 개인정보수집 동의 -->
-		            <div class="m_result privacy" >
-		              <h4 class="m_sch_tp">고객님의 이메일과 휴대폰 번호로 상품 판매를 위한<br>e-브로슈어 보안 토큰을 보내 드립니다.</h4>
-		              <ul class="schinp_list">
-		                <li>
-		                  <label for="" class="">
-		                                이용약관 및 위치기반 서비스 <input type="checkbox" id="useCheck" name="useCheck" value="" title="선택" /> <a href="javascript:useShow()" id="useBtn">보기</a> <a href="javascript:useClose()" id="useCloseBtn"  style="display:none" >닫기</a>
-		                  <br><br><br>
-		                                개인 정보 취급 방침 <input type="checkbox" id="privateCheck" name="privateCheck" value="" title="선택" /> <a href="javascript:privateShow()" id="privateBtn">보기</a> <a href="javascript:privateClose()" id="privateCloseBtn"  style="display:none" >닫기</a>
-		                  <br><br>
-		                  </label>
-						</li>
-						<li>
-						<div id="useShow" style="display:none" >
-
-						제1장 총칙
+    </div>
 
 
-						제1조 (목적)
-						
-						본 약관은 '(주)오펙트'(이하 '회사'라 함)가 운영하는 인터넷 사이트 및 모바일 애플리케이션(이하 'salesb'이라 함)에서 제공하는 전자상거래 관련 서비스 및 기타 서비스(이하 '서비스'라 함)를 이용하는 자 간의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
-						
-						제2조 (정의)
-						
-						① 'salesb'이란 '회사'가 컴퓨터 등 정보통신설비를 이용하여 '서비스'를 제공할 수 있도록 설정한 가상의 영업장을 말합니다.
-						
-						② '회원'이라 함은 '회사'에 개인정보를 제공하여 회원등록을 한 자로서, 'salesb'의 정보를 지속적으로 제공받으며, '회사'가 제공하는 '서비스'를 계속적으로 이용할 수 있는 자를 말합니다.
-						
-						③ '비회원'이라 함은 '회원'에 가입하지 않고 '회사'가 제공하는 '서비스'를 이용하는 자를 말합니다.
-						
-						④ '이용자'란 'salesb'에 접속하여 본 약관에 따라 '회사'가 제공하는 '서비스'를 이용하는 '회원' 및 '비회원'을 말합니다.
-						
-						⑤ '판매자'라 함은 'salesb'에 본인의 재화 및 용역(이하 '아이템'이라 함)을 등록하여 판매하거나 또는 제공할 의사로 '서비스'를 이용하는 자를 말합니다. 
-						
-						⑥ '구매자'라 함은 'salesb'에 등록된 '판매자'의 '아이템'을 구매하거나 또는 제공받을 의사로 '서비스'를 이용하는 자를 말합니다. 
-						
-						제3조 (약관 등의 명시와 설명 및 개정)
-						
-						① '회사'는 본 약관의 내용을 '이용자'가 쉽게 알 수 있도록 인터넷 사이트 및 모바일 어플리케이션에 공지합니다. 다만, 약관의 내용은 '이용자'가 연결화면을 통하여 볼 수 있도록 할 수 있습니다.
-						
-						② '회사'는 전자상거래등에서의소비자보호에관한법률, 약관의규제에관한법률, 전자거래기본법, 전자서명법, 정보통신망이용촉진등에관한법률, 방문판매등에관한법률, 소비자보호법 등 관련법을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다.
-						
-						③ '회사'가 약관을 개정할 경우에는 적용일자 및 개정사유를 명시하여 '이용자'가 알기 쉽도록 표시하여 공지합니다.
-						
-						④ '회사'가 약관을 개정할 경우에는 변경된 약관은 공지된 시점부터 그 효력이 발생하며, '이용자'는 약관이 변경된 후에도 본 '서비스'를 계속 이용함으로써 변경 후의 약관에 대해 동의를 한 것으로 간주됩니다.
-						
-						⑤ 본 약관에서 정하지 아니한 사항과 본 약관의 해석에 관하여는 전자상거래등에서의소비자보호에관한법률, 약관의규제등에관한법률, 공정거래위원회가 정하는 전자상거래등에서의소비자보호지침 및 관계법령 또는 상관례에 따릅니다.
-						
-						</div>
-						<div id="privateShow" style="display:none" >
+    <!-- Mainly scripts -->
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	
+	<!-- Custom and plugin javascript -->
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/wow/wow.min.js"></script>
+    
+    
+    
+    <!-- iCheck -->
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+    
+    <script>
 
-						개인정보의 수집 이용 목적 및 수집하는 개인정보 항목
+	var cust_frm = document.RegistForm;
+	var cust_key = getCookie("addys_customerkey");
+	
+	if( cust_key != null && trim(cust_key) != '' && cust_key != 'null' ){
+		cust_frm.sbPhoneNumberView.value = cust_key;
+		cust_frm.sbPhoneNumber.value = cust_key;
+	}
+	
+	</script>
+</form>
+</body>
 
-
-						회사는 Salesb 서비스 제공을 위해 마스터 아이디(Master ID), 비밀번호 등 인증정보를 수집하고 Salesb 서비스 이용 기간 동안 옥션 및 G마켓 사이에 아이디(ID), 닉네임, 성명, 주민번호, 대표자명, 사업자등록번호, 사업자연락처, 주소, 연락처, 이메일(e-mail), 등록 상품 정보, 판매 상품 정산 정보, 제3자 제공 동의 정보 등을 공유하거나 연동하여 활용할 수 있습니다. 동 사항에 동의할 경우 해당 이용자의 사업자등록번호에 연동된 모든 아이디(ID)에 상기의 정보 공유 및 연동 활용 효력이 적용됩니다.
-						
-						
-						개인정보의 보유 이용 기간
-						
-						
-						회사는 이용자의 개인정보를 원칙적으로 고지 및 약정한 기간 동안 보유 및 이용하며 개인정보의 수집 및 이용목적이 달성되면 지체 없이 파기합니다. 또한, 다음의 정보에 대해서는 아래의 이유로 명시한 기간 동안 보존합니다.
-						
-						
-						관련법령 및 회사 방침에 의한 정보보유 사유
-						
-						
-						상법 등 관계법령의 규정에 의하여 보존할 필요가 있는 경우 법령에서 규정한 일정한 기간 동안 이용자 개인정보를 보관합니다. 이 경우 회사는 보관하는 정보를 그 보관의 목적으로만 이용하며 보존기간은 아래와 같습니다.
-						1.① 계약 또는 청약철회 등에 관한 기록◦보존 이유 : 전자상거래 등에서의 소비자보호에 관한 법률 제6조 및 시행령 제6조
-						◦보존 기간 : 5년
-						
-						2.② 대금결제 및 재화 등의 공급에 관한 기록◦보존 이유 : 전자상거래 등에서의 소비자보호에 관한 법률 제6조 및 시행령 제6조
-						◦보존 기간 : 5년
-						
-						3.③ 소비자의 불만 또는 분쟁처리에 관한 기록◦보존 이유 : 전자상거래 등에서의 소비자보호에 관한 법률 제6조 및 시행령 제6조
-						◦보존 기간 : 3년
-						
-						4.④ 접속에 관한 기록◦보존 이유 : 통신비밀보호법 제15조의2 및 시행령 제41조
-						◦보존기간 : 3개월
-						
-						5.⑤ 부정거래기록◦부정거래의 배제 등 회사 방침에 의한 보존
-						◦보존 기간 : 1년
-						
-
-						
-						</div>
-						</li>
-		              </ul>
-		            <div class="bnbox">
-		              <a href="javascript:goRigist()" id="btn_change" class="bn_gray">등록하기</a>
-		            </div>
-		            </div>
-		            </div>
-		        </div>
-		      </div>
-		  </div>
-		  </form>
-		  <div id="footer" class="footer">
-		    <span class="Copyright">Copyright 2015 ⓒ salesb Corp. All rights reserved. v1.0.0</span>
-		  </div>
-	  	  <!--//container -->
-      </div>
-    </body>
 </html>
-<script>
-
-var cust_frm = document.RegistForm;
-var cust_key = getCookie("addys_customerkey");
-
-if( cust_key != null && trim(cust_key) != '' && cust_key != 'null' ){
-	cust_frm.sbPhoneNumberView.value = cust_key;
-	cust_frm.sbPhoneNumber.value = cust_key;
-}
-
-</script>

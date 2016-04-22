@@ -34,7 +34,7 @@
     //String hub_page_info = "pp_cli_hub.jsp";
    
     String s_domain_url = "http://salesb.net";
-    String s_host_url = "http://dev.salesb.net:19003"; 
+    String s_host_url = "http://dev.salesb.net"; 
     String g_conf_home_dir  = "/home/kcp/";       // BIN 절대경로 입력 (bin전까지) -linux 
     String hub_page_info = "pp_cli_hub_linux.jsp";
     

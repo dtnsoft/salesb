@@ -58,6 +58,9 @@
 			  ,ifnull(T1.useYn,'Y') as useYn
 			  ,T1.deletedYn
 			  ,ifnull(T1.smsYn,'N') as smsYn
+			  ,T1.useYn
+			  ,T1.companyId
+			  ,T1.image1
           FROM ofUser T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofGroup T3 On T1.authId=T3.groupId
@@ -115,12 +118,12 @@
             	,excelAuth = #{excelAuth}
             	,email = #{email}
            	 	,officePhone = #{officePhone}
-            	,mobliePhone = #{mobliePhone}
+            	,companyId = #{companyId}
             	,ip = #{ip}
             	,auth = #{auth}
             	,updateUserId = #{updateUserId}
             	,updateDateTime = now()
-            	,smsYn = #{smsYn}
+            	,useYn = #{useYn}
  		Where userId = #{userId}
 </update>
 
@@ -149,6 +152,9 @@
             ,createUserId
             ,createDateTime
             ,smsYn 
+            ,useYn 
+            ,companyId
+            ,image1
             )
         Values (
 	  		  #{userId}
@@ -165,6 +171,9 @@
 	  		, #{createUserId}
 	  		, now()
 	  		, #{smsYn}
+	  		,'N'
+	  		, #{companyId}
+	  		, #{image1}
 	  		)
 	  		ON DUPLICATE KEY UPDATE userName = #{userName},
 		                        groupId = #{groupId},
@@ -207,6 +216,9 @@
 			  ,T1.useYn
 			  ,T1.deletedYn
 			  ,T1.smsYn
+			  ,T1.useYn
+			  ,T1.companyId
+			  ,T1.image1
 			  ,Case When DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') ='1999-01-01' 
 			  		Then '<![CDATA[<font style="color:red">]]>초기 비밀번호를 변경하시기 바랍니다.<![CDATA[</font>]]>' 
 			        Else Case When DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') <![CDATA[<]]> date_add(DATE_FORMAT(now(), '%Y-%m-%d'), interval (Select T4.codeId from ofCode T4 where T4.codeGroupId='PW01') month)

@@ -126,34 +126,6 @@
         /* Payplus Plug-in 실행 */
         function  jsf__pay( form )
         {
-        	
-       	//주문정보 입력 (주문키생성)
-       	$.ajax({
-   		        type: "POST",
-   		        async:false,
-   		           url:  "<%= request.getContextPath() %>/order/orderkey",
-   		           data:$("#OrderProcessForm").serialize(),
-   		           success: function(result) {
-
-   						if(result!='N'){
-   							
-   							form.ordr_idxx.value=result;
-                               
-   						} else{
-					    	
-   							 alert('주문키 생성을 실패했습니다.');
-   							 return;
-   							 
-   						}
-
-   		           },
-   		           error:function(){
-   		        	   
-   		        	   alert('[error]주문키 생성을 실패했습니다.');
-   		        	   return;
-   		           }
-   		    });
-
             var RetVal = false;
 
             /* Payplus Plugin 실행 */
@@ -236,6 +208,35 @@
             var order_idxx = "TEST" + year + "" + month + "" + date + "" + time;
 
             document.order_info.ordr_idxx.value = order_idxx;
+            
+            document.OrderProcessForm.orderkey.value = order_idxx;
+            
+            //주문정보 입력 (주문키생성)
+           	$.ajax({
+                type: "POST",
+                async:false,
+                   url:  "<%= request.getContextPath() %>/order/orderkey",
+                   data:$("#OrderProcessForm").serialize(),
+                   success: function(result) {
+
+        				if(result > 0){
+        					
+        					//주문키 입력성공
+                                 
+        				} else{
+        			    	
+        					alert('주문키 생성을 실패했습니다.');
+        					return;
+        					 
+        				}
+
+                   },
+                   error:function(){
+                	   
+                	   alert('[error]주문키 생성을 실패했습니다.');
+                	   return;
+                   }
+            });
 
             /*
              * 인터넷 익스플로러와 파이어폭스(사파리, 크롬.. 등등)는 javascript 파싱법이 틀리기 때문에 object 가 인식 전에 실행 되는 문제
@@ -483,6 +484,7 @@
                                     <hr>
 									<!-- 3.결재 -->
 							        <form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
+							           <input type="hidden" name="orderkey" value="" />
 							           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
 							           <input type="hidden" name="customerKey" value="${customer.customerKey}" />
 							           <input type="hidden" name="productCode" value="${goods.idx}" />
@@ -777,6 +779,7 @@
 <!-- Custom and plugin javascript -->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/wow/wow.min.js"></script>
 
 <!-- slick carousel-->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slick/slick.min.js"></script>

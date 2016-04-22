@@ -165,6 +165,7 @@
    /* kcp 통신을 통해 받은 암호화 정보 체크 후 결제 요청 (변경불가) */
   function chk_pay()
   {
+
     self.name = "tar_opener";
     var pay_form = document.pay_form;
 

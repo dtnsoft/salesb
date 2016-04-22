@@ -71,16 +71,18 @@
                success: function(result) {
                    //commonDim(false);
                    $("#goodsTokenList").html(result);
-      			   
+
                    if(goodsTokenConForm.prodId.length!=undefined){
                 	   if(goodsTokenConForm.prodId.length>1){
                 		   goodsTokenConForm.prodIdRadio[0].checked=true;
-                           fcGoods_View(0);
+      
                        }else{
                     	   goodsTokenConForm.prodIdRadio.checked=true;
-                           fcGoods_View(0);
+                          
                        } 
                    }
+                   
+                   fcGoods_View(0);
                   
                },
                error:function() {
@@ -95,7 +97,7 @@
 
     	var curPage='${productConVO.curPage}';
     	var idx='';
-    	
+  
     	 if(goodsTokenConForm.prodId.length!=undefined){
       	   if(goodsTokenConForm.prodId.length>1){ 
       		   goodsTokenConForm.prodIdRadio[index].checked=true;
@@ -105,7 +107,10 @@
           	   goodsTokenConForm.prodIdRadio.checked=true;
           	   idx=goodsTokenConForm.prodId.value;
              } 
-         }
+         }else{
+          	   goodsTokenConForm.prodIdRadio.checked=true;
+          	   idx=goodsTokenConForm.prodId.value;
+         } 
 
     	 $.ajax({
              type: "POST",

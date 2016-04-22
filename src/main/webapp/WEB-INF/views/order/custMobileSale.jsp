@@ -7,7 +7,6 @@
 <%@ taglib uri="/WEB-INF/tlds/taglib.tld" prefix="taglib"%>
 
 <%@ page language="java" contentType="text/html;charset=euc-kr"%>
-
 <%
     /* ============================================================================== */
     /* =   PAGE : 결제 요청 PAGE                                                    = */
@@ -17,7 +16,7 @@
     /* =   진행하여 주시기 바랍니다.                                                = */
     /* = -------------------------------------------------------------------------- = */
     /* =   연동시 오류가 발생하는 경우 아래의 주소로 접속하셔서 확인하시기 바랍니다.= */
-    /* =   접속 주소 : http://kcp.co.kr/technique.requestcode.do			        = */
+    /* =   접속 주소 : http://kcp.co.kr/technique.requestcode.do                    = */
     /* = -------------------------------------------------------------------------- = */
     /* =   Copyright (c)  2013   KCP Inc.   All Rights Reserverd.                   = */
     /* ============================================================================== */
@@ -31,7 +30,7 @@
     /* = -------------------------------------------------------------------------- = */
 %>
 	<%@ include file="/kcp/cfg/site_conf_inc.jsp" %>
-<%
+<%!
     /* = -------------------------------------------------------------------------- = */
     /* =   환경 설정 파일 Include END                                               = */
     /* ============================================================================== */
@@ -40,10 +39,10 @@
     /* ============================================================================== */
     /* =   null 값을 처리하는 메소드                                                = */
     /* = -------------------------------------------------------------------------- = */
-        public String f_get_parm( String val )
+      public String f_get_parm( String val )
         {
-          if ( val == null ) val = "";
-          return  val;
+        if ( val == null ) val = "";
+            return  val;
         }
     /* ============================================================================== */
 %>
@@ -76,13 +75,12 @@
 
   String tablet_size     = "1.0"; // 화면 사이즈 고정
   String url             = request.getRequestURL().toString();
-%>    
-<!DOCTYPE html>
-<html>
+%>
 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
 <head>
-
-    <title>Salesb | E-commerce product detail</title>
+	<title>Salesb | E-commerce product detail</title>
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/images/favicon.ico" type='image/ico'>
     <meta name="viewport" content="width=device-width, user-scalable=<%=tablet_size%>, initial-scale=<%=tablet_size%>, maximum-scale=<%=tablet_size%>, minimum-scale=<%=tablet_size%>">
     <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
@@ -107,27 +105,9 @@
     
     <!-- 거래등록 하는 kcp 서버와 통신을 위한 스크립트-->
 	<script type="text/javascript" src="<%= request.getContextPath() %>/kcp/mobile_sample/js/approval_key.js"></script>
-	
-<!--	<script src="http://lite.payapp.kr/public/api/payapp-lite.js"></script> -->
-		
 
-<%
-    /* ============================================================================== */
-    /* =   Javascript source Include                                                = */
-    /* = -------------------------------------------------------------------------- = */
-    /* =   ※ 필수                                                                  = */
-    /* =   테스트 및 실결제 연동시 site_conf_inc.jsp파일을 수정하시기 바랍니다.     = */
-    /* = -------------------------------------------------------------------------- = */
-%>
-    <script type="text/javascript" src="<%= g_conf_js_url %>"></script>
-<%
-    /* = -------------------------------------------------------------------------- = */
-    /* =   Javascript source Include END                                            = */
-    /* ============================================================================== */
-%>
-  <script type="text/javascript">
-
-  var controlCss = "<%= request.getContextPath() %>/kcp/mobile_sample/css/style.css";
+<script type="text/javascript">
+  var controlCss = "css/style_mobile.css";
   var isMobile = {
     Android: function() {
       return navigator.userAgent.match(/Android/i);
@@ -149,8 +129,11 @@
     }
   };
 
-  
-  /* 주문번호 생성 예제 */
+  if( isMobile.any() )
+    document.getElementById("cssLink").setAttribute("href", controlCss);
+</script>
+<script type="text/javascript">
+   /* 주문번호 생성 예제 */
   function init_orderid()
   {
     var today = new Date();
@@ -165,11 +148,41 @@
     if (parseInt(date) < 10)
       date  = "0" + date;
 
-    var order_idxx = "TEST" + year + "" + month + "" + date + "" + time;
+    var order_idxx = "S" + year + "" + month + "" + date + "" + time;
     var ipgm_date  = year + "" + month + "" + date;
 
     document.order_info.ordr_idxx.value = order_idxx;
     document.order_info.ipgm_date.value = ipgm_date;
+    
+    document.OrderProcessForm.orderkey.value = order_idxx;
+    
+    //주문정보 입력 (주문키생성)
+   	$.ajax({
+        type: "POST",
+        async:false,
+           url:  "<%= request.getContextPath() %>/order/orderkey",
+           data:$("#OrderProcessForm").serialize(),
+           success: function(result) {
+
+				if(result > 0){
+					
+					//주문키 입력성공
+                         
+				} else{
+			    	
+					alert('주문키 생성을 실패했습니다.');
+					return;
+					 
+				}
+
+           },
+           error:function(){
+        	   
+        	   alert('[error]주문키 생성을 실패했습니다.');
+        	   return;
+           }
+    });
+    
   }
 
    /* kcp web 결제창 호츨 (변경불가) */
@@ -177,7 +190,7 @@
   {
     var v_frm = document.order_info;
 
-    document.getElementById("wrap").style.display = "none";
+    document.getElementById("sample_wrap").style.display = "none";
     document.getElementById("layer_all").style.display  = "block";
 
     v_frm.target = "frm_all";
@@ -198,7 +211,6 @@
    /* kcp 통신을 통해 받은 암호화 정보 체크 후 결제 요청 (변경불가) */
   function chk_pay()
   {
-
     self.name = "tar_opener";
     var pay_form = document.pay_form;
 
@@ -213,7 +225,7 @@
       pay_form.res_cd.value = "";
     }
 
-    document.getElementById("wrap").style.display = "block";
+    document.getElementById("sample_wrap").style.display = "block";
     document.getElementById("layer_all").style.display  = "none";
 
     if (pay_form.enc_info.value)
@@ -264,11 +276,9 @@
       document.order_info.van_code.value = "SCHM";
     }
   }
-  
+</script>
 
-  </script>
-  
-   <script>
+<script>
     
   //alert( isMobile.any() )
     
@@ -293,39 +303,7 @@
 	  ga('set', 'userId', '116577077'); // 로그인한 User-ID를 사용하여 User-ID를 설정합니다.
 
 	  ga('send', 'pageview');
-	  
-  	function orderKey(){
-  	  
-    	//주문정보 입력 (주문키생성)
-       	$.ajax({
-   		        type: "POST",
-   		        async:false,
-   		           url:  "<%= request.getContextPath() %>/order/orderkey",
-   		           data:$("#OrderProcessForm").serialize(),
-   		           success: function(result) {
 
-   						if(result!='N'){
-   						    var form = document.order_info;
-   							form.ordr_idxx.value=result;
-   							kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');
-                               
-   						} else{
-  					    	
-   							 alert('주문키 생성을 실패했습니다.');
-   							 return;
-   							 
-   						}
-
-   		           },
-   		           error:function(){
-   		        	   
-   		        	   alert('[error]주문키 생성을 실패했습니다.');
-   		        	   return;
-   		           }
-   		    });
-  	  
-    }	  
-    
 	function optionDetail(optionId){
 		
 		 $.ajax({
@@ -350,14 +328,13 @@
 	}
     
     </script>
-
+    
 </head>
 
 <body onload="jsf__chk_type();init_orderid();chk_pay();">
-
+<div id="sample_wrap">
 <div id="wrapper">
-
-		<nav class="navbar-default navbar-static-side" role="navigation">
+<nav class="navbar-default navbar-static-side" role="navigation">
 	            <div class="sidebar-collapse">
 	                <ul class="nav metismenu" id="side-menu">
 	                    <li class="nav-header">
@@ -538,6 +515,7 @@
                                     </dl>
                                     <hr>
 									<form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
+							           <input type="hidden" name="orderkey" value="" />
 							           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
 							           <input type="hidden" name="customerKey" value="${customer.customerKey}" />
 							           <input type="hidden" name="productCode" value="${goods.idx}" />
@@ -545,11 +523,9 @@
 							           <input type="hidden" name="groupId" value="${token.groupId}" />
 							           <input type="hidden" name="orderState" value="01" />
 							        </form>
-							        <form name="order_info" method="post">
-							           <!-- 주문정보 입력 form : order_info -->
-
-									   <!-- 신용카드 -->
-							
+									<form name="order_info" method="post">
+									   <!-- 주문정보 입력 form : order_info -->
+									   
 									   <!-- 주문번호(ordr_idxx) -->
 									   <input type="hidden" name="ordr_idxx" value="" />
 									   <!-- 상품명(good_name) -->
@@ -564,33 +540,30 @@
 									   <input type="hidden" name="buyr_tel1" value="${customer.sbPhoneNumber}" />
 									   <!-- 휴대폰번호(buyr_tel2) -->
 									   <input type="hidden" name="buyr_tel2" value="010-0000-0000" />
-					
-									   <!-- 결제 요청/처음으로 이미지 -->
-									   
-                                    <div>
-		                               <div class="form-group"><label class="col-sm-2 control-label">KCP 모바일지불 방법</label>
-		                                    <div class="col-sm-10">
-		                                    <select class="form-control m-b" name="ActionResult" onchange="jsf__chk_type();">
-		                                        <option value="" selected>선택하십시오</option>
-								                <option value="card">신용카드</option>
-								                <option value="acnt">계좌이체</option>
-								                <option value="vcnt">가상계좌</option>
-								                <!--  <option value="mobx">휴대폰</option>-->
-								                <option value="ocb">OK캐쉬백</option>
-								                <option value="tpnt">복지포인트</option>
-								                <option value="scbl">도서상품권</option>
-								                <option value="sccl">문화상품권</option>
-								                <option value="schm">해피머니</option>
-		                                    </select>
-                                            <button type="submit" class="btn btn-primary btn-sm" onclick="orderKey();"><i class="fa fa-cart-plus"></i> 결제요청</button>
-                                        	<!-- <button type="submit" class="btn btn-primary btn-sm" onclick="kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp')"><i class="fa fa-cart-plus"></i> 결제요청</button>-->
-                                        	
-                                        	</div>
-		                                </div>
-   
-                                    </div>
-                                    
-                                    <!-- 공통정보 -->
+									
+										<div>
+			                               <div class="form-group"><label class="col-sm-2 control-label">KCP 모바일지불 방법</label>
+			                                    <div class="col-sm-10">
+			                                    <select class="form-control m-b" name="ActionResult" onchange="jsf__chk_type();">
+			                                        <option value="" selected>선택하십시오</option>
+									                <option value="card">신용카드</option>
+									                <option value="acnt">계좌이체</option>
+									                <option value="vcnt">가상계좌</option>
+									                <!--  <option value="mobx">휴대폰</option>-->
+									                <option value="ocb">OK캐쉬백</option>
+									                <option value="tpnt">복지포인트</option>
+									                <option value="scbl">도서상품권</option>
+									                <option value="sccl">문화상품권</option>
+									                <option value="schm">해피머니</option>
+			                                    </select>
+	                                           <!-- <button type="submit" class="btn btn-primary btn-sm" onclick="orderKey();"><i class="fa fa-cart-plus"></i> 결제요청</button>-->
+	                                        	 <input name="" type="button" class="submit" value="결제요청" onclick="kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');">
+	                                      
+	                                        	</div>
+			                                </div>
+	                                    </div>
+
+									  <!-- 공통정보 -->
 									  <input type="hidden" name="req_tx"          value="pay">                           <!-- 요청 구분 -->
 									  <input type="hidden" name="shop_name"       value="<%= g_conf_site_name %>">       <!-- 사이트 이름 --> 
 									  <input type="hidden" name="site_cd"         value="<%= g_conf_site_cd   %>">       <!-- 사이트 키 -->
@@ -614,7 +587,6 @@
 									  <input type="hidden" name="disp_tax_yn"     value="Y"/>
 									  <!-- 리턴 URL (kcp와 통신후 결제를 요청할 수 있는 암호화 데이터를 전송 받을 가맹점의 주문페이지 URL) -->
 									  <input type="hidden" name="Ret_URL"         value="<%=s_host_url%>/salesb/kcp/mobile_sample/order_mobile.jsp">
-									  <!--<input type="hidden" name="Ret_URL"         value="<%=url%>">-->
 									  <!-- 화면 크기조정 -->
 									  <input type="hidden" name="tablet_size"     value="<%=tablet_size%>">
 									
@@ -666,37 +638,32 @@
 									    /* =   옵션 정보 END                                                            = */
 									    /* ============================================================================== */
 									%>
-								    </form>
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="ibox-footer">
+									
+									</form>
+									</div>
+								</div>
+							</div>
+							<div class="ibox-footer">
                             <span class="pull-right">
                                 Full stock - <i class="fa fa-clock-o"></i> 14.04.2016 10:04 pm
                             </span>
                             The generated Lorem Ipsum is therefore always free
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        
-
-        </div>
-        <div class="footer">
+                        	</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
 	           <div class="pull-right">
 	               welcome to <strong>Salesb</strong> !!
 	           </div>
 	           <div>
 	               <strong>Copyright</strong> Salesb Corp &copy; All rights reserved v1.0.0
 	           </div>
-		</div> 
-
-    </div>
+			</div> 
+		</div>
+	</div>					
 </div>
-
 <!-- Mainly scripts -->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/jquery-2.1.1.js"></script>
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/bootstrap.min.js"></script>
@@ -706,6 +673,7 @@
 <!-- Custom and plugin javascript -->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/wow/wow.min.js"></script>
 
 <!-- slick carousel-->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slick/slick.min.js"></script>
@@ -733,7 +701,7 @@
         </tr>
     </table>
 </div>
-<form name="pay_form" method="post" action="<%= request.getContextPath() %>/kcp/mobile_sample/pp_cli_hub.jsp">
+<form name="pay_form" method="post" action="pp_cli_hub.jsp">
     <input type="hidden" name="req_tx"         value="<%=req_tx%>">               <!-- 요청 구분          -->
     <input type="hidden" name="res_cd"         value="<%=res_cd%>">               <!-- 결과 코드          -->
     <input type="hidden" name="tran_cd"        value="<%=tran_cd%>">              <!-- 트랜잭션 코드      -->
@@ -753,7 +721,6 @@
     <input type="hidden" name="param_opt_1"	   value="<%=param_opt_1%>">
     <input type="hidden" name="param_opt_2"	   value="<%=param_opt_2%>">
     <input type="hidden" name="param_opt_3"	   value="<%=param_opt_3%>">
-</form>       
+</form>
 </body>
-
 </html>

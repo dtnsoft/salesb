@@ -5,22 +5,24 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="/WEB-INF/tlds/taglib.tld" prefix="taglib"%>
 <%@ page language="java" contentType="text/html;charset=utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-    <head>
 
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
-		<meta http-equiv="Cache-Control" content="no-cache">
-		<meta http-equiv="Pragma" content="no-cache">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-		      
-		<link href="<%= request.getContextPath() %>/css/reset.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/common.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/login.css" rel="stylesheet">
-		<link href="<%= request.getContextPath() %>/css/comunity.css" rel="stylesheet">
-		
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Salesb | Forgot password</title>
+
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+    
+    <link href="<%= request.getContextPath() %>/css/login.css" rel="stylesheet">
+
 		<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 		<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 		<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
@@ -371,99 +373,82 @@
     	    	}
             }	
         </script>
-    </head>
-    <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
-         <div id="wrap" class="wrap" >
-		 <!-- 헤더 -->
-		  <header>
-		   <div class="mb_top">
-				<h1 class="head_logo"></h1>
-			</div>
-		  </header>
-		  <!--//헤더 -->  
-		  <!-- container -->
-		  <form commandName="customerVo"   id="PasswordForm" name="PasswordForm"  method="post" role="form" action="<%= request.getContextPath() %>/customer/regist">
-	        <input type="hidden" name="tokenstate"          id="tokenstate"         value="-1"  />
-		    <div id="container">
-		      <div class="m_content form" >
-		      
-		      <!-- 타이틀 -->
-        <div class="clm_acdo_tit">
-          <h1>비밀번호 변경</h1>
-          <div class="clm_acdo_tit_left">
-          <c:choose>
-	    		<c:when test="${type=='survey'}">
-					<a href="<%= request.getContextPath() %>/surveyloginform" class="btn b_prev"><span class="sp_prev">이전</span></a>
-		 		</c:when>
-				<c:otherwise>
-					<a href="<%= request.getContextPath() %>/customerloginform" class="btn b_prev"><span class="sp_prev">이전</span></a>
-				</c:otherwise>
-			</c:choose>
-          </div>
+</head>
+
+<body class="gray-bg">
+ <form commandName="customerVo"   id="PasswordForm" name="PasswordForm"  method="post" role="form" action="<%= request.getContextPath() %>/customer/regist">
+      <input type="hidden" name="tokenstate"          id="tokenstate"         value="-1"  />
+    <div class="passwordBox animated fadeInDown">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="ibox-content">
+
+                    <h2 class="font-bold">Forgot password</h2>
+
+                    <p>
+                                            비밀번호 변경을 위해핸드폰으로 인증 요청을 하시기 바랍니다.
+                    </p>
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <form class="m-t" role="form" action="index.html">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id=sbPhoneNumberView name="sbPhoneNumberView" placeholder="핸드폰번호" required="">
+                                    <input type="hidden" id=sbPhoneNumber name="sbPhoneNumber"  value=""/> 
+                                </div>
+
+                                <button type="button" class="btn btn-primary block full-width m-b" id="reqbtn" onClick="getToken()">인증요청</button>
+                                
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="tokenView" name="tokenView" disabled placeholder="인증번호 입력" required="">
+                                    <input type="hidden" id=token name="token"  value=""/> 
+                                </div>
+                                
+                                <button type="button" class="btn btn-primary block full-width m-b" id="completebtn" onClick="getTokenConfirm()">인증확인</button>
+
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div  id="pwform" name="pwform" style="display:none" >
+                    <p>
+                                          비밀번호를 설정해주세요.
+                    </p>
+                    
+                    
+                     <div class="row">
+                        <div class="col-lg-12">
+                            <form class="m-t" role="form" action="index.html">
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id=sbPw name="sbPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)" required="">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="customerRePw" name="customerRePw" placeholder="비밀번호 재입력" required="">
+                                </div>
+                                
+                                <button type="button" class="btn btn-primary block full-width m-b" id="btn_change" onClick="goModify()()">비밀번호 변경</button>
+ 
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
         </div>
-        <!--// 타이틀 --> 
-		        <div class="m_resbx">
-		          <!-- 핸드폰번호 등록 -->
-		            <div class="m_result id">
-		              <h4 class="m_sch_tp">비밀번호 변경을 위해<br>핸드폰으로 인증 요청을 하시기 바랍니다.</h4>
-		              <ul class="schinp_list">
-		                <li>
-		                  <label for="" class="blind">핸드폰번호</label>
-		                  <span class="inpbx certi">
-		                  <input type="text" id=sbPhoneNumberView name="sbPhoneNumberView" placeholder="핸드폰번호 등록">
-		                  <input type="hidden" id=sbPhoneNumber name="sbPhoneNumber"  value=""/> 
-		                  </span><a href="javascript:getToken()" id="reqbtn" class="bn_certi" >인증요청</a></li>
-		                <li>
-		                  <label for="" class="blind">인증번호</label>
-		                  <span class="inpbx certi">
-		                  <input type="password" id="tokenView" name="tokenView" disabled placeholder="인증번호 입력">
-		                  <input type="hidden" id=token name="token"  value=""/> 
-		                  </span><a href="javascript:getTokenConfirm()" id="completebtn"  disabled class="bn_certi" >인증확인</a></li>
-		              </ul>
-		            </div>
-		          <!--//핸드폰번호 등록 --> 
-		          <!-- 비밀번호 등록 -->
-		          <br>
-		          <div  id="pwform" name="pwform" style="display:none" >
-		            <div class="m_result pw" >
-		              <h4 class="m_sch_tp"> 비밀번호를 설정해주세요.</h4>
-		              <ul class="schinp_list">
-		                <li>
-		                  <label for="inp_pw" class="blind">비밀번호</label>
-		                  <span class="inpbx">
-		                  <input type="password" name="sbPw" id="sbPw" placeholder="비밀번호 등록 (6~20 영문 숫자의 조합)">
-		                  </span></li>
-		                <li>
-		                  <label for="inp_pw2" class="blind">비밀번호 재입력</label>
-		                  <span class="inpbx">
-		                  <input type="password" name="customerRePw" id="customerRePw" placeholder="비밀번호 재확인">
-		                  </span></li>
-		              </ul>
-		            </div>
-		            <div class="bnbox">
-		              <a href="javascript:goModify()" id="btn_change" class="bn_gray">비밀번호 변경</a>
-		            </div>
-		          </div>
-		          <!--//비밀번호 등록 --> 
-		        </div>
-		      </div>
-		  </div>
-		  </form>
-		   <div id="footer" class="footer">
-		    <span class="Copyright">Copyright 2015 ⓒsalesb Corp. All rights reserved. v1.0.0</span>
-		  </div>
-	  	  <!--//container -->
-      </div>
-    </body>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                Copyright 2015 ⓒsalesb Corp. 
+            </div>
+            <div class="col-md-6 text-right">
+               <small>All rights reserved. v1.0.0</small>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+
 </html>
-<script>
-
-var cust_frm = document.PasswordForm;
-var cust_key = getCookie("addys_customerkey");
-
-if( cust_key != null && trim(cust_key) != '' && cust_key != 'null' ){
-	cust_frm.sbPhoneNumberView.value = cust_key;
-	cust_frm.sbPhoneNumber.value = cust_key;
-}
-
-</script>

@@ -21,6 +21,7 @@ encoding//src/main/webapp/WEB-INF/views/business/salesPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/business/tokenCreate.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/business/uploadResult.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/businessModifyForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/common/companyRegistForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/customerLoginForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/customerModifyForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/imageView.jsp=UTF-8

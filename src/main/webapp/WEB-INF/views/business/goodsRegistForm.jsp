@@ -58,7 +58,9 @@
 		var ofrm=document.optionForm;
 		var frm=document.productRegistForm;
 		
-		if(ofrm.addName.value==''){
+		var addName=$("#addName").val();
+		//alert(addName);
+		if(addName==''){
 			alert('추가 옵션명을 입력하세요');
 			return;
 		}
@@ -67,7 +69,7 @@
 		var newRow = contentId.insertRow( rowCnt++ );
 		newRow.onmouseover=function(){contentId.clickedRowIndex=this.rowIndex};
 		var newCell = newRow.insertCell();
-		newCell.innerHTML ='<tr><input type="hidden" id="selectOption" name="selectOption" value="'+ofrm.addName.value+'"><td>'+ofrm.addName.value+'  &nbsp;  &nbsp;<button type="button" class="btn btn-xs btn-info" onClick="delFile(this)" >삭제</button></td> </tr>';
+		newCell.innerHTML ='<tr><input type="hidden" id="selectOption" name="selectOption" value="'+addName+'"><td>'+addName+'  &nbsp;  &nbsp;<button type="button" class="btn btn-xs btn-info" onClick="delFile(this)" >삭제</button></td> </tr>';
 		
 	}
 	
@@ -82,15 +84,14 @@
 	}
 	
 	function addOptionList(){
-		
+
 		var ofrm=document.optionForm;
 		var frm=document.productRegistForm;
-		
+
 		if(ofrm.addName.value==''){
 			alert('추가 옵션명을 입력하세요');
 			return;
 		}
-		
 		 $.ajax({
 	            type: "POST",
 	               url:  "<%= request.getContextPath() %>/business/optionlist?optionKey="+frm.optionKey.value+"&optionName="+encodeURIComponent(ofrm.addName.value),
@@ -110,7 +111,7 @@
 	
 	function addOptionDetailList(){
 		
-		var ofrm=document.optionForm;
+		var ofrm=document.addValueForm;
 		var frm=document.productRegistForm;
 		
 		if(ofrm.addValue.value==''){
@@ -134,7 +135,7 @@
 	}
 	function optionDetail(optionId){
 	
-		var ofrm=document.optionForm;
+		var ofrm=document.addValueForm;
 		ofrm.optionId.value=optionId;
 		
 		ofrm.addValue.value='';
@@ -156,7 +157,7 @@
 	
 	function optionDel(optionId){
 		
-		var ofrm=document.optionForm;
+		var ofrm=document.addValueForm;
 		var frm=document.productRegistForm;
 		
 		 $.ajax({
@@ -176,7 +177,7 @@
 	
 	function optionDetailDel(optionValueKey){
 		
-		var ofrm=document.optionForm;
+		var ofrm=document.addValueForm;
 		var frm=document.productRegistForm;
 		
 		 $.ajax({
@@ -307,13 +308,14 @@
          </div>
      </div>
 </form:form>
-<form name="optionForm" >
+
 	 <div class="row">
          <div class="col-lg-12">
              <div class="ibox float-e-margins">
              <div class="ibox-title">
                  <h5><strong><em class="num">3. </em></strong>옵션정보 설정 <button type="button" class="btn btn-primary btn-xs"  onClick="addSet()" data-toggle="modal" data-target="#myModal2">옵션추가</button></h5>
                  <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+                 <form  id="optionForm" name="optionForm" method="post" action="">
                     <div class="modal-dialog">
                         <div class="modal-content animated flipInY">
                             <div class="modal-header">
@@ -332,8 +334,10 @@
                             </div>
                         </div>
                     </div>
+                 </form>
                 </div>
                 <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+                 <form  id="addValueForm" name="addValueForm" method="post" action="">
                     <div class="modal-dialog">
                         <div class="modal-content animated flipInY">
                             <div class="modal-header">
@@ -355,6 +359,7 @@
                             </div>
                         </div>
                     </div>
+                </form>    
                 </div>
              </div>
              
@@ -363,7 +368,7 @@
              </div>
          </div>
      </div> 
-     </form>
+
      <div class="row">
         <div class="col-lg-12">
            <div class="ibox float-e-margins">
@@ -374,3 +379,8 @@
         </div>
      </div>                          
 </div>
+
+	<!-- Custom and plugin javascript -->
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/wow/wow.min.js"></script>

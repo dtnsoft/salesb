@@ -55,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -76,6 +77,7 @@ import com.offact.salesb.service.manage.UserManageService;
 import com.offact.salesb.service.member.TokenService;
 import com.offact.salesb.service.order.OrderService;
 import com.offact.salesb.vo.CustomerVO;
+import com.offact.salesb.vo.MultipartFileVO;
 import com.offact.salesb.vo.business.ProductMasterVO;
 import com.offact.salesb.vo.common.EmailVO;
 import com.offact.salesb.vo.common.GroupVO;
@@ -457,6 +459,42 @@ public class CommonController {
 		return mv;
 	}
 	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/companyregistform", method = RequestMethod.GET)
+	public ModelAndView companyRegistForm(String type ,
+			                   HttpServletRequest request,
+			                   HttpServletResponse response,  
+			                   String key,
+			                   Model model, 
+			                   Locale locale) throws BizException 
+	{
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : customerloginform");
+		
+		logger.info("customer key ::"+key);
+
+		ModelAndView  mv = new ModelAndView();
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+
+        session = request.getSession(true);
+		session.setAttribute("key", StringUtil.nvl(key,"N"));
+
+		mv.addObject("key", StringUtil.nvl(key,"N"));
+		mv.addObject("type", type);
+		
+    	mv.setViewName("/common/companyRegistForm");
+
+		return mv;
+	}
+	
 	 /**
      * 고객 등록
      *
@@ -644,6 +682,176 @@ public class CommonController {
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
       return ""+retVal;
+	}
+    
+    
+    /**
+     * 사용자관리 등록처리
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/common/companyregist2", method = RequestMethod.POST)
+    public @ResponseBody
+    String companyRegist2(@ModelAttribute("userVO") UserManageVO userVO, 
+    		       HttpServletRequest request, 
+    		       HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userVO" + userVO);
+
+		int retVal=this.userManageSvc.userInsertProc(userVO);
+	
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    
+    /**
+     * 글올리기
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/common/companyregist", method = RequestMethod.POST)
+    public @ResponseBody
+    ModelAndView companyRegist(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
+    		                      String userId,
+    		                      String userName,
+    		                      String password,
+    		                      String email,
+    		                      String officePhone,
+    		                      String companyId,
+		                          HttpServletRequest request, 
+		                          HttpServletResponse response,
+		                          String fileName, 
+		                          String extension) throws BizException 
+    {  
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		
+		ModelAndView mv = new ModelAndView();
+		
+		logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+		logger.info("["+logid+"] Controller start userId:"+userId);
+		logger.info("["+logid+"] Controller start userName:"+userName);
+		logger.info("["+logid+"] Controller start email:"+email);
+		logger.info("["+logid+"] Controller start officePhone:"+officePhone);
+		logger.info("["+logid+"] Controller start companyId:"+companyId);
+
+        String fname ="";
+        
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        UserManageVO userVO = new UserManageVO();
+        
+        userVO.setUserId(userId);
+        userVO.setGroupId(userId);
+        userVO.setCreateUserId(userId);
+        userVO.setUserName(userName);
+        userVO.setEmail(email);
+        userVO.setOfficePhone(officePhone);
+        userVO.setCompanyId(companyId);
+
+        String imagePath="company/"+strToday+"/";
+
+        ResourceBundle rb = ResourceBundle.getBundle("config");
+        String uploadFilePath = rb.getString("offact.upload.path") + imagePath;
+
+        this.logger.debug("파일정보:" + fileName + extension);
+        this.logger.debug("file:" + fileVO);
+
+        try {
+        
+	        if (fileName != null && fileName != "") {
+		    	  
+		        List<MultipartFile> files = fileVO.getFiles();
+		        List fileNames = new ArrayList();
+		        String orgFileName = null;
+		        String realFileName = null;
+		        
+		        int fileIndex=1;
+
+		        if ((files != null) && (files.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : files)
+		          {
+		            orgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("orgFileName  :" + orgFileName);
+		            realFileName = t1 + fileIndex +"."+ extension;
+		            this.logger.debug("realFileName  :" + realFileName);
+		            
+		            if(!orgFileName.equals("")){
+ 
+			            boolean check=setDirectory(uploadFilePath);
+	
+			            String filePath = uploadFilePath;
+	
+			            File file = new File(filePath + realFileName);
+			            multipartFile.transferTo(file);
+			            fileNames.add(realFileName);
+			            
+			            userVO.setImage1(hostUrl+"/upload/"+imagePath+realFileName);
+			           
+
+		            }
+		            
+		            fileIndex++;
+		            
+		          }
+		     
+		        }
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        
+        this.logger.debug("getImage1  :" + userVO.getImage1());
+        
+    	int retVal=this.userManageSvc.userInsertProc(userVO);
+        
+        mv.addObject("retVal", retVal);
+		
+    	mv.setViewName("/common/fileResult");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+	/**
+	 * 업로드 디렉토리 세팅
+	 */
+	private static boolean setDirectory( String directory) {
+		File wantedDirectory = new File(directory);
+		if (wantedDirectory.isDirectory())
+			return true;
+	    
+		return wantedDirectory.mkdirs();
 	}
     
 	 /**

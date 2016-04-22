@@ -66,7 +66,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 400,
-            height : 580,
+            height : 730,
             modal : true, //주위를 어둡게
 
             open:function(){

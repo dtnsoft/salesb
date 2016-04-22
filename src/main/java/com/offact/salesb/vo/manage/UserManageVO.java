@@ -43,6 +43,9 @@ public class UserManageVO extends AbstractVO {
     
     private String pwdChangeDateTime;
 
+	private String companyId;
+	private String image1;
+	
     // /** for paging */
     private String totalCount       = "0";
     private String curPage          = "1";
@@ -277,6 +280,18 @@ public class UserManageVO extends AbstractVO {
 	}
 	public void setPwdChangeDateTime(String pwdChangeDateTime) {
 		this.pwdChangeDateTime = pwdChangeDateTime;
+	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+	public String getImage1() {
+		return image1;
+	}
+	public void setImage1(String image1) {
+		this.image1 = image1;
 	}
    
 }

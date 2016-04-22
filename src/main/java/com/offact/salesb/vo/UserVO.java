@@ -27,6 +27,9 @@ public class UserVO extends AbstractVO {
 	private String loginYn;
 	private String connectIp;
 	private String partnerChargeYn;
+	
+	private String companyId;
+	private String image1;
 
 	public String getUserId() {
 		return userId;
@@ -159,6 +162,18 @@ public class UserVO extends AbstractVO {
 	}
 	public void setPartnerChargeYn(String partnerChargeYn) {
 		this.partnerChargeYn = partnerChargeYn;
+	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+	public String getImage1() {
+		return image1;
+	}
+	public void setImage1(String image1) {
+		this.image1 = image1;
 	}
 	
 }

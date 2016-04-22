@@ -948,7 +948,7 @@ public class OrderController {
         List<OptionVO> optionList = null;
         OptionVO optionConVO = new OptionVO();
         
-        if(goodsVo.getOptionKey().equals("N")){
+        if(!goodsVo.getOptionKey().equals("N")){
         	
         	optionConVO.setOptionKey(goodsVo.getOptionKey());
             optionList = optionSvc.getOptionList(optionConVO);
@@ -1182,27 +1182,27 @@ public class OrderController {
         
         String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
 	    
-	    OrderVO orderKeyVo = new OrderVO();
+	    //OrderVO orderKeyVo = new OrderVO();
 	    
-	    orderKeyVo=orderSvc.getOrderKey();
+	    //orderKeyVo=orderSvc.getOrderKey();
 	    
-	    String orderKey=orderKeyVo.getOrderkey();
+	    //String orderKey=orderKeyVo.getOrderkey();
 	    
-	    orderVo.setOrderkey(orderKeyVo.getOrderkey());
+	    //orderVo.setOrderkey(orderKeyVo.getOrderkey());
 
         orderVo.setOrderUserId(customerKey);
 
 	    int retVal=orderSvc.orderInsertProc(orderVo);
 	    
-	    if(retVal<=0){
-	    	orderKey="N";
-	    }
+	 //   if(retVal<=0){
+	 //   	orderKey="N";
+	//    }
 
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-      return orderKey;
+      return ""+retVal;
 	}
 
     /**

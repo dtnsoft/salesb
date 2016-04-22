@@ -41,7 +41,7 @@
 			     url:  '<%= request.getContextPath() %>/common/restnavercagegory?list_category_api_uri='+encodeURIComponent(list_category_api_uri)+'&access_token=Bearer '+encodeURIComponent(access_token),
 				      success: function(data) {
 				    	
-				    	makeTree(data);
+				    //	makeTree(data);
 				    
 				    	$.ajax({
 						    type: "POST",
@@ -754,7 +754,7 @@
 		       <div class="ibox float-e-margins">
 		           <div class="ibox-content">
            			 <h5><strong><em class="num">3. </em></strong>상품 설명</h5>
-						<textarea style='ime-mode:active;' row="10" class="form-control" id="productEtc" maxlength="200" name="productEtc"  value="" placeholder="상품설명" >${token.productEtc}</textarea>
+						<textarea style='ime-mode:active;height:500px' row="10" class="form-control" id="productEtc" maxlength="200" name="productEtc"  value="" placeholder="상품설명" >${token.productEtc}</textarea>
          		  </div>
          	   </div>
             </div>

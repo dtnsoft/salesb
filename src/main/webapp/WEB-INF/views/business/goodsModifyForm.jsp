@@ -98,7 +98,7 @@ function addOptionList(){
 
 function addOptionDetailList(){
 	
-	var ofrm=document.optionForm;
+	var ofrm=document.addValueForm;
 	var frm=document.productModifyForm;
 	
 	if(ofrm.addValue.value==''){
@@ -122,7 +122,7 @@ function addOptionDetailList(){
 }
 function optionDetail(optionId){
 
-	var ofrm=document.optionForm;
+	var ofrm=document.addValueForm;
 	ofrm.optionId.value=optionId;
 	
 	ofrm.addValue.value='';
@@ -144,7 +144,7 @@ function optionDetail(optionId){
 
 function optionDel(optionId){
 	
-	var ofrm=document.optionForm;
+	var ofrm=document.addValueForm;
 	var frm=document.productModifyForm;
 	
 	 $.ajax({
@@ -164,7 +164,7 @@ function optionDel(optionId){
 
 function optionDetailDel(optionValueKey){
 	
-	var ofrm=document.optionForm;
+	var ofrm=document.addValueForm;
 	var frm=document.productModifyForm;
 	
 	 $.ajax({
@@ -313,13 +313,13 @@ function optionInitList(optionKey){
     </div>
   </div>
 </form:form>
-<form name="optionForm" >
 	 <div class="row">
          <div class="col-lg-12">
              <div class="ibox float-e-margins">
              <div class="ibox-title">
                  <h5><strong><em class="num">3. </em></strong>옵션정보 설정 <button type="button" class="btn btn-primary btn-xs"  onClick="addSet()" data-toggle="modal" data-target="#myModal2">옵션추가</button></h5>
                  <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+                    <form  id="optionForm" name="optionForm" method="post" action="">
                     <div class="modal-dialog">
                         <div class="modal-content animated flipInY">
                             <div class="modal-header">
@@ -338,8 +338,10 @@ function optionInitList(optionKey){
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
                 <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+                  <form name="addValueForm" >
                     <div class="modal-dialog">
                         <div class="modal-content animated flipInY">
                             <div class="modal-header">
@@ -361,6 +363,7 @@ function optionInitList(optionKey){
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
              </div>            
               <div id=addOptionList></div>
@@ -372,7 +375,6 @@ function optionInitList(optionKey){
              </div>
          </div>
      </div> 
-     </form>
       <div class="row">
         <div class="col-lg-12">
            <div class="ibox float-e-margins">
@@ -383,3 +385,8 @@ function optionInitList(optionKey){
         </div>
      </div>    
 </div>
+
+	<!-- Custom and plugin javascript -->
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/wow/wow.min.js"></script>

@@ -35,6 +35,12 @@
 	                
    <script>
    var frm=document.productRegistForm;
+
+   if(frm==undefined){
+	  
+	   frm=document.productModifyForm;
+	   
+   }
    
    frm.optionKey.value='${optionKey}';
 

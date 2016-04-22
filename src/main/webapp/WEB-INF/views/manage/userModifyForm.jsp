@@ -14,25 +14,6 @@
 			}else{
 				frm.pw_modifyYn.value='N';
 			}
-			
-			if(frm.authCode.value=='01' || frm.authCode.value=='02' || frm.authCode.value=='03'  ){//기본권한 (슈퍼관리자,관리자,일반)
-				
-				frm.auth.value=frm.authCode.value;
-				frm.authId.value='';
-			
-			}else{//일반 상세권한
-				
-				if(frm.authCode.value=='04'){//일반(본사)
-					
-					frm.auth.value='03';
-				    frm.authId.value='AD001';
-					
-				}else if(frm.authCode.value=='05'){//일반(staff)
-					
-					frm.auth.value='03';
-				    frm.authId.value='STAFF';
-				}
-			}
 
 			if (confirm('사용자 정보를 수정 하시겠습니까?')){ 
 				
@@ -95,15 +76,18 @@
 		            </select>
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>권한</th>
+		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>사업자등록증</th>
 		          <th class='text-left'>
-		          	<select class="form-control" title="관리권한" id="authCode" name="authCode"  tabindex="5">
-		                 <option value="03">일반</option>
-		                 <option value="05">일반(staff)</option>
-		                 <option value="04">일반(본사)</option>
-		                 <option value="02">관리자</option>
-		                 <c:if test="${strAuth=='01'}"><option value="01">슈퍼관리자</option></c:if>
-		       		</select></th>
+		          	  <c:choose>
+	              				  <c:when test="${userVO.image1!=null && userVO.image1!=''}">
+	                             	 <img id="image1Id" src="${userVO.image1}"  width="200" height="200" alt="이미지">
+	                              </c:when>
+								  <c:otherwise>
+								  	<img id="image1Id" src=""  width="200" height="200" alt="No Image">
+								  	</c:otherwise>
+							   </c:choose>
+		          	
+		          	</th>
 		       		<input type="hidden" name="auth" id="auth" value="${userVO.auth}">
 	       		    <input type="hidden" name="authId" id="authId" value="${userVO.authId}">
 		      	</tr>
@@ -116,15 +100,15 @@
 		          <th class='text-left'><input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="20" tabindex="7" value="${userVO.officePhone}"> </th>
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >mobilePhone</th>
-		          <th class='text-left'><input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="20" tabindex="8" value="${userVO.mobliePhone}">   </th>
+		          <th class='text-center' style="background-color:#E6F3FF" >사업자번호</th>
+		          <th class='text-left'><input type="text" class="form-control" id="companyId" name="companyId" tabindex="20" tabindex="8" value="${userVO.companyId}">   </th>
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >sms수신여부</th>
+		          <th class='text-center' style="background-color:#E6F3FF" >사용여부</th>
 		          <th class='text-left'>
-		          	<select class="form-control" title="smsYn" id="smsYn" name="smsYn" value="${userVO.smsYn}" tabindex="9">
-		                <option value="N">미수신</option>
-		                <option value="Y">수신</option>
+		          	<select class="form-control" title="useYn" id="useYn" name="useYn" value="${userVO.useYn}" tabindex="9">
+		                <option value="N">미사용</option>
+		                <option value="Y">사용</option>
 		       		</select>    </th>
 		      	</tr>
 			  </table>
