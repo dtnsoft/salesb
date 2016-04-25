@@ -1293,6 +1293,23 @@ public class OrderController {
         }catch(Exception e){
         	e.printStackTrace();
         }
+
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        
+        OrderVO orderVo =new OrderVO();
+        orderVo.setOrderkey(ordr_idxx);
+        orderVo.setOrderPrice(good_mny);
+        orderVo.setUpdateUserId(customerKey);
+        orderVo.setOrderState("02");
+        orderVo.setOrderResultCd(res_cd);
+        orderVo.setOrderResultMsg(res_msg);
+        orderVo.setOrderOption(buyr_tel2);
+
+	    int retVal=orderSvc.orderUpdateProc(orderVo);
+        
         mv.addObject("req_tx", req_tx);
 		mv.addObject("use_pay_method", use_pay_method);
 		mv.addObject("bSucc", bSucc);

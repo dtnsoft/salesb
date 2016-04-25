@@ -380,7 +380,4 @@
      </div>                          
 </div>
 
-	<!-- Custom and plugin javascript -->
-	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
-	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
-	<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/wow/wow.min.js"></script>
+	

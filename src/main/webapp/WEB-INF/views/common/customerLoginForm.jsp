@@ -211,7 +211,7 @@
         <div>
             <div>
 
-                <h1 class="logo-name">
+
                 <c:if test="${key=='N'}">	
 		            <div class="m_result id">
 	<!-- 
@@ -230,23 +230,25 @@
 						</h4>
 	 -->
 		              	<h4 class="m_sch_tp">	
-		              		<label class="radio-inline">
+		              		      사업자로그인<label class="radio-inline">
 							   <div class="switch">
-                                <div class="onoffswitch">
+                               <div class="onoffswitch">
                                     <input type="checkbox" checked class="onoffswitch-checkbox" id="example1" onClick="memeberLoginFrom2()">
-                                    <label class="onoffswitch-label" for="example1">
+                                    <label class="onoffswitch-label" for="example1">    
+                                    
+                                        <span class="onoffswitch-switch"></span>  
                                         <span class="onoffswitch-inner" ></span>
-                                        <span class="onoffswitch-switch"></span>
+
                                     </label>
                                 </div>
                             </div>
-							</label>
+							</label> &nbsp;&nbsp;&nbsp;&nbsp;일반로그인
 						</h4>
 		            </div>
 
                             
 		            </c:if>
-                </h1>
+     
 
             </div>
             <h3>Welcome to Salesb</h3>

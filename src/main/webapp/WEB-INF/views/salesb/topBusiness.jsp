@@ -948,7 +948,7 @@
 	                        </div>
 	                    </li>
 	                    <li class="active">
-	                        <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">상품 등록/변경</span> <span class="fa arrow"></span></a>
+	                        <a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsmanage')"><i class="fa fa-th-large"></i> <span class="nav-label">상품 등록/변경</span> <span class="fa arrow"></span></a>
 	                        <ul class="nav nav-second-level">
 	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsregistform')">개별상품등록</a></li>
 	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/business/goodsexcelform')">일괄상품등록</a></li>
@@ -1012,9 +1012,7 @@
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- Custom and plugin javascript -->
-<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
-<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
+
 
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 

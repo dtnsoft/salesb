@@ -320,9 +320,16 @@
 	        });		
 		
 	}
+	
+	var optionObj=''; 
+	
 	function optionDetailSelect(optionId,optionValueKey,optionValue){
 
 		document.all('select_tr_'+optionId).innerText=optionValue;
+		
+		optionObj=optionObj+'|'+optionId+'^'+optionValueKey;
+		
+		 document.order_info.buyr_tel2.value = optionObj;
 
 		$("#modalColse1").click();
 	}
@@ -533,7 +540,7 @@
 									    <!-- 결제금액(good_mny) - ※ 필수 : 값 설정시 ,(콤마)를 제외한 숫자만 입력하여 주십시오. -->
 									   <input type="hidden" name="good_mny" value="${goods.salesPrice}" />
 									    <!-- 주문자명(buyr_name) -->
-									   <input type="hidden" name="buyr_name" value="${customer.customerKey}" />
+									   <input type="hidden" name="buyr_name" value="" />
 									   <!-- 주문자 E-mail(buyr_mail) -->
 									   <input type="hidden" name="buyr_mail" value="${customer.sbEmail}" />
 									   <!-- 주문자 연락처1(buyr_tel1) -->

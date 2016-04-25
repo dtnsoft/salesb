@@ -737,7 +737,7 @@
 	                        </div>
 	                    </li>
 	                    <li class="active">
-	                        <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">나의상품</span> <span class="fa arrow"></span></a>
+	                        <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')"><i class="fa fa-th-large"></i> <span class="nav-label">나의상품</span> <span class="fa arrow"></span></a>
 	                        <ul class="nav nav-second-level">
 	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')">상품 토큰 현황</a></li>
 	                        </ul>

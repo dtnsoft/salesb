@@ -33,8 +33,9 @@
 		}else{
 
 			var list_category_api_uri = 'https://openapi.naver.com/blog/listCategory.json';
-			var write_post_api_uri = 'https://openapi.naver.com/blog/writePost.json?title=test&contents=SALESBARONTEST2SALESBARONTEST';
-			
+			var content='salesb test';//'구매하러 가기=> ${token.token} 상품설명 : '+$("#productEtc").val();
+			var write_post_api_uri = 'https://openapi.naver.com/blog/writePost.json?title=salesb&contents='+content;
+	
 	    	$.ajax({
 			    type: "POST",
 			    async:true,
@@ -48,7 +49,7 @@
 						    async:true,
 						     url:  '<%= request.getContextPath() %>/common/restnaverpost?write_post_api_uri='+encodeURIComponent(write_post_api_uri)+'&access_token=Bearer '+encodeURIComponent(access_token),
 							      success: function(data) {
-		alert(data);
+								alert(data);
 						       },
 						       error:function(){
 						     	  

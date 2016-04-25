@@ -23,6 +23,9 @@ public class OrderVO extends AbstractVO {
 	private String updateUserName;
 	private String updateDateTime;
 	private String orderState;
+	private String orderResultCd;
+	private String orderResultMsg;
+	private String orderOption;
 	  
     private String searchGubun;
     private String searchValue;
@@ -226,6 +229,30 @@ public class OrderVO extends AbstractVO {
 
 	public void setSalesPrice(String salesPrice) {
 		this.salesPrice = salesPrice;
+	}
+
+	public String getOrderResultCd() {
+		return orderResultCd;
+	}
+
+	public void setOrderResultCd(String orderResultCd) {
+		this.orderResultCd = orderResultCd;
+	}
+
+	public String getOrderResultMsg() {
+		return orderResultMsg;
+	}
+
+	public void setOrderResultMsg(String orderResultMsg) {
+		this.orderResultMsg = orderResultMsg;
+	}
+
+	public String getOrderOption() {
+		return orderOption;
+	}
+
+	public void setOrderOption(String orderOption) {
+		this.orderOption = orderOption;
 	}
 	
 

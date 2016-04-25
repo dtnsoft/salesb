@@ -97,11 +97,17 @@
 	  		, #{orderState}
 	  		) 
  </insert>
-
+        
 <update id="orderUpdateProc" parameterType="com.offact.salesb.vo.order.OrderVO">
   		
 	  Update sbOrder
        		Set orderState = #{orderState}
+       		,orderPrice = #{orderPrice}
+       		,orderResultCd = #{orderResultCd}
+       		,orderResultMsg = #{orderResultMsg}
+       		,orderOption = #{orderOption}
+       		,updateUserId = #{updateUserId}
+       		,updateDateTime = now()
  		Where orderkey = #{orderkey}
  </update>
  

@@ -4352,6 +4352,100 @@ public class CommonController {
 		        return array;
 		    }
 		    
+		    /* RestFull 정보받기
+		     *
+		     * @param request
+		     * @param response
+		     * @param model
+		     * @param locale
+		     * @return
+		     * @throws BizException
+		     */
+		    @RequestMapping({"/common/restnaverpost"})
+		    public @ResponseBody
+		    JSONArray restNaverPost(String write_post_api_uri,
+		    		String access_token,
+		            HttpServletRequest request, 
+		            HttpServletResponse response) throws BizException
+		    {
+		        
+		    	//log Controller execute time start
+				String logid=logid();
+				long t1 = System.currentTimeMillis();
+				
+				logger.info("["+logid+"] Controller start write_post_api_uri "+write_post_api_uri);
+				logger.info("["+logid+"] Controller start access_token "+access_token);
+				 
+				JSONArray array =null;
+				JSONObject object =new JSONObject();
+				JSONObject object2 =new JSONObject();
+				String inputLine = null;
+				String content = "";
+
+			    try{
+
+		            BufferedReader input = null;
+		
+		            URL url = new URL(write_post_api_uri);
+		            
+		            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		           
+		            connection.setRequestProperty("Authorization",access_token);
+
+			    	connection.setDoOutput(true);
+			    	
+			    	input= new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+
+		            while ((inputLine = input.readLine()) != null) {
+		            	
+		            	 content += inputLine;
+		            }
+		            
+		            input.close();
+
+		            logger.info("["+logid+"] content::"+content);
+		            
+		            Object obj = JSONValue.parse(content);
+		            
+		            logger.info("["+logid+"] ####################################################################################");
+
+		            object = (JSONObject)obj;
+
+		            logger.info("["+logid+"] message::"+object.get("message"));
+
+		            Object obj2 = JSONValue.parse(object.get("message").toString()); 
+		            object2 = (JSONObject)obj2;
+		            logger.info("["+logid+"] object2::"+object2);
+		            logger.info("["+logid+"] result::"+object2.get("result"));
+
+		            Object obj3 = JSONValue.parse(object2.get("result").toString()); 
+
+		            array = (JSONArray)obj3;
+		            this.logger.debug("array ==>" + array);
+		            List jasonList = new ArrayList();
+
+		            Object arryObj = null;
+
+		            for (int i = 0; i < array.size(); i++)
+		            {
+		              arryObj = JSONValue.parse(array.get(i).toString());
+		              JSONObject arryObject = (JSONObject)arryObj;
+		              jasonList.add(arryObject);
+		            }
+
+
+		          }
+		          catch (Exception e) {
+		            e.printStackTrace();
+		          }
+				
+		       //log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+		        return array;
+		    }
+		    
 		    
 		    /* RestFull 정보받기
 		     *
@@ -4558,9 +4652,9 @@ public class CommonController {
 		     * @return
 		     * @throws BizException
 		     */
-		    @RequestMapping({"/common/restnaverpost"})
+		    @RequestMapping({"/common/restnaverpost3"})
 		    public @ResponseBody
-		    JSONObject restNaverPost(String write_post_api_uri,
+		    JSONObject restNaverPost3(String write_post_api_uri,
 		    		String access_token,
 		            HttpServletRequest request, 
 		            HttpServletResponse response) throws BizException
@@ -4608,7 +4702,7 @@ public class CommonController {
 		                                      BOUNDARY);
 		            conn.setRequestProperty("Authorization", access_token);
 		            conn.setRequestProperty("Cache-Control", "no-cache");
-		       
+		       /*
 		            dos = new DataOutputStream(conn.getOutputStream());
 		            
 		            Map<String, String> paramMap;
@@ -4661,7 +4755,7 @@ public class CommonController {
 		            fis.close();
 		            dos.flush();
 		            dos.close();
-	 	    
+	 	    */
 			    } catch (MalformedURLException ex) {
 		            ex.printStackTrace();
 		        } catch (IOException ioe) {

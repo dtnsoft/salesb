@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -91,6 +93,12 @@ public class MemberController {
     @Value("#{config['oauth.kakao.client_id']}")
     private String kakaoclient_id;
     
+    @Value("#{config['oauth.naver.client_id']}")
+    private String naverclient_id;
+    
+    @Value("#{config['oauth.naver.client_secret']}")
+    private String naverclient_secret;
+    
     @Value("#{config['oauth.redirect.url']}")
     private String redirectUrl;
     
@@ -136,7 +144,11 @@ public class MemberController {
     @Autowired
     private MemberSalesService memSalesSvc;
     
-
+    public String generateState()
+    {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
+    }
     /**
      * 상품관리 화면 로딩
      *
@@ -292,10 +304,15 @@ public class MemberController {
         token.setTokenkey(tokenKey);
         
         token = tokenSvc.getTokenDetail(token);
+        
+     	String state = generateState();
+     	session.setAttribute("state", state);
 
         mv.addObject("token", token);
+        mv.addObject("state", state);
 		mv.addObject("redirectUrl", redirectUrl);
 		mv.addObject("kakaoclient_id", kakaoclient_id);
+		mv.addObject("naverclient_id", naverclient_id);
 		mv.addObject("facebookfbAppId", facebookfbAppId);
 		
         mv.setViewName("/member/goodsMakeForm");
