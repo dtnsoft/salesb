@@ -85,7 +85,7 @@
 
             </div>
  		 </div>
-         <div class="wrapper wrapper-content">     
+         <div class="wrapper wrapper-content">
      	  <!-- 조회결과리스트 -->
 	   		<div id=salesPageList></div>
 

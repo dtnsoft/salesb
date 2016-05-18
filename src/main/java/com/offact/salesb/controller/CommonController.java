@@ -3555,7 +3555,7 @@ public class CommonController {
 				if(!userChk.getPassword().equals(userChk.getInPassword())){
 					
 					logger.info(">>> 비밀번호 오류");
-					strMainUrl = "admin/loginFail";
+					strMainUrl = "common/loginFail";
 					workCode="CM006";
 					
 					mv.addObject("userId", strUserId);

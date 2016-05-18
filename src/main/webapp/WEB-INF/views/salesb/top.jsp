@@ -737,10 +737,7 @@
 	                        </div>
 	                    </li>
 	                    <li class="active">
-	                        <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')"><i class="fa fa-th-large"></i> <span class="nav-label">나의상품</span> <span class="fa arrow"></span></a>
-	                        <ul class="nav nav-second-level">
-	                            <li class="active"><a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')">상품 토큰 현황</a></li>
-	                        </ul>
+	                        <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/mytokenmanage')"><i class="fa fa-th-large"></i> <span class="nav-label">상품 토큰 현황</span> <span class="fa arrow"></span></a>
 	                    </li>
 	                    <li>
 	                         <a href="javascript:fcMenu('<%= request.getContextPath() %>/member/salesmanage')" ><i class="fa fa-diamond"></i> <span class="nav-label">판매현황</span></a>
@@ -802,8 +799,12 @@
 
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- iCheck -->
-<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="<%= request.getContextPath() %>/Static_Full_Version/js/demo/sparkline-demo.js"></script>
 
 <script>
 

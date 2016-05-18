@@ -241,13 +241,6 @@
 
 <body onload="chk_pay();">
 <div id="wrap" class="wrap"  >
-  <!-- 헤더 -->
-  <header>
-     <div class="mb_top"  id="header">
-      <h1 class="head_logo"></h1>
-    </div>
-  </header>
-  <!--//헤더 --> 
   <!-- container -->
   <div id="container">
  	<div class="dimbackground-curtain commonDimedClass" id="dimedLoadingDiv"></div>

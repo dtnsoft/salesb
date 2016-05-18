@@ -521,6 +521,18 @@
                                         <dd>${customer.sbEmail}</dd>
                                     </dl>
                                     <hr>
+                                    <h4>PayPal 결재</h4>
+
+                                    <div class="small text-muted">
+                                       <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
+									    data-name="offact" 
+									    data-button="buynow" 
+									    data-quantity="1" 
+									    data-callback="http://dev.addys.co.kr" 
+									    data-env="sandbox"
+									    data-charset="UTF-8"
+									></script>
+                                    </div>
 									<form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
 							           <input type="hidden" name="orderkey" value="" />
 							           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
@@ -547,7 +559,7 @@
 									   <input type="hidden" name="buyr_tel1" value="${customer.sbPhoneNumber}" />
 									   <!-- 휴대폰번호(buyr_tel2) -->
 									   <input type="hidden" name="buyr_tel2" value="010-0000-0000" />
-									
+									<!--  
 										<div>
 			                               <div class="form-group"><label class="col-sm-2 control-label">KCP 모바일지불 방법</label>
 			                                    <div class="col-sm-10">
@@ -556,20 +568,18 @@
 									                <option value="card">신용카드</option>
 									                <option value="acnt">계좌이체</option>
 									                <option value="vcnt">가상계좌</option>
-									                <!--  <option value="mobx">휴대폰</option>-->
+									                <option value="mobx">휴대폰</option>
 									                <option value="ocb">OK캐쉬백</option>
 									                <option value="tpnt">복지포인트</option>
 									                <option value="scbl">도서상품권</option>
 									                <option value="sccl">문화상품권</option>
 									                <option value="schm">해피머니</option>
 			                                    </select>
-	                                           <!-- <button type="submit" class="btn btn-primary btn-sm" onclick="orderKey();"><i class="fa fa-cart-plus"></i> 결제요청</button>-->
 	                                        	 <input name="" type="button" class="submit" value="결제요청" onclick="kcp_AJAX('<%= request.getContextPath() %>/kcp/mobile_sample/order_approval.jsp');">
-	                                      
 	                                        	</div>
 			                                </div>
 	                                    </div>
-
+									-->
 									  <!-- 공통정보 -->
 									  <input type="hidden" name="req_tx"          value="pay">                           <!-- 요청 구분 -->
 									  <input type="hidden" name="shop_name"       value="<%= g_conf_site_name %>">       <!-- 사이트 이름 --> 

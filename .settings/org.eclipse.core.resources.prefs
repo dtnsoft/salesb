@@ -26,6 +26,7 @@ encoding//src/main/webapp/WEB-INF/views/common/customerLoginForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/customerModifyForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/imageView.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/intro.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/common/loginFail.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/oauth2google.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/oauth2kakaostory.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/errors/404.jsp=UTF-8

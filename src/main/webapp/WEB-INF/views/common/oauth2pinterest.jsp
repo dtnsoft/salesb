@@ -104,13 +104,6 @@
 </head>
 <body onload="goLogin();">
 <div id="wrap" class="wrap"  >
-  <!-- 헤더 -->
-  <header>
-     <div class="mb_top"  id="header">
-      <h1 class="head_logo"></h1>
-    </div>
-  </header>
-  <!--//헤더 --> 
   <form  id="loginForm" name="loginForm"  method="post" role="form" action="${domainUrl}">
   <input type="hidden" name="loginType" value="sns" >
 

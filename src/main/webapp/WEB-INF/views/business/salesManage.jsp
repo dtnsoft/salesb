@@ -84,10 +84,10 @@
     <div class="col-lg-2">
     </div>
  </div>
-        
+  <div class="wrapper wrapper-content animated fadeInRight">      
  <!-- 조회결과리스트 -->
  <div id=salesPageList></div>
-	    
+  </div>   
 
 <script>
 fcSales_listSearch();

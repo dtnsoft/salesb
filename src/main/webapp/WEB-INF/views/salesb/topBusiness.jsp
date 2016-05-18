@@ -1012,10 +1012,13 @@
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-
+<!-- Custom and plugin javascript -->
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/inspinia.js"></script>
+<script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/pace/pace.min.js"></script>
 
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
+<!-- iCheck -->
 <script src="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/iCheck/icheck.min.js"></script>
 
 <script>

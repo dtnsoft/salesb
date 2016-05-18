@@ -487,7 +487,22 @@
                                         <dt>판매자 이메일</dt>
                                         <dd>${customer.sbEmail}</dd>
                                     </dl>
-                                    <hr>
+                                      <hr>
+
+                                    <h4>PayPal 결재</h4>
+
+                                    <div class="small text-muted">
+                                       <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
+									    data-name="offact" 
+									    data-button="buynow" 
+									    data-quantity="1" 
+									    data-callback="http://dev.addys.co.kr" 
+									    data-env="sandbox"
+									    data-charset="UTF-8"
+									></script>
+                                    </div>
+
+                                    
 									<!-- 3.결재 -->
 							        <form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
 							           <input type="hidden" name="orderkey" value="" />
@@ -551,6 +566,7 @@
 									   <input type="hidden" name="buyr_tel2" value="" />
 									   
 									<!-- 결제 요청/처음으로 이미지 -->
+									<!-- 
                                     <div>
 		                               <div class="form-group"><label class="col-sm-2 control-label">KCP 지불 방법</label>
 		                                    <div class="col-sm-10">
@@ -558,17 +574,17 @@
 		                                        <option value="100000000000">신용카드</option>
 				                                <option value="010000000000">계좌이체</option>
 				                                <option value="001000000000">가상계좌</option>
-				                                <!--<option value="000100000000">포인트</option>-->
-				                                <!--<option value="000010000000">휴대폰</option>-->
+				                                <option value="000100000000">포인트</option>
+				                                <option value="000010000000">휴대폰</option>
 				                                <option value="000000001000">상품권</option>
-				                                <!--<option value="000000000010">ARS</option>-->
-				                                <!-- <option value="111000000000">신용카드/계좌이체/가상계좌</option>  -->
+				                                <option value="000000000010">ARS</option>
+				                                <<option value="111000000000">신용카드/계좌이체/가상계좌</option>  
 		                                    </select>
                                             <button class="btn btn-primary btn-sm"  type="submit" onclick="return jsf__pay(this.form);"><i class="fa fa-cart-plus"></i> 결제요청</button>
-                                        </div>
+                                       		</div>
 		                                </div>
-                                       
                                     </div>
+                                     -->
 									<%
 									    /* = -------------------------------------------------------------------------- = */
 									    /* =   1. 주문 정보 입력 END                                                    = */

@@ -23,7 +23,7 @@
 </SCRIPT>
 
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-md-3">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
                                 <span class="label label-warning pull-right">Data has changed</span>
@@ -135,14 +135,22 @@
                                         </tbody>
                                     </table>
                                 </div>
-								<!-- 페이징 -->
-								<taglib:paging cbFnc="goPageSalesPageList" totalCount="${totalCount}" curPage="${salesConVO.curPage}" rowCount="${salesConVO.rowCount}" /> 
-								<!-- //페이징 --> 
                             </div>
                         </div>
                     </div>
 
                 </div>
+			     <div class="row">
+			         <div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-content">
+					             <!-- 페이징 -->
+							     <taglib:paging cbFnc="goPageTokenPageList" totalCount="${totalCount}" curPage="${salesConVO.curPage}" rowCount="${salesConVO.rowCount}" />
+							    <!-- //페이징 -->   
+					       </div>
+			            </div>
+			        </div>
+			    </div>   
 
- 
 
+  

@@ -213,13 +213,6 @@
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;" onload="goLogin()">
      <div id="wrap" class="wrap" >
-		 <!-- 헤더 -->
-		  <header>
-		   <div class="mb_top">
-				<h1 class="head_logo"></h1>
-			</div>
-		  </header>
-		  <!--//헤더 -->  
 		  <!-- container -->
 		    <form  id="loginForm" name="loginForm"  method="post" role="form" action="${domainUrl}">
 			  <input type="hidden" name="loginType" value="sns" >
