@@ -30,13 +30,35 @@
     	
     }
 
+    $(document).ready(function() {
+    	$('[data-toggle="tooltip"]').tooltip({
+    		// container: "body",
+    		delay: { "show": 0, "hide": 111000 }
+    	});
+    	$('.tooltip-right').tooltip({
+    		placement: 'right',
+    		viewport: {selector: 'body', padding: 2}
+    	});
+    	$('.tooltip-bottom').tooltip({
+    		placement: 'bottom',
+    		viewport: {selector: 'body', padding: 2}
+    	});
+    	$('.tooltip-viewport-right').tooltip({
+    		placement: 'right',
+    		viewport: {selector: '.container-viewport', padding: 2}
+    	});
+    	$('.tooltip-viewport-bottom').tooltip({
+    		placement: 'bottom',
+    		viewport: {selector: '.container-viewport', padding: 2}
+    	});
+       });
 </SCRIPT>
 <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                 <div class="row">
-                   <div class="col-xs-4">
+                   <div class="col-lg-12">
                       <h4>전체 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" />개 검색</h4>
                    </div>
                 </div>
@@ -53,8 +75,7 @@
                  <table class="table table-striped">
                     <thead>
                        <tr>
-                           <th>상품명</th>
-                           <th>상품코드 </th>
+                           <th>상품 </th>
                            <th>수정확인</th>
                        </tr>
                     </thead>
@@ -63,7 +84,7 @@
                    		<c:forEach items="${productList}" var="ProductVO" varStatus="status">
                    			<tr onClick="fcGoods_View('${ProductVO.idx}');">
 		                       <td><c:out value="${ProductVO.productName}"></c:out></td>
-		                       <td><c:out value="${ProductVO.productCode}"></c:out></td>
+                               <td><c:out value="${ProductVO.productCode}"></c:out></td>
                                <td>
 								<button class="btn btn-info  dim" type="button" ><i class="fa fa-paste"></i> </button>
 							   </td>
@@ -72,7 +93,7 @@
 						</c:if>
 						<c:if test="${empty productList}">
                           <tr>
-                            <td colspan='3' class='text-center'>조회된 데이터가 없습니다.</td>
+                            <td colspan='2' class='text-center'>조회된 데이터가 없습니다.</td>
 						  </tr>
 					   </c:if>
                    </tbody>

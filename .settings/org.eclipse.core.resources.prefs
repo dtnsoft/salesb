@@ -1,7 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/main/resources/config.properties=UTF-8
 encoding//src/main/resources/messages.properties=UTF-8
-encoding//src/main/resources_dev/config.properties=UTF-8
-encoding//src/main/resources_real/config.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/views/admin/footer.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/admin/loginFail.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/admin/loginForm.jsp=UTF-8
@@ -71,5 +70,4 @@ encoding//src/main/webapp/WEB-INF/views/salesb/index_ROOT_addys.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/salesb/index_ROOT_offact.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/salesb/top.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/salesb/topBusiness.jsp=UTF-8
-encoding//src/main/webapp/kcp/cfg/site_conf_inc.jsp=UTF-8
 encoding/<project>=UTF-8

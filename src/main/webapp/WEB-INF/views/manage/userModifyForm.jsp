@@ -120,29 +120,7 @@
 </html>
 <script>
 
-document.userModifyForm.groupId.value='${userVO.groupId}';
-document.userModifyForm.smsYn.value='${userVO.smsYn}';
-
-if('${userVO.auth}'=='03'){//일반인경우
-	
-	if('${userVO.authId}'=='AD001'){//일반본사
-		
-		document.userModifyForm.authCode.value='04';
-		
-	}else if('${userVO.authId}'=='STAFF'){//일반스태프
-		
-		document.userModifyForm.authCode.value='05';
-		
-	}else{//일반
-		
-		document.userModifyForm.authCode.value='03';//일반
-	}
-	
-}else{
-	
-	document.userModifyForm.authCode.value='${userVO.auth}';
-	
-}
+document.userModifyForm.useYn.value='${userVO.useYn}';
 
 </script>
 

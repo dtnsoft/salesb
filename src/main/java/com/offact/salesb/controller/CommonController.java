@@ -145,6 +145,10 @@ public class CommonController {
     
 	@Value("#{config['offact.dev.sms']}")
     private String devSms;
+	
+	@Value("#{config['offact.dev.mail']}")
+    private String devMails;
+	
     
     @Value("#{config['offact.sms.smsid']}")
     private String smsId;
@@ -746,7 +750,7 @@ public class CommonController {
 		long t1 = System.currentTimeMillis();
 		
 		ModelAndView mv = new ModelAndView();
-		
+
 		logger.info("["+logid+"] Controller start : fileVO" + fileVO);
 		logger.info("["+logid+"] Controller start userId:"+userId);
 		logger.info("["+logid+"] Controller start userName:"+userName);
@@ -771,6 +775,7 @@ public class CommonController {
         userVO.setEmail(email);
         userVO.setOfficePhone(officePhone);
         userVO.setCompanyId(companyId);
+        userVO.setPassword(password);
 
         String imagePath="company/"+strToday+"/";
 
@@ -779,6 +784,8 @@ public class CommonController {
 
         this.logger.debug("파일정보:" + fileName + extension);
         this.logger.debug("file:" + fileVO);
+        
+        File file = null;
 
         try {
         
@@ -806,7 +813,7 @@ public class CommonController {
 	
 			            String filePath = uploadFilePath;
 	
-			            File file = new File(filePath + realFileName);
+			            file = new File(filePath + realFileName);
 			            multipartFile.transferTo(file);
 			            fileNames.add(realFileName);
 			            
@@ -831,6 +838,167 @@ public class CommonController {
         this.logger.debug("getImage1  :" + userVO.getImage1());
         
     	int retVal=this.userManageSvc.userInsertProc(userVO);
+    	
+    	String mc="";
+		String keyvalue="";
+	    String encryptValue = "";
+        String encrypt = "";
+        
+        encryptValue=userVO.getUserId()+"|"+userVO.getOfficePhone()+"|"+userVO.getEmail()+"|"+orderfromemail;
+	        
+	    encrypt = CipherDecipherUtil.encrypt(encryptValue, "We are sales and livingsocials !");
+	        
+	    logger.info("["+logid+"] CipherDecipherUtil encrypt::"+encrypt);
+
+		//이메일 리스틑 조회 user
+		String cclist="";
+		
+		String [] getToMails=devMails.split("\\^");
+    	String [] getToMail_Ccs=cclist.split(";");
+
+		//email 전송
+		EmailVO mail = new EmailVO();
+		
+		List<String> toEmails= new ArrayList();
+		List<String> toEmail_Ccs= new ArrayList();
+		List<String> attcheFileName= new ArrayList();
+		List<File> files = new ArrayList();
+
+		for(int m=0;m<getToMails.length;m++){	
+			toEmails.add(getToMails[m]);	
+		}
+		
+		for(int c=0;c<getToMail_Ccs.length;c++){	
+			toEmail_Ccs.add(getToMail_Ccs[c]);	
+		}
+
+		attcheFileName.add(fileName + extension);
+		files.add(file);
+		//메일발송
+		mail.setToEmails(toEmails);
+		mail.setToEmail_Ccs(toEmail_Ccs);
+		mail.setAttcheFileName(attcheFileName);
+		mail.setFile(files);
+
+		mail.setFromEmail(orderfromemail);
+		
+		String szContent = "";
+		
+		szContent += "<html xmlns='http://www.w3.org/1999/xhtml'>";
+	    szContent += "<head>";
+        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />";
+        szContent += "<title>[sales baron]</title>";
+        szContent += "<link href='"+hostUrl+"/salesb/css/issue_style.css' rel='stylesheet' type='text/css' />";
+        szContent += "<style type='text/css'>";
+        szContent += "<!--";
+        szContent += "body {";
+        szContent += "background-color: #ffffff;";
+        szContent += "}";
+        szContent += "-->";
+        szContent += "</style></head>";
+		
+        szContent += "<body>";
+        szContent += "<table width='630' cellspacing='0' cellpadding='0' align='center' >";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+hostUrl+"/salesb/images/error/error_boxtop.gif' width='630' height='32' /></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td align='center' background='"+hostUrl+"/salesb/images/error/error_boxcen.gif'><table width='500' cellspacing='0' cellpadding='0'>";
+        szContent += "<tr>";
+        szContent += "<td height='30' class='tit_black_b'>[sales baron] 사업자 등록 인증메일</td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td height='1' bgcolor='a9a9a9'></td>";
+        szContent += "</tr>";
+        szContent += "</table>";
+        szContent += "<table width='500' cellspacing='0' cellpadding='0' style='margin-top:18px'>";
+        szContent += "<tr>";
+        szContent += "<td valign='top' style='padding:10px 0 0 0'>사업자아이디("+userVO.getUserId()+")에 대한 salseb 가입내용을 확인 부탁드립니다.<br><br>가입 내용이 맞을경우 아래 인증하기를 클릭하여 사업자정보를 활성화 하시기 바랍니다.<br><br><a href='"+hostUrl+"/salesb/common/companyconfirm?mc="+encrypt+"'><font color='bule'>[ 인증하기 ]</font></a><br><br>salesb 바로가기 =><a href='http://dev.salesb.net/salesb/admin'>http://dev.salesb.net/salesb/admin</a><br><br>[사업자 등록증]<br></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+userVO.getImage1()+"' width='500'/></td>";
+        szContent += "</tr>";
+        szContent += "</table></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+hostUrl+"/salesb/images/error/error_boxbot.gif' width='630' height='32' /></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td height='300'>&nbsp;</td>";
+        szContent += "</tr>";
+        szContent += "</table>";
+        szContent += "</body>";
+        szContent += "</html>";
+        
+		mail.setMsg(szContent);
+		
+		mail.setSubject("[sales baron] 사업자 등록 인증메일");
+		
+		boolean mailResult=false;
+
+		try{
+			
+			mailResult=mailSvc.sendMail(mail);
+			
+			logger.debug("mail result :"+mailResult);
+			
+			if(mailResult==false){
+				
+				retVal=-1;
+				
+			}else{
+				
+				retVal=1;
+				
+				try{
+					//SMS발송
+					SmsVO smsVO = new SmsVO();
+					SmsVO resultSmsVO = new SmsVO();
+					
+					//즉시전송 세팅
+					smsVO.setSmsDirectYn("Y");
+					
+					smsVO.setSmsId(smsId);
+					smsVO.setSmsPw(smsPw);
+					smsVO.setSmsType(smsType);
+					smsVO.setSmsFrom(sendno);
+					smsVO.setSmsMsg("["+userVO.getUserId()+"] 님의 사업자 등록 요청이 발생했습니다. 발송요청 메일로 사업자 인증처리 하시기 바랍니다.");
+					
+					logger.debug("sms sendno :"+sendno);
+					
+					String[] devSmss= devSms.split("\\^");
+					
+		    		for(int i=0;i<devSmss.length;i++){
+							
+		    			logger.debug("sms recvno :"+devSmss[i]);
+		    			
+		    			smsVO.setSmsTo(devSmss[i]);
+		    			resultSmsVO=smsSvc.sendSms(smsVO);
+		    			
+		    			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+						logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+						logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+					}
+				
+				}catch(BizException e){
+					
+					e.printStackTrace();
+			        String errMsg = e.getMessage();
+			        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+					
+				}
+			}
+
+			
+		}catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+	    	retVal=-1;
+	    	
+	    }
         
         mv.addObject("retVal", retVal);
 		
@@ -972,6 +1140,214 @@ public class CommonController {
     	    mv.addObject("message", "인증업데이트 오류");
     	    mv.setViewName("/common/mailConfirm");
         	return mv;
+		}
+
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+        //고객인증성공안내
+	    mv.addObject("message", "인증이 성공했습니다.salesb를 정상적으로 사용가능하십니다.");
+	    mv.setViewName("/common/mailConfirm");
+    	return mv;
+	}
+    
+    /**
+     * 사업자 등록
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/common/companyconfirm"})
+    public @ResponseBody
+    ModelAndView companyConfirm(String mc,
+            HttpServletRequest request, 
+            HttpServletResponse response) throws BizException
+    {
+		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : mc" + mc);
+		
+		ModelAndView  mv = new ModelAndView();
+    			
+		int retVal=-1;
+		String token="";
+		String email="";
+		
+		String key_userid="";
+		String key_phone="";
+		String key_email="";
+		String key_updatemail="";
+		
+		String keyvalue = CipherDecipherUtil.decrypt(mc, "We are sales and livingsocials !");
+	        
+        logger.info("["+logid+"] CipherDecipherUtil keyvalue::"+keyvalue);
+
+        String[] keys=null;
+        
+        keys=keyvalue.split("\\|");
+        
+        logger.info("["+logid+"] CipherDecipherUtil Id::"+keys[0]);
+        logger.info("["+logid+"] CipherDecipherUtil phone::"+keys[1]);
+        logger.info("["+logid+"] CipherDecipherUtil email::"+keys[2]);
+        logger.info("["+logid+"] CipherDecipherUtil updateEmail::"+keys[3]);
+	    
+        key_userid=keys[0];
+        key_phone=keys[1];
+        key_email=keys[2];
+        key_updatemail=keys[3];
+
+        UserVO userVO = new UserVO();
+        
+        userVO.setUserId(key_userid);
+        userVO.setUseYn("Y");
+        userVO.setUpdateUserId(key_updatemail);
+
+		retVal = userSvc.regiUseYnUpdate(userVO);	
+		
+		if(retVal<=0){
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	       	
+			//고객인증 오류 잘못된 접근 안내
+    	    mv.addObject("message", "인증업데이트 오류");
+    	    mv.setViewName("/common/mailConfirm");
+        	return mv;
+		}
+		
+		//이메일 리스틑 조회 user
+		String emaillist=key_email;//등록자 이메일
+		String cclist="";
+		
+		String [] getToMails=emaillist.split(";");
+    	String [] getToMail_Ccs=cclist.split(";");
+
+		//email 전송
+		EmailVO mail = new EmailVO();
+		
+		List<String> toEmails= new ArrayList();
+		List<String> toEmail_Ccs= new ArrayList();
+		List<String> attcheFileName= new ArrayList();
+		List<File> files = new ArrayList();
+
+		for(int m=0;m<getToMails.length;m++){	
+			toEmails.add(getToMails[m]);	
+		}
+		
+		for(int c=0;c<getToMail_Ccs.length;c++){	
+			toEmail_Ccs.add(getToMail_Ccs[c]);	
+		}
+
+		//메일발송
+		mail.setToEmails(toEmails);
+		mail.setToEmail_Ccs(toEmail_Ccs);
+		mail.setAttcheFileName(attcheFileName);
+		mail.setFile(files);
+
+		mail.setFromEmail(orderfromemail);
+		
+		String szContent = "";
+		
+		szContent += "<html xmlns='http://www.w3.org/1999/xhtml'>";
+	    szContent += "<head>";
+        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />";
+        szContent += "<title>[sales baron]</title>";
+        szContent += "<link href='"+hostUrl+"/salesb/css/issue_style.css' rel='stylesheet' type='text/css' />";
+        szContent += "<style type='text/css'>";
+        szContent += "<!--";
+        szContent += "body {";
+        szContent += "background-color: #ffffff;";
+        szContent += "}";
+        szContent += "-->";
+        szContent += "</style></head>";
+		
+        szContent += "<body>";
+        szContent += "<table width='630' cellspacing='0' cellpadding='0' align='center' >";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+hostUrl+"/salesb/images/error/error_boxtop.gif' width='630' height='32' /></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td align='center' background='"+hostUrl+"/salesb/images/error/error_boxcen.gif'><table width='500' cellspacing='0' cellpadding='0'>";
+        szContent += "<tr>";
+        szContent += "<td height='30' class='tit_black_b'>[sales baron] 사업자 등록 인증 완료메일</td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td height='1' bgcolor='a9a9a9'></td>";
+        szContent += "</tr>";
+        szContent += "</table>";
+        szContent += "<table width='500' cellspacing='0' cellpadding='0' style='margin-top:18px'>";
+        szContent += "<tr>";
+        szContent += "<td valign='top' style='padding:10px 0 0 0'>사업자아이디("+userVO.getUserId()+")에 대한 salseb 가입내용이 확인되었습니다.<br><br>아래 url을 통해 서비스 사용이 가능하십니다.<br><br>salesb 바로가기 =><a href='"+domainUrl+"'>http://salesb.net</a><br></td>";
+        szContent += "</tr>";
+        szContent += "</table></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td><img src='"+hostUrl+"/salesb/images/error/error_boxbot.gif' width='630' height='32' /></td>";
+        szContent += "</tr>";
+        szContent += "<tr>";
+        szContent += "<td height='300'>&nbsp;</td>";
+        szContent += "</tr>";
+        szContent += "</table>";
+        szContent += "</body>";
+        szContent += "</html>";
+        
+		mail.setMsg(szContent);
+		
+		mail.setSubject("[sales baron] 사업자 등록 인증 완료메일");
+		
+		boolean mailResult=false;
+
+		try{
+			
+			mailResult=mailSvc.sendMail(mail);
+			
+			logger.debug("mail result :"+mailResult);
+
+		}catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+	    	
+	    }
+
+		try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			//즉시전송 세팅
+			smsVO.setSmsDirectYn("Y");
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(key_phone);
+			smsVO.setSmsFrom(sendno);
+			smsVO.setSmsMsg("[SALESB] 요청하신 사업자 등록이 승인완료 되었습니다.");
+
+			resultSmsVO=smsSvc.sendSms(smsVO);
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			
 		}
 
 		//log Controller execute time end
@@ -1341,7 +1717,7 @@ public class CommonController {
 				smsVO.setSmsType(smsType);
 				smsVO.setSmsTo(customerVo.getSbPhoneNumber());
 				smsVO.setSmsFrom(sendno);
-				smsVO.setSmsMsg("애디스에서 발송된 임시 비밀번호 입니다 ["+temppassword+"]");
+				smsVO.setSmsMsg("SALESB 에서 발송된 임시 비밀번호 입니다 ["+temppassword+"]");
 
 				logger.debug("#########devOption :"+devOption);
 				String[] devSmss= devSms.split("\\^");

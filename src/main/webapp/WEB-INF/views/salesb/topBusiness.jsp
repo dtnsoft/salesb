@@ -38,30 +38,30 @@
 	}
 	</style>
 
-   	<link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+   	<link href="<%= request.getContextPath() %>/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet"></link>
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet"></link>
 
     <!-- Morris -->
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet"></link>
 
     <!-- Toastr style -->
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/toastr/toastr.min.css" rel="stylesheet"></link>
 
     <!-- Gritter -->
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/js/plugins/gritter/jquery.gritter.css" rel="stylesheet"></link>
 
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet">
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/animate.css" rel="stylesheet"></link>
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/style.css" rel="stylesheet"></link>
     
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet">
-    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet"></link>
+    <link href="<%= request.getContextPath() %>/Static_Full_Version/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"></link>
 <!--  
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
--->	
+
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
-	
+	-->	
 	<!-- JQuery Mobile을 사용하기 위해 반드시 필요한 태그
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
     <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>

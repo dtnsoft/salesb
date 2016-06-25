@@ -25,6 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import kr.co.udid.payapp.module.PayappAccountData;
+import kr.co.udid.payapp.module.PayappAccountResult;
+
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -64,6 +67,10 @@ import com.offact.salesb.vo.order.OrderVO;
 import com.offact.salesb.vo.business.ProductMasterVO;
 import com.offact.salesb.vo.business.OptionVO;
 import com.offact.common.JSONDataParser;
+
+import kr.co.udid.payapp.module.PayappAccountData;
+import kr.co.udid.payapp.module.PayappAccountResult;
+import com.offact.salesb.service.order.PayappService;
 
 /**
  * Handles requests for the application home page.
@@ -137,7 +144,10 @@ public class OrderController {
     @Autowired
     private OrderService orderSvc;
     
-   
+	/**
+	 * 페이앱 서비스
+	 */
+	@Autowired private PayappService payappSv;
 	
 	/**
      *
@@ -1410,5 +1420,82 @@ public class OrderController {
        	
         return mv;
     }
-    
+    /**
+	 * 결제 요청 시작
+	 * @param goodname
+	 * @param price
+	 * @param recvphone
+	 * @param memo
+	 * @return
+	 */
+	@RequestMapping(value="/order/requestpayapp")
+	public ModelAndView requestPayApp (
+			
+			/**
+			 * 상품명
+			 */
+			@RequestParam(value="goodname", defaultValue="") String goodname
+			
+			/**
+			 * 상품가격
+			 */
+			, @RequestParam(value="price", defaultValue="0") Integer price
+			
+			/**
+			 * 연락처
+			 */
+			, @RequestParam(value="recvphone", defaultValue="") String recvphone
+			
+			/**
+			 * 메모
+			 */
+			, @RequestParam(value="memo", defaultValue="") String memo
+			)
+	{
+		ModelAndView mv = new ModelAndView();
+		
+		// 페이앱 아이디를 입력해주세요
+		final String payappID = "ObJV/UEI9kQhwsQbAZz0mu1DPJnCCRVaOgT+oqg6zaM=";
+		
+		// 결제 요청 데이터
+		// 필수 : 상품명, 상품 가격, 상대방 전화번호
+		PayappAccountData accountData = new PayappAccountData (goodname, price.intValue (), recvphone);
+		
+		// 피드백 URL
+		accountData.setFeedBackUrl ("");
+		
+		// SMS 발송 여부
+		accountData.setSendSms (true);
+		
+		// 메모 설정
+		accountData.setMemo (memo);
+		
+		// 에러 메시지
+		String errorMsg = "";
+
+		try
+		{
+			// 결제를 요청한다.
+			PayappAccountResult result = payappSv.requestAccount (payappID, accountData);
+			
+			// 결제 성공 여부 판단.
+			if (result.isSuccess ())
+			{
+				mv.addObject ("result", result);
+			}
+			else
+			{
+				errorMsg = result.getErrorMessage ();
+			}
+		}
+		catch (IOException e)
+		{
+			errorMsg = "통신중 에러가 발생하였습니다.";
+		}
+		
+		mv.addObject ("errorMsg", errorMsg);
+		mv.setViewName("/order/requestPayapp");
+		
+		return mv; 
+	}
 }

@@ -1396,6 +1396,7 @@ public class BusinessController {
         //option list 조회
         optionDetailList = optionSvc.getOptionDetailList(optionConVO);
         
+        mv.addObject("optionId", optionId);
         mv.addObject("optionDetailList", optionDetailList);
 
         mv.setViewName("/business/optionDetailList");
@@ -1462,6 +1463,7 @@ public class BusinessController {
         //option list 조회
         optionDetailList = optionSvc.getOptionDetailList(optionConVO);
         
+        mv.addObject("optionId", optionId);
         mv.addObject("optionDetailList", optionDetailList);
 
         mv.setViewName("/business/optionDetailList");
@@ -1592,6 +1594,7 @@ public class BusinessController {
         //option list 조회
         optionDetailList = optionSvc.getOptionDetailList(optionConVO);
         
+        mv.addObject("optionId", optionId);
         mv.addObject("optionDetailList", optionDetailList);
 
         mv.setViewName("/business/optionDetailList");

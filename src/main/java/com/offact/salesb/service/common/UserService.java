@@ -31,5 +31,15 @@ public interface UserService {
     public int regiLoginYnUpdate(UserVO user)
     	    throws BizException;
     
+	/**
+     * 사용자 사용여부저장
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiUseYnUpdate(UserVO user)
+    	    throws BizException;
+    
 	
 }

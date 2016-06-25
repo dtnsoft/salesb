@@ -101,7 +101,7 @@
 </SCRIPT>
 
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-10">
+    <div class="col-lg-12">
         <h2>상품 등록목록 (수정)</h2>
         <ol class="breadcrumb">
             <li>
@@ -115,7 +115,7 @@
             </li>
         </ol>
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-12">
     </div>
 </div>
    	

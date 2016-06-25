@@ -25,7 +25,7 @@
 
         <div class="error-desc">
             The server encountered something unexpected that didn't allow it to complete the request. We apologize.<br/>
-            You can go back to main page: <br/><a href="<%= request.getContextPath() %>/common/intro" class="btn btn-primary m-t">Intro</a>
+            You can go back to main page: <br/><a href="<%= request.getContextPath() %>/intro" class="btn btn-primary m-t">Intro</a>
         </div>
     </div>
 

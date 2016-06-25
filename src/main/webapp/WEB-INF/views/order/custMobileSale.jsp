@@ -105,7 +105,9 @@
     
     <!-- 거래등록 하는 kcp 서버와 통신을 위한 스크립트-->
 	<script type="text/javascript" src="<%= request.getContextPath() %>/kcp/mobile_sample/js/approval_key.js"></script>
-
+	
+    <script src="http://lite.payapp.kr/public/api/payapp-lite.js"></script>
+    
 <script type="text/javascript">
   var controlCss = "css/style_mobile.css";
   var isMobile = {
@@ -133,28 +135,31 @@
     document.getElementById("cssLink").setAttribute("href", controlCss);
 </script>
 <script type="text/javascript">
-   /* 주문번호 생성 예제 */
-  function init_orderid()
-  {
+/* 주문번호 생성 예제 */
+function init_orderid()
+{
     var today = new Date();
     var year  = today.getFullYear();
     var month = today.getMonth() + 1;
     var date  = today.getDate();
     var time  = today.getTime();
 
-    if (parseInt(month) < 10)
-      month = "0" + month;
+    if(parseInt(month) < 10) {
+        month = "0" + month;
+    }
 
-    if (parseInt(date) < 10)
-      date  = "0" + date;
+    if(parseInt(date) < 10) {
+        date = "0" + date;
+    }
 
     var order_idxx = "S" + year + "" + month + "" + date + "" + time;
-    var ipgm_date  = year + "" + month + "" + date;
 
     document.order_info.ordr_idxx.value = order_idxx;
-    document.order_info.ipgm_date.value = ipgm_date;
     
     document.OrderProcessForm.orderkey.value = order_idxx;
+    
+    document.PayPalForm.item_number.value=order_idxx;
+    document,PayAppForm.memo.value=order_idxx;
     
     //주문정보 입력 (주문키생성)
    	$.ajax({
@@ -182,8 +187,15 @@
         	   return;
            }
     });
-    
-  }
+
+    /*
+     * 인터넷 익스플로러와 파이어폭스(사파리, 크롬.. 등등)는 javascript 파싱법이 틀리기 때문에 object 가 인식 전에 실행 되는 문제
+     * 기존에는 onload 부분에 추가를 했지만 setTimeout 부분에 추가
+     * setTimeout 300의 의미는 플러그인 인식속도에 따른 여유시간 설정
+     * - 20101018 -
+     */
+  //  setTimeout("init_pay_button();",300);
+}
 
    /* kcp web 결제창 호츨 (변경불가) */
   function call_pay_form()
@@ -332,6 +344,11 @@
 		 document.order_info.buyr_tel2.value = optionObj;
 
 		$("#modalColse1").click();
+	}
+	
+	function payAppProcess() {
+	    PayApp.setForm('MyPayAppForm');
+	    PayApp.call();
 	}
     
     </script>
@@ -521,18 +538,57 @@
                                         <dd>${customer.sbEmail}</dd>
                                     </dl>
                                     <hr>
-                                    <h4>PayPal 결재</h4>
+                                      <h4>PayPal 결재</h4>
 
-                                    <div class="small text-muted">
-                                       <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
-									    data-name="offact" 
+                                    <div class="small text-muted" >
+									<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=kevin.jeon@offact.com" async="async" 
+									    data-name="${goods.idx}" 
+									    data-number ="${goods.idx}"   
 									    data-button="buynow" 
-									    data-quantity="1" 
-									    data-callback="http://dev.addys.co.kr" 
+									    data-amount="${goods.salesPrice}" 
+									    data-callback="http://salesb.net/salesb/order/paypalorderresult" 
 									    data-env="sandbox"
-									    data-charset="UTF-8"
 									></script>
-                                    </div>
+									<!-- data-charset="UTF-8"
+										<form id="PayPalForm" name="PayPalForm" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+										<input type="hidden" name="cmd" value="_xclick">
+										<input type="hidden" name="business" value="kevin.jeon@offact.com">
+										<input type="hidden" name="item_name" value="${goods.productName}">
+										<input type="hidden" name="item_number" value="">
+										<input type="hidden" name="currency_code" value="USD">
+										<input type="hidden" name="amount" value="${goods.salesPrice}">
+										<input type="hidden" name="charset" value="UTF-8">
+										<input type="image" onClick="init_orderid()" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
+										</form>
+										-->
+									 </div>
+
+									<br><br>
+									<h4>PayApp 결재</h4>
+
+                                    <div class="small text-muted" >
+									    <form  id="PayAppForm" name="PayAppForm"  role="form" method = 'post' action = "<c:url value="/order/requestpayapp" />">
+										<input type="hidden" name="goodname" value="${goods.productName}">
+										<input type="hidden" name="price" value="${goods.salesPrice}">
+										<input type="hidden" name="recvphone" value="01085161995">
+										<input type="hidden" name="memo" value="">
+										<div class="form-group">
+										   <!-- 
+										    <div class="col-sm-offset-2 col-sm-10">
+										      <button onClick="init_orderid()" type="submit" class="btn btn-primary">PayyApp 결제 요청</button>
+										    </div>
+										    -->
+									   </div>
+										</form>
+										
+										 <form name="MyPayAppForm">
+										    <input type="hidden" name="userid"   value="jeonpro">
+										    <input type="hidden" name="shopname" value="Offact">
+										    <input type="hidden" name="goodname" value="${goods.productName}">
+										    <input type="hidden" name="price"    value="${goods.salesPrice}">
+										</form>
+										<button onClick="payAppProcess()"  class="btn btn-primary">PayyApp 결제 요청</button>
+									 </div>
 									<form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
 							           <input type="hidden" name="orderkey" value="" />
 							           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />

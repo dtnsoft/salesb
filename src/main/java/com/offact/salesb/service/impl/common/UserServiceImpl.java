@@ -54,5 +54,26 @@ public class UserServiceImpl implements UserService {
 		    
 	  }
 	   
+	@Override
+	   public int regiUseYnUpdate(UserVO user)
+	   	    throws BizException
+		{
+		    int retVal=-1;
+		    
+		    try{
+		
+		    	retVal=this.commonDao.insert("User.userUseYnUpdate", user);
+		
+		    }catch(Exception e){
+		    	
+		    	e.printStackTrace();
+		    	e.printStackTrace();
+		    	throw new BizException(e.getMessage());
 
+		    }
+		
+		    return retVal;
+		    
+	  }
+	   
 }

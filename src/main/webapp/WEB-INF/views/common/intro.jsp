@@ -58,8 +58,8 @@
                                           사장님이 되실 수 있습니다.</h2>
                     <p>http://salesb.net</p>
                     <p>
-                        <a class="btn btn-lg btn-primary" href="javascript:goLogin()" role="button">로그인</a>
                         <a class="caption-link" href="javascript:goLogin()" role="button">go login</a>
+                        <a class="btn btn-lg btn-primary" href="javascript:goLogin()" role="button">로그인</a>
                     </p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goPrivateForm()" role="button">일반회원가입</a>
@@ -83,9 +83,9 @@
                                           누구나 무료로 온라인 쇼핑몰의<br/>
                                           사장님이 되실 수 있습니다.</h2>
                     <p>http://salesb.net</p>
-                    <p>
-                        <a class="btn btn-lg btn-primary" href="javascript:goLogin()" role="button">로그인</a>
+                    <p>  
                         <a class="caption-link" href="javascript:goLogin()" role="button">go login</a>
+                        <a class="btn btn-lg btn-primary" href="javascript:goLogin()" role="button">로그인</a>
                     </p>
                     <p>
                         <a class="btn btn-lg btn-primary" href="javascript:goPrivateForm()" role="button">일반회원가입</a>

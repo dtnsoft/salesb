@@ -99,6 +99,15 @@
  		Where userId = #{userId}
 </update>
 
+<update id="userUseYnUpdate" parameterType="com.offact.salesb.vo.common.UserVO" >
+        Update ofUser
+       		Set 
+       		     useYn = #{useYn}
+       		    ,updateUserId = #{updateUserId}
+  				,updateDateTime = now()
+ 		Where userId = #{userId}
+</update>
+
 <select id="getEncPassword" resultMap="UserVO" parameterType="com.offact.salesb.vo.common.UserVO" >
 			Select PASSWORD(#{curPwd}) as encPwd
 </select>

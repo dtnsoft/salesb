@@ -54,10 +54,10 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
--->	
+	
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
 	
-	
+-->	
     
     <!-- naver -->
     <script type="text/javascript" src="http://openapi.map.naver.com/openapi/v2/maps.js?clientId=4THYarC7qz77DVXElPNk"></script>

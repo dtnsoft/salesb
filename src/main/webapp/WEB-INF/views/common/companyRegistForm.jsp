@@ -106,9 +106,25 @@
 				return;
 			}
 			
+			
+			if(ufrm.email.value==false){
+				alert('email 정보를 입력하세요');
+				return;
+			}
+			
+			if(ufrm.officePhone.value==false){
+				alert('사무실 전화번호를 입력하세요');
+				return;
+			}
+			
+			if(ufrm.companyId.value==false){
+				alert('사업자 번호를 입력하세요');
+				return;
+			}
+			
 			var url;
 	        var frm=userRegistFileForm;
-		    var fileName = '';
+		    var fileName = '세일즈비.jpg';
 		    var pos = '';
 		    var ln = '';
 		    var gap = '';
@@ -121,7 +137,15 @@
 		    var officePhone=$("#officePhone").val();
 		    var companyId=$("#companyId").val();
 
-		    fileName = '세일즈비.jpg';
+		    if($("#files").val() != ''){
+
+		        fileName = document.all.files.value;
+  
+		    }else{
+		    	
+		    	alert('사업자 등록증을 첨부하셔야 가입요청이 가능합니다.');
+		    	return;
+		    }
 			   
 	        pos = fileName.lastIndexOf("\\");
 	        ln = fileName.lastIndexOf("\.");
@@ -140,7 +164,7 @@
 	    	if (confirm('사업자 회원정보를 등록하시겠습니까?\n등록후 법인심사가 완료되면 사용 가능하십니다.')){ 
 
 		        frm.action = url;
-		        frm.target="file_result";
+		        frm.target="file_result"
 		
 		        frm.submit();    
 	    	}   

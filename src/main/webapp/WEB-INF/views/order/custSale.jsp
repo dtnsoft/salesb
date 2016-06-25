@@ -86,7 +86,7 @@
 	    /* ============================================================================== */
 	%>
 	
-	<!--	<script src="http://lite.payapp.kr/public/api/payapp-lite.js"></script> -->
+ <script src="http://lite.payapp.kr/public/api/payapp-lite.js"></script>
  	
   <script type="text/javascript">
 
@@ -211,6 +211,9 @@
             
             document.OrderProcessForm.orderkey.value = order_idxx;
             
+            document.PayPalForm.item_number.value=order_idxx;
+            document,PayAppForm.memo.value=order_idxx;
+            
             //주문정보 입력 (주문키생성)
            	$.ajax({
                 type: "POST",
@@ -299,12 +302,17 @@
 
 		$("#modalColse1").click();
 	}
+	
+	function payAppProcess() {
+	    PayApp.setForm('MyPayAppForm');
+	    PayApp.call();
+	}
     
     </script>
 
 </head>
 
-<body onload="init_orderid();">
+<body>
 
 <div id="wrapper">
 
@@ -489,27 +497,66 @@
                                     </dl>
                                       <hr>
 
-                                    <h4>PayPal 결재</h4>
+                                    <h4>PayPal 결재2</h4>
 
-                                    <div class="small text-muted">
-                                       <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=Z75Q9DK6L5VRC" async="async" 
-									    data-name="offact" 
+                                    <div class="small text-muted" >
+									<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=kevin.jeon@offact.com" async="async" 
+									    data-name="${goods.productName}" 
+									    data-number ="${goods.idx}"   
 									    data-button="buynow" 
-									    data-quantity="1" 
-									    data-callback="http://dev.addys.co.kr" 
+									    data-amount="${goods.salesPrice}" 
+									    data-callback="http://salesb.net/salesb/order/paypalorderresult" 
 									    data-env="sandbox"
 									    data-charset="UTF-8"
 									></script>
-                                    </div>
+									<!--  
+										<form id="PayPalForm" name="PayPalForm" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+										<input type="hidden" name="cmd" value="_xclick">
+										<input type="hidden" name="business" value="kevin.jeon@offact.com">
+										<input type="hidden" name="item_name" value="${goods.productName}">
+										<input type="hidden" name="item_number" value="">
+										<input type="hidden" name="currency_code" value="USD">
+										<input type="hidden" name="amount" value="${goods.salesPrice}">
+										<input type="hidden" name="charset" value="UTF-8">
+										<input type="image" onClick="init_orderid()" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
+										</form>
+										-->
+									 </div>
 
-                                    
+									<br><br>
+									<h4>PayApp 결재</h4>
+
+                                    <div class="small text-muted" >
+									    <form  id="PayAppForm" name="PayAppForm"  role="form" method = 'post' action = "<c:url value="/order/requestpayapp" />">
+										<input type="hidden" name="goodname" value="${goods.productName}">
+										<input type="hidden" name="price" value="${goods.salesPrice}">
+										<input type="hidden" name="recvphone" value="01085161995">
+										<input type="hidden" name="memo" value="">
+										<div class="form-group">
+										   <!-- 
+										    <div class="col-sm-offset-2 col-sm-10">
+										      <button onClick="init_orderid()" type="submit" class="btn btn-primary">PayyApp 결제 요청</button>
+										    </div>
+										    -->
+									   </div>
+										</form>
+										
+										 <form name="MyPayAppForm">
+										    <input type="hidden" name="userid"   value="jeonpro">
+										    <input type="hidden" name="shopname" value="Offact">
+										    <input type="hidden" name="goodname" value="${goods.productName}">
+										    <input type="hidden" name="price"    value="${goods.salesPrice}">
+										</form>
+										<button onClick="payAppProcess()"  class="btn btn-primary">PayyApp 결제 요청</button>
+									 </div>
+
 									<!-- 3.결재 -->
 							        <form commandName="orderVo"   id="OrderProcessForm" name="OrderProcessForm"  method="post" role="form" >
 							           <input type="hidden" name="orderkey" value="" />
 							           <input type="hidden" name="tokenkey" value="${token.tokenkey}" />
 							           <input type="hidden" name="customerKey" value="${customer.customerKey}" />
 							           <input type="hidden" name="productCode" value="${goods.idx}" />
-							           <input type="hidden" name="salesPrice" value="${goods.salesPrice}" />
+							           <input type="hidden" name="e" value="${goods.salesPrice}" />
 							           <input type="hidden" name="groupId" value="${token.groupId}" />
 							           <input type="hidden" name="orderState" value="01" />
 							        </form>

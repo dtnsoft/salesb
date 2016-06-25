@@ -97,8 +97,9 @@ public class SmsServiceImpl implements SmsService {
     		}
     		logger.debug("최종 SMS전송시간"+sms_date);
     		// UTF-8 설정
-    		whois_sms.setUtf8();
-    	    sms_msg = new String(sms_msg.getBytes(), "ISO-8859-1");
+    		//whois_sms.setUtf8();
+    	    sms_msg = new String(sms_msg.getBytes(), "ISO-8859-1");//ISO-8859-1
+    		//sms_msg = URLEncoder.encode(sms_msg, "UTF-8");//ISO-8859-1
     	    logger.debug("Send SMS Msg : {}"+sms_msg);
     	    //logger.debug("Send SMS Msg UTF-8: {}"+URLEncoder.encode(sms_msg, "UTF-8"));
 
