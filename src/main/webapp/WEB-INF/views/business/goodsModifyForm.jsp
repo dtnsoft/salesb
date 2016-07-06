@@ -3,7 +3,7 @@
 
 function fcGoods_modify(){
 	
-	var frm=document.productModifyForm;
+	var frm=document.productForm;
 	
 	if(frm.productName.value==''){
 		alert('상품명을 입력하세요');
@@ -27,7 +27,7 @@ function fcGoods_modify(){
 	        type: "POST",
 	        async:false,
 	           url:  "<%= request.getContextPath() %>/business/productmodify",
-	           data:$("#productModifyForm").serialize(),
+	           data:$("#productForm").serialize(),
 	           success: function(result) {
 
 					if(result>0){
@@ -72,7 +72,7 @@ function addOption(){
 function addOptionList(){
 	
 	var ofrm=document.optionForm;
-	var frm=document.productModifyForm;
+	var frm=document.productForm;
 	
 	if(ofrm.addName.value==''){
 		alert('추가 옵션명을 입력하세요');
@@ -99,7 +99,7 @@ function addOptionList(){
 function addOptionDetailList(){
 	
 	var ofrm=document.addValueForm;
-	var frm=document.productModifyForm;
+	var frm=document.productForm;
 	
 	if(ofrm.addValue.value==''){
 		alert('추가 상세 옵션명을 입력하세요');
@@ -145,7 +145,7 @@ function optionDetail(optionId){
 function optionDel(optionId){
 	
 	var ofrm=document.addValueForm;
-	var frm=document.productModifyForm;
+	var frm=document.productForm;
 	
 	 $.ajax({
             type: "POST",
@@ -165,7 +165,7 @@ function optionDel(optionId){
 function optionDetailDel(optionValueKey){
 	
 	var ofrm=document.addValueForm;
-	var frm=document.productModifyForm;
+	var frm=document.productForm;
 	
 	 $.ajax({
             type: "POST",
@@ -219,7 +219,7 @@ function optionInitList(optionKey){
 </div>
         	
 <div class="wrapper wrapper-content animated fadeInRight">
- <form:form class="form-horizontal" role="form" commandName="productMasterVO" id="productModifyForm" name="productModifyForm" method="post" action="">  
+ <form:form class="form-horizontal" role="form" commandName="productMasterVO" id="productForm" name="productForm" method="post" action="">  
     <input type="hidden" id="optionKey" name="optionKey" value="${productVO.optionKey}" >        
 	<div class="row">
        <div class="col-lg-12">
@@ -313,68 +313,33 @@ function optionInitList(optionKey){
     </div>
   </div>
 </form:form>
-	 <div class="row">
-         <div class="col-lg-12">
-             <div class="ibox float-e-margins">
-             <div class="ibox-title">
-                 <h5><strong><em class="num">3. </em></strong>옵션정보 설정 <button type="button" class="btn btn-primary btn-xs"  onClick="addSet()" data-toggle="modal" data-target="#myModal2">옵션추가</button></h5>
-                 <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
-                    <form  id="optionForm" name="optionForm" method="post" action="">
-                    <div class="modal-dialog">
-                        <div class="modal-content animated flipInY">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                <h4 class="modal-title">상품 옵션추가</h4>
-                                <small class="font-bold">* 상품별 옵션을 등록하실 수 있습니다.</small>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group has-success"><label class="col-sm-2 control-label" >옵션명</label>
-				                     <div class="col-sm-10"><input type="text" class="form-control" id="addName" name="addName"  maxlength="50"  value="" placeholder="옵션명"></div>
-				                 </div>  
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-white" id="modalColse" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onClick="addOptionList()">add Option</button>
-                            </div>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-                <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-                  <form name="addValueForm" >
-                    <div class="modal-dialog">
-                        <div class="modal-content animated flipInY">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                <h4 class="modal-title">옵션 상세관리</h4>
-                                <small class="font-bold">* 선택된 옵션의 상세내용을 관리합니다..</small>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group has-success"><label class="col-sm-2 control-label" >상세옵션</label>
-				                     <div class="col-sm-10"><input type="text" class="form-control" id="addValue" name="addValue"  maxlength="50"  value="" placeholder="상세옵션"></div>
-				                 </div> 
-				                 <input type="hidden" id="optionId" name="optionId" value="">
-				                   <div id=addOptionDetailList></div>
-				                  
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-white" id="modalColse1" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onClick="addOptionDetailList()">상세옵션 추가</button>
-                            </div>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-             </div>            
-              <div id=addOptionList></div>
-                <c:if test="${productVO.optionKey!='N'}">
+	<div class="row">
+	     <div class="col-lg-12">
+	         <div class="ibox float-e-margins">
+	           <div class="ibox-title">
+	               <h5><em class="num">3. </em></strong>옵션정보 설정</h5>
+	           </div>
+	           <div class="ibox-content"  class="form-horizontal">
+	                <form method="get" class="form-horizontal"  id="optionForm" name="optionForm" >
+	           			<div class="form-group"><label class="col-sm-2 control-label">옵션추가</label>
+	                         <div class="col-sm-7">
+	                         <input type="text" class="form-control"  id="addName" name="addName"  maxlength="50"  value="" placeholder="옵션명">
+	                         </div> 
+	                         <div class="col-sm-3">
+	                         <button type="button" class="btn btn-primary btn-ms"  onClick="addOptionList()">옵션추가</button>
+	                         </div>
+	                     </div>                                                        
+	                 </form>
+	            </div>
+	            <div id=addOptionList></div>
+	            <c:if test="${productVO.optionKey!='N'}">
 			    <script>
 			    optionInitList('${productVO.optionKey}');
 				</script>
 				</c:if>
-             </div>
-         </div>
-     </div> 
+	          </div>
+	       </div>
+	  </div>
       <div class="row">
         <div class="col-lg-12">
            <div class="ibox float-e-margins">

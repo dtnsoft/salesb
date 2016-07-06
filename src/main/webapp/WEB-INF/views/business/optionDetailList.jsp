@@ -11,19 +11,18 @@ function optionClose(optionId){
 function addOptionDetailList(optionId){
 	
 	var ofrm=document.addValueForm;
-	var frm=document.productRegistForm;
-	
-	//alert(	$('#addValueInput').val());
-	//alert(	$('#optionId').val());
-	
-	if($('#addValueInput').val()==''){
+	var frm=document.productForm;
+
+	if($('#addValueInput_'+optionId).val()==''){
 		alert('추가 상세 옵션명을 입력하세요');
 		return;
 	}
 	
+	var optionValue=$('#addValueInput_'+optionId).val();
+	
 	 $.ajax({
             type: "POST",
-               url:  "<%= request.getContextPath() %>/business/optioninsertlist?optionKey="+frm.optionKey.value+"&optionId="+optionId+"&optionValue="+encodeURIComponent($('#addValueInput').val()),
+               url:  "<%= request.getContextPath() %>/business/optioninsertlist?optionKey="+frm.optionKey.value+"&optionId="+optionId+"&optionValue="+encodeURIComponent(optionValue),
                success: function(result) {
                    //commonDim(false);
                    $("#addOptionDetailList_"+optionId).html(result);
@@ -39,7 +38,7 @@ function addOptionDetailList(optionId){
 function optionDetailDel(optionValueKey,optionId){
 	
 	var ofrm=document.addValueForm;
-	var frm=document.productRegistForm;
+	var frm=document.productForm;
 	
 	 $.ajax({
             type: "POST",
@@ -61,7 +60,7 @@ function optionDetailDel(optionValueKey,optionId){
  <div class="modal-header">
  	<div class="form-group has-success">
 	 	<label class="col-sm-2 control-label" >상세옵션</label>
-		<div class="col-sm-10"><input type="text" class="form-control" id="addValueInput" name="addValueInput"  maxlength="50"  value="" placeholder="상세옵션내용"></div>
+		<div class="col-sm-10"><input type="text" class="form-control" id="addValueInput_${optionId}" name="addValueInput_${optionId}"  maxlength="50"  value="" placeholder="상세옵션내용"></div>
 	</div> 
  </div>
 

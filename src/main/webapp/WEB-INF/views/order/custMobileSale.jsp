@@ -316,6 +316,7 @@ function init_orderid()
 
 	  ga('send', 'pageview');
 
+	
 	function optionDetail(optionId){
 		
 		 $.ajax({
@@ -323,7 +324,7 @@ function init_orderid()
 	               url:  "<%= request.getContextPath() %>/order/optiondetaillist?optionId="+optionId,
 	               success: function(result) {
 	                   //commonDim(false);
-	                   $("#addOptionDetailList").html(result);
+	            	   $("#addOptionDetailList_"+optionId).html(result);
 	 
 	               },
 	               error:function() {
@@ -488,23 +489,7 @@ function init_orderid()
 											<div class="ibox-content">
 									          <div class="table-responsive">
 									              <table class="table table-striped" id="contentId">
-									             	  <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-										                    <div class="modal-dialog">
-										                        <div class="modal-content animated flipInY">
-										                            <div class="modal-header">
-										                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-										                                <h4 class="modal-title">옵션 상세선택</h4>
-										                                <small class="font-bold">* 선택된 옵션으로 주문합니다.</small>
-										                            </div>
-										                            <div class="modal-body">
-														              <div id=addOptionDetailList></div>
-										                            </div>
-										                            <div class="modal-footer">
-										                                <button type="button" class="btn btn-white" id="modalColse1" data-dismiss="modal">Close</button>
-										                            </div>
-										                        </div>
-										                    </div>
-										                </div>
+	
 									                  <thead>
 										             	 <tr>
 									                      <th>구분</th>
@@ -518,8 +503,13 @@ function init_orderid()
 										                        	<tr>
 												                        <td>${OptionVO.optionName}</td>
 												                        <td id="select_tr_${OptionVO.optionId}"></td>
-												                        <td><button type="button" class="btn btn-primary btn-xs"  onClick="optionDetail('${OptionVO.optionId}')" data-toggle="modal" data-target="#myModal1">상세옵션선택</button></td>
+												                        <td><button type="button" class="btn btn-primary btn-xs"  onClick="optionDetail('${OptionVO.optionId}')" >상세옵션선택</button></td>
 										                            </tr>
+										                            <tr>
+																		<td colspan="3">
+																		  <div id="addOptionDetailList_${OptionVO.optionId}"></div>
+																		</td>
+																	</tr>
 										                       </c:forEach>
 												          </c:if>
 											              <c:if test="${empty optionList}">

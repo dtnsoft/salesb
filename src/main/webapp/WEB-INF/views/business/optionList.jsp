@@ -59,14 +59,8 @@ function optionDetail(optionId){
       </div>
 	                
    <script>
-   var frm=document.productRegistForm;
+   var frm=document.productForm;
 
-   if(frm==undefined){
-	  
-	   frm=document.productModifyForm;
-	   
-   }
-   
    frm.optionKey.value='${optionKey}';
 
    </script>

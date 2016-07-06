@@ -3,7 +3,7 @@
 
 	function fcGoods_regist(){
 		
-		var frm=document.productRegistForm;
+		var frm=document.productForm;
 		
 		if(frm.productName.value==''){
 			alert('상품명을 입력하세요');
@@ -27,7 +27,7 @@
 		        type: "POST",
 		        async:false,
 		           url:  "<%= request.getContextPath() %>/business/productregist",
-		           data:$("#productRegistForm").serialize(),
+		           data:$("#productForm").serialize(),
 		           success: function(result) {
 
 						if(result>0){
@@ -56,7 +56,7 @@
 
 	function addOption(){
 		var ofrm=document.optionForm;
-		var frm=document.productRegistForm;
+		var frm=document.productForm;
 		
 		var addName=$("#addName").val();
 		//alert(addName);
@@ -86,7 +86,7 @@
 	function addOptionList(){
 
 		var ofrm=document.optionForm;
-		var frm=document.productRegistForm;
+		var frm=document.productForm;
 
 		if(ofrm.addName.value==''){
 			alert('추가 옵션명을 입력하세요');
@@ -115,7 +115,7 @@
 	function optionDel(optionId){
 		
 		var ofrm=document.addValueForm;
-		var frm=document.productRegistForm;
+		var frm=document.productForm;
 		
 		 $.ajax({
 	            type: "POST",
@@ -153,7 +153,7 @@
 </div>
         	
 <div class="wrapper wrapper-content animated fadeInRight">
-  <form:form class="form-horizontal" role="form" commandName="productMasterVO" id="productRegistForm" name="productRegistForm" method="post" action="">  
+  <form:form class="form-horizontal" role="form" commandName="productMasterVO" id="productForm" name="productForm" method="post" action="">  
     <input type="hidden" id="optionKey" name="optionKey" value="N" >             
 	<div class="row">
         <div class="col-lg-12">
