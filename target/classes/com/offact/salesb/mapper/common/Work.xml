@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Work">
+
+<resultMap id="workVO" type="com.offact.salesb.vo.common.WorkVO" >
+  <result column="idx"              property="idx"  />
+  <result column="workDateTime"            property="workDateTime"  />
+  <result column="workIp"      	   property="workIp"  />
+  <result column="workUserId"       	   property="workUserId"  />
+  <result column="workUserName"       	   property="workUserName"  />
+  <result column="workGroupId"       	   property="workGroupId"  />
+  <result column="workGroupName"       	   property="workGroupName"  />
+  <result column="workCategory"              property="workCategory"  />
+  <result column="workCategoryName"              property="workCategoryName"  />
+  <result column="workCode"                property="workCode"  />
+  <result column="workCodeName"                property="workCodeName"  />
+</resultMap>
+
+<insert id="WorkInsert"  parameterType="com.offact.salesb.vo.common.WorkVO" >
+		insert into adWorkHistory (
+				 workDateTime
+            	,workIp
+            	,workUserId 
+            	,workCategory
+            	,workCode
+            	,workKey1
+            	,workKey2
+            	,workKey3
+            	,searchKey1
+            	,searchKey2
+            	,searchKey3
+		)values(
+				 now()
+	  			, #{workIp}
+	  			, #{workUserId}
+	  		    , #{workCategory}
+	  		    , #{workCode}
+	  		    , #{workKey1}
+	  		    , #{workKey2}
+	  		    , #{workKey3}
+	  		    , #{searchKey1}
+	  		    , #{searchKey2}
+	  		    , #{searchKey3}
+		)
+
+</insert>
+
+</mapper>

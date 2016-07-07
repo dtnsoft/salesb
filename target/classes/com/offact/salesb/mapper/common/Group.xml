@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Group">
+
+  <resultMap id="groupVO" type="com.offact.salesb.vo.common.GroupVO" >
+    <result column="groupId" property="groupId"  />
+    <result column="groupName" property="groupName"  />
+    <result column="upGroupId" property="upGroupId"  />
+    <result column="upGroupName" property="upGroupName"  />
+    <result column="groupStep" property="groupStep"  />
+    <result column="groupSort" property="groupSort"  />
+    <result column="createUserId"     property="createUserId"  />
+    <result column="createUserName"   property="createUserName"  />
+    <result column="createDateTime"   property="createDateTime"  />
+    <result column="updateUserId"     property="updateUserId"  />
+    <result column="updateUserName"   property="updateUserName"  />
+    <result column="updateDateTime"   property="updateDateTime"  />
+    <result column="deletedYn"        property="deletedYn"  />
+  </resultMap>
+
+    <select id="getGroupComboList"  resultMap="groupVO" parameterType="com.offact.salesb.vo.common.GroupVO" >
+        SELECT
+               groupId,
+               groupName,
+               upGroupId, 
+               groupStep,
+               groupSort
+        From ofGroup 
+        Where deletedYn = 'N' 
+            And smartYn='Y'
+        	And groupStep=2              
+        <!--if test="groupId != null and groupId != '' and groupId != 'AD001' and groupId != 'G00000'" >
+        	And groupId = #{groupId}
+        </if-->
+        Order By groupSort ASC
+    </select>   
+ 
+</mapper>

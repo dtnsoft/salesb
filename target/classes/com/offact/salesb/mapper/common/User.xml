@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+
+<resultMap id="UserVO" type="com.offact.salesb.vo.common.UserVO" >
+  <result column="userId"              property="userId"  />
+  <result column="userName"            property="userName"  />
+  <result column="groupId"      	   property="groupId"  />
+  <result column="groupName"       	   property="groupName"  />
+  <result column="authId"              property="authId"  />
+  <result column="auth"                property="auth"  />
+  <result column="authName"            property="authName"  />
+  <result column="excelAuth"           property="excelAuth"  />
+  <result column="password"            property="password"  />
+  <result column="inPassword"          property="inPassword"  />
+  <result column="officePhone"         property="officePhone"  />
+  <result column="officePhoneFormat"   property="officePhoneFormat"  />
+  <result column="mobliePhone"         property="mobliePhone"  />
+  <result column="mobliePhoneFormat"   property="mobliePhoneFormat"  />
+  <result column="email"               property="email"  />
+  <result column="ip"                  property="ip"  />
+  <result column="createUserId"        property="createUserId"  />
+  <result column="createDateTime"      property="createDateTime"  />
+  <result column="updateUserId"        property="updateUserId"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="useYn"               property="useYn"  />
+  <result column="deletedYn"           property="deletedYn"  />
+  <result column="curPwd"              property="curPwd"  />
+  <result column="encPwd"              property="encPwd"  />
+  <result column="pwdChangeDateTime"   property="pwdChangeDateTime"  />
+  <result column="pwCycleDate"   property="pwCycleDate"  />
+  <result column="smsAlarmYn"   property="smsAlarmYn"  />
+  <result column="smsAlarmPoint"   property="smsAlarmPoint"  />
+</resultMap>
+
+<select id="getUser" resultMap="UserVO" parameterType="com.offact.salesb.vo.common.UserVO" >
+			Select	   T1.userId
+					  ,T1.userName
+					  ,T1.groupId
+					  ,T2.groupName
+				  	  ,T1.authId
+				  	  ,T1.auth   
+				  	  ,CASE WHEN T1.authId = T1.userId Then '개인권한'
+						   ELSE T3.groupName
+					  END As authName
+					  ,IFNULL(T1.excelAuth,'N')   As excelAuth
+					  ,T1.password
+					  ,password(#{inPassword}) As inPassword
+					  ,T1.email
+					  ,T1.officePhone
+					  ,T1.officePhone As officePhoneFormat
+					  ,T1.mobliePhone
+					  ,T1.mobliePhone As mobliePhoneFormat
+					  ,T1.ip
+					  ,T1.createUserId
+					  ,T1.updateUserId
+					  ,T1.createDateTime As CreateDateTime
+					  ,T1.updateDateTime As UpdateDateTime
+					  ,T1.useYn
+					  ,T1.deletedYn
+					  ,DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') as pwdChangeDateTime
+					  ,date_add(DATE_FORMAT(now(), '%Y-%m-%d'), interval (Select T4.codeId from ofCode T4 where T4.codeGroupId='PW01') month) as pwCycleDate
+					  ,case When T1.auth <![CDATA[<>]]> '03' 
+                  			Then ( Case When cast((select resultLastPoint from adSmsHistory where resultMessage='Success!!' order by smsDateTime desc limit 1 ) as SIGNED) <![CDATA[<]]> 
+                      			 cast((Select T4.codeId from ofCode T4 where T4.codeGroupId='SP01' ) as SIGNED) Then 'Y' Else 'N' End )
+                            Else 'N'
+                            End smsAlarmYn
+            		  ,(Select T4.codeId from ofCode T4 where T4.codeGroupId='SP01' ) as smsAlarmPoint
+				  From ofUser T1 
+					   Left Join ofGroup T2 On T1.groupId=T2.groupId
+					   Left Join ofGroup T3 On T1.authId=T3.groupId
+				  Where T1.userId = #{userId} And T1.deletedYn='N'
+</select>
+
+<select id="getSmsList" resultMap="UserVO" parameterType="com.offact.salesb.vo.common.UserVO" >
+			select mobliePhone
+				from ofUser 
+				Where groupId=#{groupId}  and smsYn='Y'
+</select>
+
+<select id="getSmsBatchList" resultMap="UserVO" parameterType="com.offact.salesb.vo.common.UserVO" >
+			
+                            Select T3.mobliePhone 
+                            from adRecovery T1
+                                 Left Join adCollect T2 On T1.collectCode = T2.collectCode
+                                 Left Join ofUser T3 On T1.groupID = T3.groupId
+                            Where T2.recoveryClosingDate = DATE_FORMAT(date_add(now(), interval +1 day) , '%Y-%m-%d')
+                                  And T3.smsYn = 'Y'
+                                  And T1.recoveryState ='01'
+</select>
+
+<update id="userLoginYnUpdate" parameterType="com.offact.salesb.vo.common.UserVO" >
+        Update ofUser
+       		Set 
+       		     ip = #{ip}
+       		    ,connectIp = #{connectIp}
+            	,loginYn = #{loginYn}
+  				,loginDateTime = now()
+ 		Where userId = #{userId}
+</update>
+
+<update id="userUseYnUpdate" parameterType="com.offact.salesb.vo.common.UserVO" >
+        Update ofUser
+       		Set 
+       		     useYn = #{useYn}
+       		    ,updateUserId = #{updateUserId}
+  				,updateDateTime = now()
+ 		Where userId = #{userId}
+</update>
+
+<select id="getEncPassword" resultMap="UserVO" parameterType="com.offact.salesb.vo.common.UserVO" >
+			Select PASSWORD(#{curPwd}) as encPwd
+</select>
+ 
+</mapper>

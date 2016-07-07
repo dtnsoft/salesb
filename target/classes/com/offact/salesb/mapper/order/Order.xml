@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Order">
+
+<resultMap id="orderVO" type="com.offact.salesb.vo.order.OrderVO" >
+  <result column="orderkey"      property="orderkey"  />
+  <result column="tokenkey"          property="tokenkey"  />
+  <result column="customerKey"      property="customerKey"  /> 
+  <result column="productCode"          property="productCode"  />
+  <result column="groupId"      property="groupId"  />
+  <result column="orderUserId"      property="orderUserId"  />
+  <result column="orderUserName"   property="orderUserName"  />
+  <result column="orderDateTimee"   property="orderDateTime"  />
+  <result column="createDateTime"   property="createDateTime"  />
+  <result column="updateUserId"     property="updateUserId"  />
+  <result column="updateUserName"   property="updateUserName"  />
+  <result column="updateDateTime"   property="updateDateTime"  />
+  <result column="orderState"        property="orderState"  />
+</resultMap>
+
+<select id="getOrderPageList"  resultMap="orderVO" parameterType="com.offact.salesb.vo.order.OrderVO" >
+        SELECT T1.orderkey
+			  ,T1.tokenkey
+			  ,T1.customerKey
+			  ,T1.productCode
+			  ,T4.productName
+			  ,T1.orderPrice
+			  ,T1.groupId
+			  ,T1.orderUserId
+			  ,T2.orderName As orderUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.orderDateTime,'%Y-%m-%d %T') as orderDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.orderState
+          FROM sbOrder T1
+          	   Left Join ofUser T2 On T1.orderUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+			   Left Join sbProductMaster T4 On T1.productCode=T4.idx
+         WHERE T1.customerKey = #{customerKey} 
+         ORDER BY orderDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getOrderCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			          FROM sbOrder T1
+          	   Left Join ofUser T2 On T1.orderUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+			   Left Join sbProductMaster T4 On T1.productCode=T4.idx
+         WHERE T1.customerKey = #{customerKey} 
+</select>
+
+<select id="getOrderDetail" resultMap="orderVO" parameterType="com.offact.salesb.vo.order.OrderVO" >
+
+		SELECT T1.orderkey
+			  ,T1.tokenkey
+			  ,T1.customerKey
+			  ,T1.productCode
+			  ,T4.productName
+			  ,T1.orderPrice
+			  ,T1.groupId
+			  ,T1.orderUserId
+			  ,T2.orderName As orderUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.orderDateTime,'%Y-%m-%d %T') as orderDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.orderState
+          FROM sbOrder T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+		 Where T1.orderkey = #{orderkey} 
+</select>
+
+<insert id="orderInsertProc" parameterType="com.offact.salesb.vo.order.OrderVO">
+        INSERT INTO sbOrder( 
+        	 orderkey
+        	,tokenkey
+            ,customerKey
+            ,productCode
+            ,salesPrice
+            ,groupId
+            ,orderUserId 
+            ,orderDateTime 
+            ,orderState 
+            )
+        VALUES (
+	  		  #{orderkey}
+	  		, #{tokenkey}
+	  		, #{customerKey}
+	  		, #{productCode}
+	  		, #{salesPrice}
+	  		, #{groupId}
+	  		, #{orderUserId}
+	  		, now()
+	  		, #{orderState}
+	  		) 
+ </insert>
+        
+<update id="orderUpdateProc" parameterType="com.offact.salesb.vo.order.OrderVO">
+  		
+	  Update sbOrder
+       		Set orderState = #{orderState}
+       		,orderPrice = #{orderPrice}
+       		,orderResultCd = #{orderResultCd}
+       		,orderResultMsg = #{orderResultMsg}
+       		,orderOption = #{orderOption}
+       		,updateUserId = #{updateUserId}
+       		,updateDateTime = now()
+ 		Where orderkey = #{orderkey}
+ </update>
+ 
+ <select id="getOrderKey" resultMap="orderVO"  >
+
+		SELECT  nextval('order_seq') as orderkey
+		
+</select>
+
+
+</mapper>

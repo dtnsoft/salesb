@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Customer">
+
+<resultMap id="CustomerVO" type="com.offact.salesb.vo.CustomerVO" >
+  <result column="customerKey"              property="customerKey"  />
+  <result column="sbPhoneNumber"            property="sbPhoneNumber"  />
+  <result column="sbPw"      	   property="sbPw"  />
+  <result column="socialId1"       	   property="socialId1"  />
+  <result column="socialId2"              property="socialId2"  />
+  <result column="socialId3"                property="socialId3"  />
+  <result column="socialId4"            property="socialId4"  />
+  <result column="socialId5"           property="socialId5"  />
+  <result column="socialId6"            property="socialId6"  />
+  <result column="socialId7"         property="socialId7"  />
+  <result column="socialId8"   property="socialId8"  />
+  <result column="socialId9"         property="socialId9"  />
+  <result column="socialId10"   property="socialId10"  />
+  <result column="createDateTime"               property="createDateTime"  />
+  <result column="token"                  property="token"  />
+  <result column="tokenDateTime"        property="tokenDateTime"  />
+  <result column="registDateTime"      property="registDateTime"  />
+  <result column="updateDateTime"        property="updateDateTime"  />
+  <result column="usedYn"      property="usedYn"  />
+  <result column="lastloginType"               property="lastloginType"  />
+  <result column="lastLat"           property="lastLat"  />
+  <result column="lastlon"   property="lastlon"  />
+</resultMap>
+
+<select id="getCustomer" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+SELECT  T1.customerKey
+	  ,T1.sbPhoneNumber
+	  ,T1.sbPw As customerPw
+	  ,password(#{inCustomerPw}) As inCustomerPw
+	  ,T1.socialId1
+	  ,T1.socialId2
+	  ,T1.socialId3
+      ,T1.socialId4
+	  ,T1.socialId5
+	  ,T1.socialId6
+	  ,T1.socialId7
+	  ,T1.socialId8
+	  ,T1.socialId9
+	  ,T1.socialId10
+	  ,T1.createDateTime
+	  ,T1.token
+	  ,T1.tokenDateTime
+	  ,T1.registDateTime
+	  ,T1.updateDateTime
+	  ,ifnull(T1.usedYn,'N') as usedYn
+	  ,T1.lastloginType
+	  ,T1.lastLat
+	  ,T1.lastlon
+  FROM sbCustomer T1
+  WHERE T1.usedYn='Y'
+        And T1.sbPhoneNumber = #{sbPhoneNumber}
+ 
+</select>
+
+<update id="customerUpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				sbPhoneNumber = ifnull(#{sbPhoneNumber},'01')
+            	,sbPw = #{sbPw}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<update id="customerUpdatePwProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set sbPw = password(#{sbPw})
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<select id="getEncPassword" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+			Select PASSWORD(#{curPwd}) as encPwd
+</select>
+
+<insert id="customerRegist" parameterType="com.offact.salesb.vo.CustomerVO">
+        INSERT INTO sbCustomer( 
+        	 sbPhoneNumber
+            ,sbPw
+            ,registDateTime 
+            ,usedYn 
+            )
+        VALUES (
+	  		  #{sbPhoneNumber}
+	  		, password(#{sbPw})
+	  		, now()
+	  		, 'Y'
+	  		) 
+	  	ON DUPLICATE KEY UPDATE sbPw =  password(#{sbPw})
+            	               ,updateDateTime = now()    
+            	               ,usedYn = 'Y'  
+ </insert>
+ 
+ <update id="customerRegistUpdate" parameterType="com.offact.salesb.vo.CustomerVO">
+        
+        Update sbCustomer
+       		Set
+  				 sbPw =  password(#{sbPw})
+            	,updateDateTime = now()
+            	,usedYn = 'Y'  
+ 		Where customerKey = #{customerKey} 
+
+ </update>
+
+
+<insert id="getToken"  parameterType="com.offact.salesb.vo.CustomerVO" >
+		 
+		INSERT INTO sbCustomer( 
+        	 sbEmail
+        	,sbPhoneNumber
+        	,createDateTime 
+        	,token
+            ,tokenDateTime
+            )
+        VALUES (
+	  		  #{sbEmail}
+	  		, #{sbPhoneNumber}
+	  		, now()
+	  		, #{token}
+	  		, now()
+	  		)      
+	  	ON DUPLICATE KEY UPDATE token = #{token}
+            	               ,tokenDateTime = now()
+		                        
+</insert>
+
+<insert id="getTokenInsert"  parameterType="com.offact.salesb.vo.CustomerVO" >
+		 
+		INSERT INTO sbCustomer( 
+        	 sbEmail
+        	,sbPhoneNumber
+        	,createDateTime 
+        	,token
+            ,tokenDateTime
+            )
+        VALUES (
+	  		  #{sbEmail}
+	  		, #{sbPhoneNumber}
+	  		, now()
+	  		, #{token}
+	  		, now()
+	  		)      
+		                        
+</insert>
+
+<update id="getTokenUpdate"  parameterType="com.offact.salesb.vo.CustomerVO" >
+		
+	    Update sbCustomer
+       		Set
+  				 token = #{token}
+            	,tokenDateTime = now()
+ 		Where customerKey = #{customerKey} 
+
+</update>
+
+<select id="getTokenInfo" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+	SELECT T1.token
+  		FROM sbCustomer T1
+  	WHERE T1.sbPhoneNumber = #{sbPhoneNumber}
+ 
+</select>
+
+<select id="getCustKeyInfo" resultMap="CustomerVO" parameterType="com.offact.salesb.vo.CustomerVO" >
+	SELECT T1.customerKey,
+		   T1.sbPhoneNumber,
+		   T1.sbEmail,
+		   T1.socialId1,
+		   T1.socialId2,
+		   T1.socialId3,
+		   T1.socialId4,
+		   T1.socialId5,
+	       T1.usedYn,
+	       T1.token,
+	       T1.sbPw As customerPw ,
+	       password(#{inCustomerPw}) As inCustomerPw
+  		FROM sbCustomer T1
+  	WHERE 1=1
+        <if test="searchType != null and searchType != ''" >
+          <choose>
+            <when test="searchType.equals('00')">
+       		  AND T1.customerKey = #{customerKey}
+            </when>
+            <when test="searchType.equals('01')">
+       		  AND T1.sbPhoneNumber = #{sbPhoneNumber}
+            </when>
+            <when test="searchType.equals('02')">
+        	  AND T1.sbEmail = #{sbEmail}
+            </when>
+            <when test="searchType.equals('03')">
+        	  AND T1.sbPhoneNumber = #{sbPhoneNumber} And T1.sbEmail = #{sbEmail}
+            </when>
+            <when test="searchType.equals('04')">
+        	  AND T1.socialId1 = #{socialId1}
+            </when>
+            <when test="searchType.equals('05')">
+        	  AND T1.socialId2 = #{socialId2}
+            </when>
+            <when test="searchType.equals('06')">
+        	  AND T1.socialId3 = #{socialId3}
+            </when>
+            <when test="searchType.equals('07')">
+        	  AND T1.socialId4 = #{socialId4}
+            </when>
+            <when test="searchType.equals('08')">
+        	  AND T1.socialId5 = #{socialId5}
+            </when>
+          </choose>
+        </if>
+ 
+</select>
+
+<insert id="customerInsert" parameterType="com.offact.salesb.vo.CustomerVO">
+        INSERT INTO sbCustomer( 
+        	 sbPhoneNumber
+            ,sbEmail
+            ,registDateTime 
+            ,usedYn 
+            )
+        VALUES (
+	  		  #{sbPhoneNumber}
+	  		, #{sbEmail}
+	  		, now()
+	  		, 'N'
+	  		) 
+ </insert>
+
+<update id="socialId1UpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				 socialId1 = #{socialId1}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<update id="socialId2UpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				 socialId2 = #{socialId2}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+<update id="socialId3UpdateProc" parameterType="com.offact.salesb.vo.CustomerVO" >
+        Update sbCustomer
+       		Set
+  				 socialId3 = #{socialId3}
+            	,updateDateTime = now()
+ 		Where customerKey = #{customerKey}
+</update>
+
+</mapper>

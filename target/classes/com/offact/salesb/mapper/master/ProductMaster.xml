@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductMaster">
+
+<resultMap id="productMasterVO" type="com.offact.salesb.vo.master.ProductMasterVO" >
+  <result column="productCode"      property="productCode"  />
+  <result column="barCode"          property="barCode"  />
+  <result column="productName"      property="productName"  />
+  <result column="companyCode"      property="companyCode"  />
+  <result column="companyName"      property="companyName"  />
+  <result column="productPrice"     property="productPrice"  />
+  <result column="vatRate"          property="vatRate"  />
+  <result column="group1"           property="group1"  />
+  <result column="group1Name"       property="group1Name"  />
+  <result column="group2"         	property="group2"  />
+  <result column="group2Name"   	property="group2Name"  />
+  <result column="group3"         	property="group3"  />
+  <result column="group3Name"   	property="group3Name"  />
+  <result column="recoveryYn"       property="recoveryYn"  />
+  <result column="recoveryYnView"       property="recoveryYnView"  />
+  <result column="createUserId"     property="createUserId"  />
+  <result column="createUserName"   property="createUserName"  />
+  <result column="createDateTime"   property="createDateTime"  />
+  <result column="updateUserId"     property="updateUserId"  />
+  <result column="updateUserName"   property="updateUserName"  />
+  <result column="updateDateTime"   property="updateDateTime"  />
+  <result column="deletedYn"        property="deletedYn"  />
+</resultMap>
+
+<select id="getProductPageList"  resultMap="productMasterVO" parameterType="com.offact.salesb.vo.master.ProductMasterVO" >
+        SELECT T1.productCode
+			  ,T1.barCode
+			  ,T1.productName
+			  ,T1.companyCode
+			  ,T2.companyName
+			  ,T1.productPrice
+			  ,T1.vatRate
+			  ,T1.group1
+			  ,T1.group1Name
+			  ,T1.group2
+			  ,T1.group2Name
+		      ,T1.group3
+			  ,T1.group3Name
+			  ,T1.recoveryYn
+			  ,Case T1.recoveryYn When 'Y' Then '회수' Else '진행' End recoveryYnView
+			  ,T1.createUserId
+			  ,T3.userName As createUserName
+			  ,T1.updateUserId
+			  ,T4.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.deletedYn
+          FROM adProductMaster T1
+               Left Join adCompany T2 On T1.companyCode=T2.companyCode
+          	   Left Join ofUser T3 On T1.createUserId=T3.userId
+			   Left Join ofUser T4 On T1.updateUserId=T4.userId
+         WHERE T1.deletedYn='N'
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('03')">
+           AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('04')">
+           AND T2.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+                <when test="searchGubun.equals('05')">
+           AND T1.group1Name  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY createDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getProductCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adProductMaster T1
+  				Left Join adCompany T2 On T1.companyCode=T2.companyCode
+ 			WHERE T1.deletedYn='N'
+           	<if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('03')">
+           AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('04')">
+           AND T2.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('05')">
+           AND T1.group1Name  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+<select id="getProductDetail" resultMap="productMasterVO" parameterType="com.offact.salesb.vo.master.ProductMasterVO" >
+
+		SELECT T1.productCode
+			  ,T1.barCode
+			  ,T1.productName
+			  ,T1.companyCode
+			  ,T2.companyName
+			  ,T1.productPrice
+			  ,T1.vatRate
+			  ,T1.group1
+			  ,T1.group1Name
+			  ,T1.group2
+			  ,T1.group2Name
+		      ,T1.group3
+			  ,T1.group3Name
+			  ,T1.recoveryYn
+			  ,Case T1.recoveryYn When 'Y' Then '회수' Else '진행' End recoveryYnView
+			  ,T1.createUserId
+			  ,T3.userName As createUserName
+			  ,T1.updateUserId
+			  ,T4.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.deletedYn
+          FROM adProductMaster T1
+               Left Join adCompany T2 On T1.companyCode=T2.companyCode
+          	   Left Join ofUser T3 On T1.createUserId=T3.userId
+			   Left Join ofUser T4 On T1.updateUserId=T4.userId
+		 Where T1.productCode = #{productCode} And T1.deletedYn='N'
+</select>
+
+<update id="productDeleteAll" parameterType="java.util.Map" >
+        Update adProductMaster
+       		Set
+  				deletedYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where 1=1
+</update>
+
+<insert id="insertExcelProduct"  parameterType="com.offact.salesb.vo.master.ProductMasterVO" >
+		insert into adProductMaster (
+				 productCode
+            	,barCode
+            	,productName 
+            	,companyCode
+            	,productPrice
+            	,vatRate
+           		,group1
+            	,group1Name
+            	,group2
+            	,group2Name
+            	,group3
+            	,group3Name
+            	,recoveryYn
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+				 #{productCode}
+	  			, #{barCode}
+	  			, #{productName}
+	  			, #{companyCode}
+	  			, #{productPrice}
+	  			, #{vatRate}
+	  			, #{group1}
+	  		    , #{group1Name}
+	  		    , #{group2}
+	  		    , #{group2Name}
+	  		    , #{group3}
+	  		    , #{group3Name}
+	  		    , 'N'
+	  			, #{createUserId}
+	  			, now()
+	  			, #{deletedYn}
+		)
+		ON DUPLICATE KEY UPDATE barCode = #{barCode},
+		                        productName = #{productName},
+		                        companyCode = #{companyCode},
+		                        productPrice = #{productPrice},
+		                        vatRate = #{vatRate},
+		                        group1 = #{group1},
+		                        group1Name = #{group1Name},
+		                        group2 = #{group2},
+		                        group2Name = #{group2Name},
+		                        group3 = #{group3},
+		                        group3Name = #{group3Name},
+		                       updateUserId = #{updateUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = #{deletedYn}
+		                        
+</insert>
+
+<update id="productRecoveryUpdate" parameterType="java.util.Map" >
+        Update adProductMaster
+       		Set
+  				recoveryYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where productCode = #{productCode}
+</update>
+
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Option">
+
+<resultMap id="optionVO" type="com.offact.salesb.vo.business.OptionVO" >
+  <result column="optionId"         property="optionId"  />
+  <result column="optionName"       property="optionName"  />
+  <result column="optionKey"        property="optionKey"  /> 
+  <result column="optionValueKey"   property="optionValueKey"  />
+  <result column="optionValue"      property="optionValue"  />
+  <result column="createUserId"     property="createUserId"  />
+  <result column="createUserName"   property="createUserName"  />
+  <result column="createDateTime"   property="createDateTime"  />
+  <result column="updateUserId"     property="updateUserId"  />
+  <result column="updateUserName"   property="updateUserName"  />
+  <result column="updateDateTime"   property="updateDateTime"  />
+  <result column="deletedYn"        property="deletedYn"  />
+</resultMap>
+
+<select id="getOptionList"  resultMap="optionVO" parameterType="com.offact.salesb.vo.business.OptionVO" >
+        SELECT T1.optionId
+			  ,T1.optionName
+			  ,T1.optionKey
+			  ,T1.description
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.deletedYn
+          FROM sbOption T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.deletedYn='N'
+               And T1.optionKey = #{optionKey} 
+         ORDER BY T1.optionId desc
+         
+</select>
+
+
+<insert id="optionInsert" parameterType="com.offact.salesb.vo.business.OptionVO" >
+  	insert into sbOption (
+				 optionName
+				,optionKey
+            	,description
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+		          #{optionName}
+	  			, #{optionKey}
+	  			, #{description}
+	  			, #{createUserId}
+	  			, now()
+	  			, 'N'
+		)
+
+</insert>
+
+
+<select id="getOptionKey" resultMap="optionVO"  >
+
+		SELECT  nextval('option_seq') as optionKey
+		
+</select>
+
+<select id="getOptionDetailList"  resultMap="optionVO" parameterType="com.offact.salesb.vo.business.OptionVO" >
+        SELECT T1.optionValueKey
+			  ,T1.optionValue
+			  ,T1.optionKey
+			  ,T1.optionId
+			  ,T1.description
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
+			  ,T1.deletedYn
+          FROM sbOptionValue T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.deletedYn='N'
+               And T1.optionId = #{optionId} 
+         ORDER BY T1.optionValueKey desc
+         
+</select>
+
+
+<insert id="optionDetailInsert" parameterType="com.offact.salesb.vo.business.OptionVO" >
+  	insert into sbOptionValue (
+				 optionValue
+				,optionKey
+				,optionId
+            	,description
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+		          #{optionValue}
+	  			, #{optionKey}
+	  			, #{optionId}
+	  			, #{description}
+	  			, #{createUserId}
+	  			, now()
+	  			, 'N'
+		)
+
+</insert>
+
+<update id="optionDelete" parameterType="com.offact.salesb.vo.business.OptionVO" >
+        Update sbOption
+       		Set deletedYn = 'Y'
+            	,updateDateTime = now()
+            	,updateUserId = #{updateUserId}
+ 		Where optionId = #{optionId}
+</update>
+
+<update id="optionDetailDelete" parameterType="com.offact.salesb.vo.business.OptionVO" >
+        Update sbOptionValue
+       		Set deletedYn = 'Y'
+            	,updateDateTime = now()
+            	,updateUserId = #{updateUserId}
+ 		Where optionValueKey = #{optionValueKey}
+</update>
+
+</mapper>

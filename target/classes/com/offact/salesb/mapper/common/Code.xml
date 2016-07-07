@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Code">
+
+  <resultMap id="codeVO" type="com.offact.salesb.vo.common.CodeVO" >
+    <result column="codeGroupId" property="codeGroupId"  />
+    <result column="groupName" property="groupName"  />
+    <result column="codeId" property="codeId"  />
+    <result column="codeName" property="codeName"  />
+    <result column="description" property="description"  />
+    <result column="createUserId"     property="createUserId"  />
+    <result column="createUserName"   property="createUserName"  />
+    <result column="createDateTime"   property="createDateTime"  />
+    <result column="updateUserId"     property="updateUserId"  />
+    <result column="updateUserName"   property="updateUserName"  />
+    <result column="updateDateTime"   property="updateDateTime"  />
+    <result column="deletedYn"        property="deletedYn"  />
+  </resultMap>
+
+    <select id="getCodeComboList"  resultMap="codeVO" parameterType="com.offact.salesb.vo.common.CodeVO" >
+        SELECT
+               T1.codeGroupId,
+               T2.groupName,
+               T1.codeId, 
+               T1.codeName,
+               T1.description
+        From ofCode T1 Inner Join ofCodeGroup T2 On T1.codeGroupId=T2.codeGroupId
+        Where T1.deletedYn = 'N'              
+        <if test="codeGroupId != null and codeGroupId != ''" >
+        	And T1.codeGroupId = #{codeGroupId}
+        </if>
+        Order By orderNo ,codeId ASC
+    </select>   
+ 
+ <select id="getWorkCodeList"  resultMap="codeVO" parameterType="com.offact.salesb.vo.common.CodeVO" >
+        SELECT
+               codeGroupId,
+               codeId, 
+               codeName,
+               description
+        From ofCode 
+        Where deletedYn = 'N' 
+          And codeGroupId= 'SE02'             
+       	  And Left(codeId,2) = #{codeId}
+         Order By orderNo ,codeId ASC
+    </select> 
+    
+    <select id="getCodeName"  resultMap="codeVO" parameterType="com.offact.salesb.vo.common.CodeVO" >
+        SELECT
+               codeId, 
+               codeName,
+               description
+        From ofCode T1 
+        Where deletedYn = 'N'              
+              And codeGroupId = #{codeGroupId}
+              And codeId = #{codeId}
+
+    </select>    
+</mapper>

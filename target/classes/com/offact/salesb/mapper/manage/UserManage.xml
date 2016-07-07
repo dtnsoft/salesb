@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserManage">
+
+<resultMap id="userListVO" type="com.offact.salesb.vo.manage.UserManageVO" >
+  <result column="userId"              property="userId"  />
+  <result column="userName"            property="userName"  />
+  <result column="groupId"      	   property="groupId"  />
+  <result column="groupName"       	   property="groupName"  />
+  <result column="authId"              property="authId"  />
+  <result column="auth"                property="auth"  />
+  <result column="authName"            property="authName"  />
+  <result column="excelAuth"           property="excelAuth"  />
+  <result column="password"            property="password"  />
+  <result column="officePhone"         property="officePhone"  />
+  <result column="officePhoneFormat"   property="officePhoneFormat"  />
+  <result column="mobliePhone"         property="mobliePhone"  />
+  <result column="mobliePhoneFormat"   property="mobliePhoneFormat"  />
+  <result column="email"               property="email"  />
+  <result column="ip"                  property="ip"  />
+  <result column="createUserId"        property="createUserId"  />
+  <result column="createDateTime"      property="createDateTime"  />
+  <result column="updateUserId"        property="updateUserId"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="useYn"               property="useYn"  />
+  <result column="deletedYn"           property="deletedYn"  />
+  <result column="userResult"          property="userResult"  />
+  <result column="smsYn"               property="smsYn"  />
+  <result column="pwdChangeDateTime"   property="pwdChangeDateTime"  />
+</resultMap>
+
+<select id="getUserPageList"  resultMap="userListVO" parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+        SELECT T1.userId
+			  ,T1.userName
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.auth
+			  ,T1.authId   
+			  ,Case T1.auth When '01' Then '슈퍼관리자'
+  						   When '02' Then '관리자'
+  						   Else Case T1.authId When 'AD001' Then '일반(본사)'
+  						   					   When 'STAFF' Then '일반(STAFF)'
+  						   					   Else '일반' End
+         				   End authName
+			  ,IFNULL(T1.excelAuth,'N')   As excelAuth
+			  ,T1.password
+			  ,T1.email
+			  ,T1.officePhone
+		      ,T1.officePhone As officePhoneFormat
+			  ,T1.mobliePhone
+			  ,T1.mobliePhone As mobliePhoneFormat
+		      ,T1.ip
+			  ,T1.createUserId
+			  ,T1.updateUserId
+			  ,T4.userName as updateUserName
+			  ,T1.createDateTime As CreateDateTime
+			  ,T1.updateDateTime As UpdateDateTime
+			  ,ifnull(T1.useYn,'Y') as useYn
+			  ,T1.deletedYn
+			  ,ifnull(T1.smsYn,'N') as smsYn
+			  ,T1.useYn
+			  ,T1.companyId
+			  ,T1.image1
+          FROM ofUser T1
+          	   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join ofGroup T3 On T1.authId=T3.groupId
+			   Left Join ofUser T4 On T1.updateUserId=T4.userId
+         WHERE T1.deletedYn='N' And T1.userId <![CDATA[<>]]> 'system'
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.userId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+           <if test="con_useYn != null and con_useYn != ''" >
+           AND T1.useYn = #{con_useYn}
+           </if>
+         ORDER BY createDateTime,userId,groupId desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getUserCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM ofUser
+ 			WHERE deletedYn='N' And userId <![CDATA[<>]]> 'system'
+           	<if test="con_groupId != null and con_groupId != ''" >
+           	AND groupId = #{con_groupId}
+           	</if>
+           	<if test="searchValue != null and searchValue != ''" >
+             	<choose>
+               		<when test="searchGubun.equals('01')">
+           	AND userName  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+               		<when test="searchGubun.equals('02')">
+           	AND userId  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+             	</choose>
+           </if>
+           <if test="con_useYn != null and con_useYn != ''" >
+           AND useYn = #{con_useYn}
+ 		   </if>
+</select>
+
+<update id="userUpdateProc" parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+        Update ofUser
+       		Set
+  				userId = #{userId}
+            	,userName = #{userName}
+            	,groupId  = #{groupId}
+            	,authId = #{authId}
+            	,excelAuth = #{excelAuth}
+            	,email = #{email}
+           	 	,officePhone = #{officePhone}
+            	,companyId = #{companyId}
+            	,ip = #{ip}
+            	,auth = #{auth}
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+            	,useYn = #{useYn}
+ 		Where userId = #{userId}
+</update>
+
+<update id="userUpdatePwProc" parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+        Update ofUser
+       		Set password = password(#{password})
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+            	,pwdChangeDateTime = now()
+ 		Where userId = #{userId}
+</update>
+
+<insert id="userInsertProc" parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+  	Insert into ofUser( 
+        	 userId
+            ,userName
+            ,groupId
+            ,auth 
+            ,authId
+            ,excelAuth
+            ,password
+            ,email
+            ,officePhone
+            ,mobliePhone
+            ,ip
+            ,createUserId
+            ,createDateTime
+            ,smsYn 
+            ,useYn 
+            ,companyId
+            ,image1
+            )
+        Values (
+	  		  #{userId}
+	  		, #{userName}
+	  		, #{groupId}
+	  		, #{auth}
+	  		, #{authId}
+	  		, #{excelAuth}
+	  		, password(#{password})
+	  		, #{email}
+	  		, #{officePhone}
+	  		, #{mobliePhone}
+	  		, #{ip}
+	  		, #{createUserId}
+	  		, now()
+	  		, #{smsYn}
+	  		,'N'
+	  		, #{companyId}
+	  		, #{image1}
+	  		)
+	  		ON DUPLICATE KEY UPDATE userName = #{userName},
+		                        groupId = #{groupId},
+		                        password = password(#{password}),
+		                        auth = #{auth},
+		                        authId = #{authId},
+		                        email = #{email},
+		                        officePhone = #{officePhone},
+		                        mobliePhone = #{mobliePhone},
+		                        smsYn = #{smsYn},
+		                        mobliePhone = #{mobliePhone},
+		                        updateUserId = #{createUserId},
+		                        updateDateTime =now() ,
+		                        deletedYn= 'N'  
+</insert>
+
+<select id="getUserDetail" resultMap="userListVO" parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+
+		Select T1.userId
+			  ,T1.userName
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.auth
+			  ,T1.authId   
+			  ,CASE WHEN T1.authId = T1.userId Then '개인권한'
+			   		ELSE T3.groupName
+			   END As authName
+			  ,IFNULL(T1.excelAuth,'N')   As excelAuth
+			  ,T1.password
+			  ,T1.email
+			  ,T1.officePhone
+			  ,T1.officePhone As officePhoneFormat
+			  ,T1.mobliePhone
+		      ,T1.mobliePhone As mobliePhoneFormat
+			  ,T1.ip
+			  ,T1.createUserId
+			  ,T1.updateUserId
+		      ,T1.createDateTime As CreateDateTime
+			  ,T1.updateDateTime As UpdateDateTime
+			  ,T1.useYn
+			  ,T1.deletedYn
+			  ,T1.smsYn
+			  ,T1.useYn
+			  ,T1.companyId
+			  ,T1.image1
+			  ,Case When DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') ='1999-01-01' 
+			  		Then '<![CDATA[<font style="color:red">]]>초기 비밀번호를 변경하시기 바랍니다.<![CDATA[</font>]]>' 
+			        Else Case When DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') <![CDATA[<]]> date_add(DATE_FORMAT(now(), '%Y-%m-%d'), interval (Select T4.codeId from ofCode T4 where T4.codeGroupId='PW01') month)
+			                  Then concat('<![CDATA[<font style="color:red">]]>[',concat(DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d'),']<![CDATA[<br>]]>비밀번호를 변경하시기 바랍니다.<![CDATA[</font>]]>')) 
+			                  Else DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') End 
+			        End pwdChangeDateTime
+	     From ofUser T1 
+			  Left Join ofGroup T2 On T1.groupId=T2.groupId
+			  Left Join ofGroup T3 On T1.authId=T3.groupId
+		 Where T1.userId = #{userId} And T1.deletedYn='N'
+</select>
+
+<update id="userDeleteProc" parameterType="java.util.Map" >
+        Update ofUser
+       		Set
+  				deletedYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where userId = #{userId}
+</update>
+
+<select id="validationUploadFile"  resultMap="userListVO" parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+    SELECT 
+       'SUCCESS' as userResult
+       FROM 
+              ofUser 
+       WHERE 
+              userId = 'system' 
+</select>
+
+<insert id="insertExcelUser"  parameterType="com.offact.salesb.vo.manage.UserManageVO" >
+		insert into ofUser (
+				 userId
+            	,userName
+            	,groupId 
+            	,auth
+            	,authId
+            	,excelAuth
+            	,password
+           		,email
+            	,officePhone
+            	,mobliePhone
+            	,ip
+            	,useYn
+            	,smsYn
+            	,createUserId
+            	,createDateTime
+		)values(
+				 #{userId}
+	  			, #{userName}
+	  			, #{groupId}
+	  		    , '03'
+	  			, #{authId}
+	  			, 'N'
+	  			, password(#{password})
+	  			, #{email}
+	  		    , #{officePhone}
+	  		    , #{mobliePhone}
+	  		    , #{ip}
+	  		    , #{useYn}
+	  		    ,'N'
+	  		    , #{createUserId}
+	  		    , now()
+		)
+		ON DUPLICATE KEY UPDATE userName = #{userName},
+		                        groupId = #{groupId},
+		                        password = password(#{password}),
+		                        mobliePhone = #{mobliePhone},
+		                        updateUserId = #{createUserId},
+		                        updateDateTime =now()
+</insert>
+
+<select id="getCheckCnt" resultType="int">
+		SELECT count(*) 
+  			FROM ofUser
+ 			WHERE deletedYn='N' And userId = #{userId}
+</select>
+
+</mapper>
